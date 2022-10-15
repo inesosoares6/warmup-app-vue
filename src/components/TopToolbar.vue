@@ -2,18 +2,27 @@
   <div>
     <v-app-bar app fixed dark color="primary">
       <v-toolbar-title>WOD App</v-toolbar-title>
-      <v-icon>mdi-cog</v-icon>
-      <v-icon>mdi-logout</v-icon>
-
+      <v-btn>
+        <v-icon>mdi-cog</v-icon>
+        <SettingsMenu></SettingsMenu>
+      </v-btn>
+      <v-btn>
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import SettingsMenu from "./pop-ups/SettingsMenu.vue";
 
 export default defineComponent({
   name: "TopToolbar",
+
+  components: {
+    SettingsMenu,
+  },
 
   data() {
     return {
@@ -30,8 +39,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.v-icon {
-    margin-right: 13px;
-}
-</style>
+<style scoped></style>
