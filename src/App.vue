@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <BottomToolbar></BottomToolbar>
+    <TopToolbar></TopToolbar>
     <v-main>
       <HelloWorld/>
     </v-main>
@@ -9,6 +10,7 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import TopToolbar from './components/TopToolbar.vue'
 import BottomToolbar from './components/BottomToolbar.vue'
 
 export default {
@@ -16,6 +18,7 @@ export default {
 
   components: {
     HelloWorld,
+    TopToolbar,
     BottomToolbar,
   },
 
