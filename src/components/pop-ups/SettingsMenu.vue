@@ -9,7 +9,7 @@
           color="secondary"
           inset
           hide-details
-          @change="setDarkMode"
+          @change="toggleTheme"
         ></v-switch>
       </v-card-text>
     </v-card>
@@ -18,20 +18,27 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useTheme } from "vuetify";
 
 export default defineComponent({
   name: "SettingsMenu",
 
-  data() {
+  setup() {
+    const theme = useTheme();
+
     return {
-        isDarkMode: false,
+      theme,
+      toggleTheme: () =>
+        (theme.global.name.value = theme.global.current.value.dark
+          ? "light"
+          : "dark"),
     };
   },
 
-  methods: {
-    setDarkMode() {
-        //TODO set dark mode
-    }
-  }
+  data() {
+    return {
+      isDarkMode: true,
+    };
+  },
 });
 </script>
