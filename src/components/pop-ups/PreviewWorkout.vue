@@ -8,7 +8,7 @@
       <v-card-actions>
         <v-spacer></v-spacer
         ><v-btn color="error" @click="deleteWorkout"> Delete </v-btn>
-        <v-btn color="secondary" @click="selectWorkout"> Add </v-btn>
+        <v-btn color="secondary" @click="selectWorkout"> Select </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

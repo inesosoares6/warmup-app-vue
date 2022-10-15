@@ -89,3 +89,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.v-card-title {
+  margin-top: 10px;
+}
+</style>
