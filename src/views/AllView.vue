@@ -7,6 +7,8 @@
       :title="workout.name"
       :subtitle="workout.type + ' - ' + workout.time + ' min'"
     >
+      <PreviewWorkout :workout="workout"></PreviewWorkout>
+
       <template v-slot:prepend>
         <v-avatar :color="workout.done ? 'secondary' : 'error'">
           <v-icon>mdi-dumbbell</v-icon>
@@ -18,9 +20,14 @@
 
 <script>
 import { defineComponent } from "vue";
+import PreviewWorkout from "@/components/pop-ups/PreviewWorkout.vue";
 
 export default defineComponent({
   name: "AllView",
+
+  components: {
+    PreviewWorkout,
+  },
 
   data() {
     return {
