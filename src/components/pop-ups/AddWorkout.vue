@@ -32,6 +32,7 @@
           <v-checkbox
             v-model="alreadyDone"
             label="Already done"
+            hide-details
           ></v-checkbox>
         </v-form>
       </v-card-text>
