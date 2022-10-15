@@ -1,18 +1,18 @@
 <template>
   <v-bottom-navigation app fixed grow v-model="activeItem" color="primary">
-    <v-btn value="top">
-      <span>Top Stories</span>
-      <v-icon>thumb_up</v-icon>
+    <v-btn value="home">
+      <v-icon>mdi-home</v-icon>
+      Home
     </v-btn>
 
-    <v-btn value="code">
-      <span>Code Examples</span>
-      <v-icon>code</v-icon>
+    <v-btn value="wod">
+      <v-icon>mdi-dumbbell</v-icon>
+      WOD
     </v-btn>
 
-    <v-btn value="favorites">
-      <span>Favorites</span>
-      <v-icon>favorite</v-icon>
+    <v-btn value="all">
+      <v-icon>mdi-format-list-bulleted</v-icon>
+      All
     </v-btn>
   </v-bottom-navigation>
 </template>
@@ -25,8 +25,16 @@ export default defineComponent({
 
   data() {
     return {
-      activeItem: "top",
+      activeItem: "home",
     };
   },
 });
 </script>
+
+<style scoped>
+.v-icon{
+    font-size: 16px;
+    margin-bottom: 5px;;
+}
+
+</style>
