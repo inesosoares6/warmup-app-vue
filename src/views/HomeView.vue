@@ -1,6 +1,12 @@
 <template>
   <v-container>
-    <v-card title="WODs Summary">
+    <v-card>
+      <v-card-title>
+        <v-icon class="dumbbell-icon" color="secondary"
+          >mdi-clipboard-check-multiple-outline</v-icon
+        >
+        Summary
+      </v-card-title>
       <v-card-text>
         <v-row class="center-btns">
           <v-col class="done-todo">
@@ -29,7 +35,7 @@
     <v-card>
       <v-card-title>
         <v-icon color="secondary">mdi-swap-horizontal</v-icon>
-        WODs
+        Exchange WODs
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -50,7 +56,7 @@
     <v-card>
       <v-card-title>
         <v-icon class="dumbbell-icon" color="secondary">mdi-dumbbell</v-icon>
-        Random WOD
+        Generate Random
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -86,7 +92,7 @@ export default defineComponent({
 
   data() {
     return {
-      time: 0,
+      time: null,
       timeRules: [
         (v) => !!v || "Field is required",
         (v) => v >= 0 || "Time must be greater than 0",
@@ -129,7 +135,7 @@ export default defineComponent({
 }
 
 .dumbbell-icon {
-  font-size: 25px;
+  font-size: 23px;
 }
 
 .center-btns {
