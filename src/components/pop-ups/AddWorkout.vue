@@ -23,12 +23,13 @@
             label="Time (min)"
             required
           ></v-text-field>
-          <v-text-field
+          <v-textarea
             v-model="exercises"
             :rules="nameRules"
             label="Exercises"
             required
-          ></v-text-field>
+            hide-details
+          ></v-textarea>
           <v-checkbox
             v-model="alreadyDone"
             label="Already done"
