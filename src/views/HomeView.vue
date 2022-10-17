@@ -81,6 +81,20 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <v-divider thickness="0px"></v-divider>
+    <v-card>
+      <v-card-title>
+        <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
+        Last Workout
+      </v-card-title>
+      <v-card-subtitle>
+        <div>{{workout.name}}</div>
+        <div>{{ workout.type + " - " + workout.time + " min" }}</div>
+      </v-card-subtitle>
+      <v-card-text>
+        {{ workout.exercises }}
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -115,6 +129,13 @@ export default defineComponent({
           quantity: 2,
         },
       ],
+      workout: {
+        name: "Test Name",
+        type: "Test Type",
+        time: 0,
+        exercises: "Test Exercises",
+        alreadyDone: false,
+      }
     };
   },
 });
