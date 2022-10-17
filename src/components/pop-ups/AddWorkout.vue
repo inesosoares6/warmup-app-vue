@@ -80,7 +80,7 @@ export default defineComponent({
           type: this.type,
           time: this.time,
           exercises: this.exercises,
-          done: this.alreadyDone,
+          completions: this.alreadyDone ? 1 : 0,
         });
       }
     },

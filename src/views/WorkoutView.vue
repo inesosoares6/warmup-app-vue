@@ -6,8 +6,8 @@
       </v-col>
       <v-col>
         <v-checkbox
-          v-model="workout.alreadyDone"
-          label="Already done"
+          v-model="checkbox"
+          label="Mark as done"
           hide-details
           @change="updateWorkout"
         ></v-checkbox>
@@ -35,12 +35,13 @@ export default defineComponent({
 
   data() {
     return {
+      checkbox: false,
       workout: {
         name: "Test Name",
         type: "Test Type",
         time: 0,
         exercises: "Test Exercises",
-        alreadyDone: false,
+        completions: 0,
       }
     };
   },
@@ -48,6 +49,7 @@ export default defineComponent({
   methods: {
     updateWorkout() {
       //TODO update workout
+      if(this.checkbox) this.workout.completions++;
       console.log("update", this.workout);
     },
   },

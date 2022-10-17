@@ -134,7 +134,7 @@ export default defineComponent({
         type: "Test Type",
         time: 0,
         exercises: "Test Exercises",
-        alreadyDone: false,
+        completions: 1,
       }
     };
   },
