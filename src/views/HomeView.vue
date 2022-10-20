@@ -91,8 +91,7 @@
         <div>{{ lastWorkout.name }}</div>
         <div>{{ lastWorkout.type + " - " + lastWorkout.time + " min" }}</div>
       </v-card-subtitle>
-      <v-card-text>
-        {{ lastWorkout.exercises }}
+      <v-card-text v-html="lastWorkout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
     </v-card>
   </v-container>
