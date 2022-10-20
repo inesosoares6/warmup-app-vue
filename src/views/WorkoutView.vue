@@ -13,7 +13,7 @@
         ></v-checkbox>
       </v-col>
     </v-row>
-    <v-card v-if="workout !== null">
+    <v-card v-if="workout.name !== undefined">
       <v-card-title>
         {{ workout.name }}
       </v-card-title>
@@ -47,10 +47,8 @@ export default defineComponent({
 
   methods: {
     updateWorkout() {
-      this.$emit("update-workout", {
-        workout: this.workout,
-        checkbox: this.checkbox,
-      });
+      this.$emit("update-workout", this.workout);
+      if(this.checkbox) localStorage.setItem("lastWorkout", JSON.stringify(this.workout));
     },
   },
 });

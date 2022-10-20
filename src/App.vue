@@ -50,12 +50,11 @@ export default {
       );
     },
 
-    updateWorkout(params) {
-      this.allWorkouts.forEach((workout, index) => {
-        if (workout.id === params.workout.id) {
-          this.allWorkouts[index].completions = params.checkbox
-            ? this.allWorkouts[index].completions + 1
-            : this.allWorkouts[index].completions - 1;
+    updateWorkout(workout) {
+      this.allWorkouts.forEach((item, index) => {
+        if (item.id === workout.id) {
+          this.allWorkouts[index].completions =
+            this.allWorkouts[index].completions + 1;
         }
       });
     },

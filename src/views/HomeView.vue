@@ -82,17 +82,17 @@
       </v-card-text>
     </v-card>
     <v-divider thickness="0px"></v-divider>
-    <v-card>
+    <v-card v-if="lastWorkout.name !== undefined">
       <v-card-title>
         <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
         Last Workout
       </v-card-title>
       <v-card-subtitle>
-        <div>{{workout.name}}</div>
-        <div>{{ workout.type + " - " + workout.time + " min" }}</div>
+        <div>{{ lastWorkout.name }}</div>
+        <div>{{ lastWorkout.type + " - " + lastWorkout.time + " min" }}</div>
       </v-card-subtitle>
       <v-card-text>
-        {{ workout.exercises }}
+        {{ lastWorkout.exercises }}
       </v-card-text>
     </v-card>
   </v-container>
@@ -129,14 +129,13 @@ export default defineComponent({
           quantity: 2,
         },
       ],
-      workout: {
-        name: "Test Name",
-        type: "Test Type",
-        time: 0,
-        exercises: "Test Exercises",
-        completions: 1,
-      }
+      lastWorkout: {},
     };
+  },
+
+  mounted() {
+    if (localStorage.getItem("lastWorkout"))
+      this.lastWorkout = JSON.parse(localStorage.getItem("lastWorkout"));
   },
 });
 </script>
