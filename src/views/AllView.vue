@@ -6,7 +6,10 @@
       :title="workout.name"
       :subtitle="workout.type + ' - ' + workout.time + ' min'"
     >
-      <PreviewWorkout :workout="workout"></PreviewWorkout>
+      <PreviewWorkout
+        :workout="workout"
+        :deleteWorkout="deleteWorkout"
+      ></PreviewWorkout>
 
       <template v-slot:prepend>
         <v-avatar :color="workout.done ? 'secondary' : 'error'">
@@ -29,5 +32,11 @@ export default defineComponent({
   },
 
   props: ["allWorkouts"],
+
+  methods: {
+    deleteWorkout(id) {
+      this.$emit('deleteWorkout', id);
+    },
+  },
 });
 </script>

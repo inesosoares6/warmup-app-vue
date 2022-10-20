@@ -28,14 +28,12 @@ export default defineComponent({
   },
 
   data() {
-    return {
-      
-    };
+    return {};
   },
 
   methods: {
     addWorkout(newWorkout) {
-      this.$emit('add-workout', newWorkout);
+      this.$emit("add-workout", newWorkout);
     },
   },
 });

@@ -11,7 +11,7 @@
         <v-btn
           color="secondary"
           @click="selectWorkout"
-          :to="{name: 'workout-view'}"
+          :to="{ name: 'workout-view' }"
         >
           Select
         </v-btn>
@@ -25,12 +25,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "PreviewWorkout",
-  props: {
-    workout: {
-      type: Object,
-      required: true,
-    },
-  },
+  props: ["workout"],
 
   data() {
     return {
@@ -42,8 +37,11 @@ export default defineComponent({
     deleteWorkout() {
       console.log("delete", this.workout.name);
       this.previewWorkout = false;
+      this.$emit("deleteWorkout", this.workout.id);
     },
+
     selectWorkout() {
+      localStorage.setItem("currentWorkout", JSON.stringify(this.workout));
       console.log("select", this.workout.name);
       this.previewWorkout = false;
     },

@@ -36,20 +36,18 @@ export default defineComponent({
   data() {
     return {
       checkbox: false,
-      workout: {
-        name: "Test Name",
-        type: "Test Type",
-        time: 0,
-        exercises: "Test Exercises",
-        completions: 0,
-      }
+      workout: {},
     };
+  },
+
+  mounted() {
+    if (localStorage.getItem("currentWorkout"))
+      this.workout = JSON.parse(localStorage.getItem("currentWorkout"));
   },
 
   methods: {
     updateWorkout() {
       //TODO update workout
-      if(this.checkbox) this.workout.completions++;
       console.log("update", this.workout);
     },
   },
