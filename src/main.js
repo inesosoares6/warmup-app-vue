@@ -14,7 +14,6 @@ const routes = [
     name: "workout-view",
     path: "/workout-view",
     component: WorkoutView,
-    props: { workout: false },
   },
   { name: "all-view", path: "/all-view", component: AllView },
 ];

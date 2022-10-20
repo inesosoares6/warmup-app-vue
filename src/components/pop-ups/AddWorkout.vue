@@ -11,6 +11,7 @@
             required
           ></v-text-field>
           <v-select
+            v-model="type"
             :items="types"
             :rules="[(v) => !!v || 'Item is required']"
             label="Type"
@@ -47,6 +48,7 @@
 
 <script>
 import { defineComponent } from "vue";
+import { v4 as uuidv4 } from 'uuid';
 
 export default defineComponent({
   name: "AddWorkout",
@@ -73,15 +75,17 @@ export default defineComponent({
     validate() {
       this.$refs.form.validate();
       if (this.valid) {
-        //TODO add workout
         this.addWorkout = false;
-        console.log({
+        const newWorkout = {
+          id: uuidv4(),
           name: this.name,
           type: this.type,
           time: this.time,
           exercises: this.exercises,
           completions: this.alreadyDone ? 1 : 0,
-        });
+        };
+        this.$emit('add-workout', newWorkout);
+        this.reset();
       }
     },
     reset() {

@@ -4,7 +4,7 @@
       <v-toolbar-title>WOD App</v-toolbar-title>
       <v-btn>
         <v-icon>mdi-plus</v-icon>
-        <AddWorkout></AddWorkout>
+        <AddWorkout v-on:add-workout="addWorkout"></AddWorkout>
       </v-btn>
       <v-btn>
         <v-icon>mdi-cog</v-icon>
@@ -29,15 +29,14 @@ export default defineComponent({
 
   data() {
     return {
-      showMenu: false,
+      
     };
   },
 
   methods: {
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
+    addWorkout(newWorkout) {
+      this.$emit('add-workout', newWorkout);
     },
-    doNothing() {},
   },
 });
 </script>

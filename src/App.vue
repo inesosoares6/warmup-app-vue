@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <BottomToolbar></BottomToolbar>
-    <TopToolbar></TopToolbar>
+    <TopToolbar v-on:add-workout="addWorkout"></TopToolbar>
     <v-main>
       <router-view></router-view>
     </v-main>
@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import TopToolbar from './components/TopToolbar.vue'
-import BottomToolbar from './components/BottomToolbar.vue'
+import TopToolbar from "./components/TopToolbar.vue";
+import BottomToolbar from "./components/BottomToolbar.vue";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     TopToolbar,
@@ -21,9 +21,25 @@ export default {
   },
 
   data() {
-    return{
-
+    return {
+      allWorkouts: []
     };
   },
-}
+
+  methods: {
+    addWorkout(newWorkout) {
+      this.allWorkouts = [...this.allWorkouts, newWorkout];
+    },
+  },
+
+  watch: {
+    allWorkouts: {
+        handler() {
+            console.log('allWorkouts array changed!');
+            localStorage.setItem('allWorkouts', JSON.stringify(this.allWorkouts));
+        },
+        deep: true,
+    },
+},
+};
 </script>
