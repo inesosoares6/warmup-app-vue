@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title> Edit Workout </v-card-title>
       <v-card-text>
-        <v-form ref="formEdit" v-model="valid" lazy-validation>
+        <v-form ref="formEdit" v-model="validEdit">
           <v-text-field
             v-model="workoutEdited.name"
             :rules="nameRules"
@@ -44,7 +44,8 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer><v-btn color="error" @click="resetForm"> Reset </v-btn>
+        <v-spacer></v-spacer
+        ><v-btn color="error" @click="resetForm"> Reset </v-btn>
         <v-btn color="secondary" @click="updateWorkout"> Update </v-btn>
       </v-card-actions>
     </v-card>
@@ -65,7 +66,7 @@ export default defineComponent({
   data() {
     return {
       editWorkout: false,
-      valid: true,
+      validEdit: true,
       nameRules: [(v) => !!v || "Field is required"],
       timeRules: [
         (v) => !!v || "Field is required",
@@ -78,11 +79,8 @@ export default defineComponent({
 
   methods: {
     updateWorkout() {
-      this.$refs.formEdit.validate();
-      if (this.valid) {
-        this.editWorkout = false;
-        this.$emit("edit-workout", this.workoutEdited);
-      }
+      this.editWorkout = false;
+      this.$emit("edit-workout", this.workoutEdited);
     },
     resetForm() {
       this.$refs.formEdit.reset();
