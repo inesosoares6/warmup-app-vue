@@ -5,7 +5,7 @@
       :subtitle="workout.type + ' - ' + workout.time + ' min'"
     >
       <template v-slot:append>
-        <v-btn>
+        <v-btn icon color="grey">
           <v-icon>mdi-pencil</v-icon>
           <EditWorkout v-bind:workout="workout" v-on:edit-workout="editWorkout"/>
         </v-btn>

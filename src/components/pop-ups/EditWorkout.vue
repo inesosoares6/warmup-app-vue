@@ -30,7 +30,6 @@
               <v-text-field
                 v-model="workoutEdited.completions"
                 type="number"
-                :rules="nameRules"
                 label="Completions"
                 required
               ></v-text-field> </v-col
@@ -45,8 +44,8 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer><v-btn color="error" @click="reset"> Reset </v-btn>
-        <v-btn color="secondary" @click="validate"> Update </v-btn>
+        <v-spacer></v-spacer><v-btn color="error" @click="resetForm"> Reset </v-btn>
+        <v-btn color="secondary" @click="updateWorkout"> Update </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -78,14 +77,14 @@ export default defineComponent({
   },
 
   methods: {
-    validate() {
+    updateWorkout() {
       this.$refs.formEdit.validate();
       if (this.valid) {
         this.editWorkout = false;
         this.$emit("edit-workout", this.workoutEdited);
       }
     },
-    reset() {
+    resetForm() {
       this.$refs.formEdit.reset();
     },
   },

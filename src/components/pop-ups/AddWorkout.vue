@@ -39,8 +39,9 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer><v-btn color="error" @click="reset"> Reset </v-btn>
-        <v-btn color="secondary" @click="validate"> Add </v-btn>
+        <v-spacer></v-spacer
+        ><v-btn color="error" @click="resetForm"> Reset </v-btn>
+        <v-btn color="secondary" @click="addWorkoutFunction"> Add </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -48,7 +49,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export default defineComponent({
   name: "AddWorkout",
@@ -72,23 +73,22 @@ export default defineComponent({
   },
 
   methods: {
-    validate() {
+    addWorkoutFunction() {
       this.$refs.form.validate();
       if (this.valid) {
         this.addWorkout = false;
-        const newWorkout = {
+        this.$emit("add-workout", {
           id: uuidv4(),
           name: this.name,
           type: this.type,
           time: this.time,
           exercises: this.exercises,
           completions: this.alreadyDone ? 1 : 0,
-        };
-        this.$emit('add-workout', newWorkout);
-        this.reset();
+        });
+        this.resetForm();
       }
     },
-    reset() {
+    resetForm() {
       this.$refs.form.reset();
     },
   },
