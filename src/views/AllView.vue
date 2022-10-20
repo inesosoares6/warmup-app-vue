@@ -8,7 +8,7 @@
     >
       <PreviewWorkout
         :workout="workout"
-        v-on:deleteWorkout="deleteWorkout"
+        v-on:delete-workout="deleteWorkout"
       ></PreviewWorkout>
 
       <template v-slot:prepend>
@@ -40,7 +40,7 @@ export default defineComponent({
 
   methods: {
     deleteWorkout(id) {
-      this.$emit("deleteWorkout", id);
+      this.$emit("delete-workout", id);
     },
   },
 });

@@ -47,8 +47,10 @@ export default defineComponent({
 
   methods: {
     updateWorkout() {
-      //TODO update workout
-      console.log("update", this.workout);
+      this.$emit("update-workout", {
+        workout: this.workout,
+        checkbox: this.checkbox,
+      });
     },
   },
 });

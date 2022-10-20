@@ -8,7 +8,8 @@
           :is="Component"
           :key="route.path"
           :allWorkouts="allWorkouts"
-          v-on:deleteWorkout="deleteWorkout"
+          v-on:delete-workout="deleteWorkout"
+          v-on:update-workout="updateWorkout"
         />
       </router-view>
     </v-main>
@@ -42,11 +43,21 @@ export default {
     addWorkout(newWorkout) {
       this.allWorkouts = [...this.allWorkouts, newWorkout];
     },
-    
+
     deleteWorkout(id) {
       this.allWorkouts = this.allWorkouts.filter(
         (workout) => workout.id !== id
       );
+    },
+
+    updateWorkout(params) {
+      this.allWorkouts.forEach((workout, index) => {
+        if (workout.id === params.workout.id) {
+          this.allWorkouts[index].completions = params.checkbox
+            ? this.allWorkouts[index].completions + 1
+            : this.allWorkouts[index].completions - 1;
+        }
+      });
     },
   },
 
