@@ -3,7 +3,13 @@
     <BottomToolbar></BottomToolbar>
     <TopToolbar v-on:add-workout="addWorkout"></TopToolbar>
     <v-main>
-      <router-view></router-view>
+      <router-view v-slot="{ Component, route }">
+        <component
+          :is="Component"
+          :key="route.path"
+          :allWorkouts="allWorkouts"
+        />
+      </router-view>
     </v-main>
   </v-app>
 </template>
@@ -22,8 +28,14 @@ export default {
 
   data() {
     return {
-      allWorkouts: []
+      allWorkouts: [],
     };
+  },
+
+  mounted() {
+    if (localStorage.getItem("allWorkouts"))
+      this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
+    console.log(this.allWorkouts);
   },
 
   methods: {
@@ -34,12 +46,11 @@ export default {
 
   watch: {
     allWorkouts: {
-        handler() {
-            console.log('allWorkouts array changed!');
-            localStorage.setItem('allWorkouts', JSON.stringify(this.allWorkouts));
-        },
-        deep: true,
+      handler() {
+        localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
+      },
+      deep: true,
     },
-},
+  },
 };
 </script>

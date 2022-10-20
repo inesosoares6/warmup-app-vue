@@ -1,9 +1,8 @@
 <template>
-  <v-list class="wod-list" lines="two" v-if="workouts.length > 0">
+  <v-list class="wod-list" lines="two" v-if="allWorkouts.length > 0">
     <v-list-item
-      v-for="(workout, index) in workouts"
+      v-for="(workout, index) in allWorkouts"
       :key="index"
-      @click="selectWorkout(workout)"
       :title="workout.name"
       :subtitle="workout.type + ' - ' + workout.time + ' min'"
     >
@@ -29,24 +28,6 @@ export default defineComponent({
     PreviewWorkout,
   },
 
-  mounted() {
-    console.log("Mounted");
-    if (localStorage.getItem("allWorkouts"))
-      this.workouts = JSON.parse(localStorage.getItem("allWorkouts"));
-    console.log(this.workouts);
-  },
-
-  data() {
-    return {
-      workouts: [],
-    };
-  },
-
-  methods: {
-    selectWorkout(workout) {
-      //TODO set dark mode
-      console.log(workout);
-    },
-  },
+  props: ["allWorkouts"],
 });
 </script>

@@ -15,7 +15,7 @@ const routes = [
     path: "/workout-view",
     component: WorkoutView,
   },
-  { name: "all-view", path: "/all-view", component: AllView },
+  { name: "all-view", path: "/all-view", component: AllView, props: true },
 ];
 
 const router = createRouter({
