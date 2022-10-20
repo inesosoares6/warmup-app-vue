@@ -3,17 +3,17 @@
     <v-card>
       <v-card-title> Edit Workout </v-card-title>
       <v-card-text>
-        <v-form ref="formEdit" v-model="validEdit">
+        <v-form ref="formEdit">
           <v-text-field
             v-model="workoutEdited.name"
-            :rules="nameRules"
+            :rules="[(v) => !!v || 'Name is required']"
             label="Name"
             required
           ></v-text-field>
           <v-select
             v-model="workoutEdited.type"
             :items="types"
-            :rules="[(v) => !!v || 'Item is required']"
+            :rules="[(v) => !!v || 'Type is required']"
             label="Type"
             required
           ></v-select>
@@ -36,7 +36,7 @@
           ></v-row>
           <v-textarea
             v-model="workoutEdited.exercises"
-            :rules="nameRules"
+            :rules="[(v) => !!v || 'Exercises are required']"
             label="Exercises"
             required
             hide-details
@@ -66,8 +66,6 @@ export default defineComponent({
   data() {
     return {
       editWorkout: false,
-      validEdit: true,
-      nameRules: [(v) => !!v || "Field is required"],
       timeRules: [
         (v) => !!v || "Field is required",
         (v) => v >= 0 || "Time must be greater than 0",
