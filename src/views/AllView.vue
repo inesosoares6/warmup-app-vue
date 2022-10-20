@@ -12,8 +12,13 @@
       ></PreviewWorkout>
 
       <template v-slot:prepend>
-        <v-avatar :color="workout.done ? 'secondary' : 'error'">
+        <v-avatar :color="workout.completions > 0 ? 'secondary' : 'error'">
           <v-icon>mdi-dumbbell</v-icon>
+        </v-avatar>
+      </template>
+      <template v-slot:append>
+        <v-avatar outline color="grey">
+          {{workout.completions}}
         </v-avatar>
       </template>
     </v-list-item>
