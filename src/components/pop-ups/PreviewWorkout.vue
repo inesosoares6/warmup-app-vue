@@ -3,8 +3,9 @@
     <v-card
       :title="workout.name"
       :subtitle="workout.type + ' - ' + workout.time + ' min'"
-      :text="workout.exercises"
     >
+      <v-card-text v-html="workout.exercises.replaceAll('\n', '<br/>')">
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer
         ><v-btn color="error" @click="deleteWorkout"> Delete </v-btn>
