@@ -35,14 +35,12 @@ export default defineComponent({
 
   methods: {
     deleteWorkout() {
-      console.log("delete", this.workout.name);
-      this.previewWorkout = false;
       this.$emit("deleteWorkout", this.workout.id);
+      this.previewWorkout = false;
     },
 
     selectWorkout() {
       localStorage.setItem("currentWorkout", JSON.stringify(this.workout));
-      console.log("select", this.workout.name);
       this.previewWorkout = false;
     },
   },

@@ -8,6 +8,7 @@
           :is="Component"
           :key="route.path"
           :allWorkouts="allWorkouts"
+          v-on:deleteWorkout="deleteWorkout"
         />
       </router-view>
     </v-main>
@@ -35,12 +36,17 @@ export default {
   mounted() {
     if (localStorage.getItem("allWorkouts"))
       this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
-    console.log(this.allWorkouts);
   },
 
   methods: {
     addWorkout(newWorkout) {
       this.allWorkouts = [...this.allWorkouts, newWorkout];
+    },
+    
+    deleteWorkout(id) {
+      this.allWorkouts = this.allWorkouts.filter(
+        (workout) => workout.id !== id
+      );
     },
   },
 

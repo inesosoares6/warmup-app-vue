@@ -13,7 +13,7 @@
         ></v-checkbox>
       </v-col>
     </v-row>
-    <v-card>
+    <v-card v-if="workout !== null">
       <v-card-title>
         {{ workout.name }}
       </v-card-title>
