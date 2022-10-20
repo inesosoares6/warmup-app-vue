@@ -10,6 +10,7 @@
           :allWorkouts="allWorkouts"
           v-on:delete-workout="deleteWorkout"
           v-on:update-workout="updateWorkout"
+          v-on:edit-workout="editWorkout"
         />
       </router-view>
     </v-main>
@@ -48,6 +49,11 @@ export default {
       this.allWorkouts = this.allWorkouts.filter(
         (workout) => workout.id !== id
       );
+    },
+
+    editWorkout(workout) {
+      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
+      this.allWorkouts[objIndex] = { ...workout };
     },
 
     updateWorkout(workout) {

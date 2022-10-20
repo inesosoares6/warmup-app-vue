@@ -4,6 +4,12 @@
       :title="workout.name"
       :subtitle="workout.type + ' - ' + workout.time + ' min'"
     >
+      <template v-slot:append>
+        <v-btn>
+          <v-icon>mdi-pencil</v-icon>
+          <EditWorkout v-bind:workout="workout" v-on:edit-workout="editWorkout"/>
+        </v-btn>
+      </template>
       <v-card-text v-html="workout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
       <v-card-actions>
@@ -23,10 +29,15 @@
 
 <script>
 import { defineComponent } from "vue";
+import EditWorkout from "@/components/pop-ups/EditWorkout.vue";
 
 export default defineComponent({
   name: "PreviewWorkout",
   props: ["workout"],
+
+  components: {
+    EditWorkout,
+  },
 
   data() {
     return {
@@ -38,6 +49,10 @@ export default defineComponent({
     deleteWorkout() {
       this.$emit("delete-workout", this.workout.id);
       this.previewWorkout = false;
+    },
+
+    editWorkout(workout) {
+      this.$emit("edit-workout", workout);
     },
 
     selectWorkout() {
