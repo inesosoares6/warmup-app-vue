@@ -45,6 +45,7 @@
           <v-col class="d-flex justify-center">
             <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
               Send
+              <QrcodeGenerator/>
             </v-btn>
           </v-col>
           <v-col class="d-flex justify-center">
@@ -102,10 +103,15 @@
 
 <script>
 import { defineComponent } from "vue";
+import QrcodeGenerator from "@/components/pop-ups/QrcodeGenerator.vue";
 
 export default defineComponent({
   name: "AddWorkout",
   props: ["workoutSummary", "lastWorkout"],
+
+  components: {
+    QrcodeGenerator,
+  },
 
   data() {
     return {
