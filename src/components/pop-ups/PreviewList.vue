@@ -26,8 +26,9 @@
         </v-list>
       </v-card-text>
       <v-card-actions>
+        <v-spacer></v-spacer>
         <v-btn color="secondary">
-          Send
+          Generate QR Code
           <QrcodeGenerator :message="'Hello World'"/>
         </v-btn>
       </v-card-actions>
