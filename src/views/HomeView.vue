@@ -45,7 +45,7 @@
           <v-col class="d-flex justify-center">
             <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
               Send
-              <QrcodeGenerator/>
+              <PreviewList v-if="allWorkouts.length > 0" v-bind:allWorkouts="allWorkouts"></PreviewList>
             </v-btn>
           </v-col>
           <v-col class="d-flex justify-center">
@@ -103,14 +103,14 @@
 
 <script>
 import { defineComponent } from "vue";
-import QrcodeGenerator from "@/components/pop-ups/QrcodeGenerator.vue";
+import PreviewList from "@/components/pop-ups/PreviewList.vue";
 
 export default defineComponent({
   name: "AddWorkout",
-  props: ["workoutSummary", "lastWorkout"],
+  props: ["workoutSummary", "lastWorkout", "allWorkouts"],
 
   components: {
-    QrcodeGenerator,
+    PreviewList,
   },
 
   data() {
