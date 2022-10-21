@@ -1,5 +1,5 @@
 <template>
-  <v-dialog activator="parent">
+  <v-dialog v-model="settingsMenu" activator="parent">
     <v-card>
       <v-card-title> Settings </v-card-title>
       <v-card-text>
@@ -11,12 +11,10 @@
           hide-details
           @change="toggleTheme"
         ></v-switch>
-        <v-btn
-          @click="deleteCache"
-        >
-          Delete Cache
-        </v-btn>
       </v-card-text>
+      <v-card-actions>
+        <v-btn color="error" @click="deleteCache"> Delete Cache </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -42,6 +40,7 @@ export default defineComponent({
 
   data() {
     return {
+      settingsMenu: false,
       isDarkMode: true,
     };
   },
@@ -49,7 +48,8 @@ export default defineComponent({
   methods: {
     deleteCache() {
       this.$emit("delete-cache");
-    }
-  }
+      this.settingsMenu = false;
+    },
+  },
 });
 </script>
