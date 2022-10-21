@@ -9,7 +9,7 @@ import HomeView from "./views/HomeView.vue";
 import WorkoutView from "./views/WorkoutView.vue";
 
 const routes = [
-  { name: "home-view", path: "/", component: HomeView },
+  { name: "home-view", path: "/", component: HomeView, props: true },
   {
     name: "workout-view",
     path: "/workout-view",

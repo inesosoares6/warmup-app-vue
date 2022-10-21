@@ -10,21 +10,24 @@
       <v-card-text>
         <v-row class="center-btns">
           <v-col class="done-todo">
-            <v-avatar size="60" :color="'secondary'"> 10 </v-avatar><br />
+            <v-avatar size="60" :color="'secondary'">
+              {{ workoutSummary.done }} </v-avatar
+            ><br />
             <v-divider thickness="0px"></v-divider>
             Done
           </v-col>
           <v-col class="done-todo">
-            <v-avatar size="60" :color="'error'"> 0 </v-avatar><br />
+            <v-avatar size="60" :color="'error'">
+              {{ workoutSummary.todo }} </v-avatar
+            ><br />
             <v-divider thickness="0px"></v-divider>
             To Do
           </v-col>
         </v-row>
         <v-divider class="divider" thickness="1px"></v-divider>
         <v-row class="center-btns">
-          <v-col v-for="(item, index) in items" :key="index">
-            <v-avatar :color="'secondary'"> {{ item.quantity }} </v-avatar
-            ><br />
+          <v-col v-for="(item, index) in workoutSummary.types" :key="index">
+            <v-avatar :color="'secondary'"> {{ item.value }} </v-avatar><br />
             <v-divider thickness="0px"></v-divider>
             {{ item.type }}
           </v-col>
@@ -64,7 +67,7 @@
             <v-text-field
               v-model="time"
               type="number"
-              :rules="timeRules"
+              :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
               label="Max time (min)"
               required
             ></v-text-field>
@@ -102,39 +105,12 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "AddWorkout",
+  props: ["workoutSummary", "lastWorkout"],
 
   data() {
     return {
       time: null,
-      timeRules: [
-        (v) => !!v || "Field is required",
-        (v) => v >= 0 || "Time must be greater than 0",
-      ],
-      items: [
-        {
-          type: "WOD",
-          quantity: 2,
-        },
-        {
-          type: "AFAP",
-          quantity: 3,
-        },
-        {
-          type: "AMRAP",
-          quantity: 3,
-        },
-        {
-          type: "EMOM",
-          quantity: 2,
-        },
-      ],
-      lastWorkout: {},
     };
-  },
-
-  mounted() {
-    if (localStorage.getItem("lastWorkout"))
-      this.lastWorkout = JSON.parse(localStorage.getItem("lastWorkout"));
   },
 });
 </script>

@@ -14,11 +14,11 @@
       </v-col>
     </v-row>
     <v-card
-      v-if="workout.name !== undefined"
-      :title="workout.name"
-      :subtitle="workout.type + ' - ' + workout.time + ' min'"
+      v-if="currentWorkout.name !== undefined"
+      :title="currentWorkout.name"
+      :subtitle="currentWorkout.type + ' - ' + currentWorkout.time + ' min'"
     >
-      <v-card-text v-html="workout.exercises.replaceAll('\n', '<br/>')">
+      <v-card-text v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
     </v-card>
   </v-container>
@@ -29,24 +29,17 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "WorkoutView",
+  props: ["currentWorkout"],
 
   data() {
     return {
       checkbox: false,
-      workout: {},
     };
-  },
-
-  mounted() {
-    if (localStorage.getItem("currentWorkout"))
-      this.workout = JSON.parse(localStorage.getItem("currentWorkout"));
   },
 
   methods: {
     updateWorkout() {
-      this.$emit("update-workout", this.workout);
-      if (this.checkbox)
-        localStorage.setItem("lastWorkout", JSON.stringify(this.workout));
+      if (this.checkbox) this.$emit("update-workout", this.currentWorkout);
     },
   },
 });

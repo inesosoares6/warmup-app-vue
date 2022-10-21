@@ -8,7 +8,7 @@
       </v-btn>
       <v-btn>
         <v-icon>mdi-cog</v-icon>
-        <SettingsMenu></SettingsMenu>
+        <SettingsMenu v-on:delete-cache="deleteCache"></SettingsMenu>
       </v-btn>
     </v-app-bar>
   </div>
@@ -35,6 +35,10 @@ export default defineComponent({
     addWorkout(newWorkout) {
       this.$emit("add-workout", newWorkout);
     },
+    
+    deleteCache() {
+      this.$emit("delete-cache");
+    }
   },
 });
 </script>

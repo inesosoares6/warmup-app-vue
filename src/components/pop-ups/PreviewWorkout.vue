@@ -56,7 +56,7 @@ export default defineComponent({
     },
 
     selectWorkout() {
-      localStorage.setItem("currentWorkout", JSON.stringify(this.workout));
+      this.$emit("select-workout", this.workout);
       this.previewWorkout = false;
     },
   },

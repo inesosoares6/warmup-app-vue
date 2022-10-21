@@ -10,6 +10,7 @@
         :workout="workout"
         v-on:delete-workout="deleteWorkout"
         v-on:edit-workout="editWorkout"
+        v-on:select-workout="selectWorkout"
       ></PreviewWorkout>
 
       <template v-slot:prepend>
@@ -19,7 +20,7 @@
       </template>
       <template v-slot:append>
         <v-avatar outline color="grey">
-          {{workout.completions}}
+          {{ workout.completions }}
         </v-avatar>
       </template>
     </v-list-item>
@@ -46,6 +47,10 @@ export default defineComponent({
 
     editWorkout(workout) {
       this.$emit("edit-workout", workout);
+    },
+
+    selectWorkout(workout) {
+      this.$emit("select-workout", workout);
     },
   },
 });

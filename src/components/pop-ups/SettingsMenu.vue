@@ -11,6 +11,11 @@
           hide-details
           @change="toggleTheme"
         ></v-switch>
+        <v-btn
+          @click="deleteCache"
+        >
+          Delete Cache
+        </v-btn>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -40,5 +45,11 @@ export default defineComponent({
       isDarkMode: true,
     };
   },
+
+  methods: {
+    deleteCache() {
+      this.$emit("delete-cache");
+    }
+  }
 });
 </script>
