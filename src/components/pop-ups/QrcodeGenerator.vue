@@ -6,9 +6,15 @@
         >Read QR Code with another device to import</v-card-subtitle
       >
       <v-card-text class="d-flex justify-center">
-        <VueQRCodeComponent :text="message" :size="200"></VueQRCodeComponent>
+        <div class="border">
+          <VueQRCodeComponent
+            class="qrcode"
+            :text="message"
+            :size="200"
+          ></VueQRCodeComponent>
+        </div>
       </v-card-text>
-      <v-card-text>{{message}}</v-card-text>
+      <v-card-text>{{ message }}</v-card-text>
     </v-card>
   </v-dialog>
 </template>
@@ -33,3 +39,15 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.border {
+  flex: center;
+  width: 240px;
+  background-color: white;
+}
+
+.qrcode {
+  padding: 20px 20px 20px 20px;
+}
+</style>
