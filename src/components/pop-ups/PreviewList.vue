@@ -35,9 +35,12 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary">
+        <v-btn v-if="exportWorkouts" color="secondary">
           Generate QR Code
           <QrcodeGenerator :message="JSON.stringify(workoutList)" />
+        </v-btn>
+        <v-btn v-else color="secondary" @click="importWorkoutsFunction">
+          Import
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -50,7 +53,7 @@ import QrcodeGenerator from "@/components/pop-ups/QrcodeGenerator.vue";
 
 export default defineComponent({
   name: "PreviewList",
-  props: ["allWorkouts"],
+  props: ["allWorkouts", "exportWorkouts"],
 
   components: {
     QrcodeGenerator,
@@ -70,6 +73,11 @@ export default defineComponent({
   },
 
   methods: {
+    importWorkoutsFunction() {
+      this.$emit("import-workouts", this.workoutList);
+      this.previewList = false;
+    },
+
     updateCheckboxes(value) {
       this.selected = new Array(this.allWorkouts.length).fill(value);
     },
@@ -77,7 +85,7 @@ export default defineComponent({
     updateList(insert, newWorkout) {
       if (insert !== false) {
         this.workoutList = [...this.workoutList, newWorkout];
-        if( this.selected.every(v => v === true) ) {
+        if (this.selected.every((v) => v === true)) {
           this.selectedAll = true;
         }
       } else {

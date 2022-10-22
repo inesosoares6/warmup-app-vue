@@ -18,6 +18,7 @@
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
+          v-on:import-workouts="importWorkouts"
         />
       </router-view>
     </v-main>
@@ -27,6 +28,7 @@
 <script>
 import TopToolbar from "./components/TopToolbar.vue";
 import BottomToolbar from "./components/BottomToolbar.vue";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "App",
@@ -122,6 +124,13 @@ export default {
       this.updateSummary(workout, workout.completions, -1);
       this.allWorkouts[objIndex] = { ...workout };
       this.updateSummary(workout, workout.completions, 1);
+    },
+
+    importWorkouts(workouts) {
+      for( const workout of workouts) {
+        workout.id = uuidv4();
+        this.addWorkout(workout);
+      }
     },
 
     selectWorkout(workout) {

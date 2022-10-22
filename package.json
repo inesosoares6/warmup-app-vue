@@ -19,6 +19,7 @@
     "vue": "^3.2.13",
     "vue-qrcode-component": "^2.1.1",
     "vue-router": "^4.1.5",
+    "vue3-qr-reader": "^1.0.0",
     "vuetify": "^3.0.0-beta.0",
     "webfontloader": "^1.0.0"
   },

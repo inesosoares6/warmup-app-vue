@@ -45,12 +45,17 @@
           <v-col class="d-flex justify-center">
             <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
               Send
-              <PreviewList v-if="allWorkouts.length > 0" v-bind:allWorkouts="allWorkouts"></PreviewList>
+              <PreviewList
+                v-if="allWorkouts.length > 0"
+                v-bind:allWorkouts="allWorkouts"
+                v-bind:importWorkouts="false"
+              ></PreviewList>
             </v-btn>
           </v-col>
           <v-col class="d-flex justify-center">
             <v-btn variant="outlined" prepend-icon="mdi-arrow-bottom-left">
               Receive
+              <QrcodeReader v-on:preview-imported-workouts="previewImportedWorkouts" />
             </v-btn>
           </v-col>
         </v-row>
@@ -98,12 +103,21 @@
       <v-card-text v-html="lastWorkout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
     </v-card>
+
+    <PreviewList
+      v-model="imported"
+      v-if="imported && importedWorkouts.length > 0"
+      v-bind:allWorkouts="importedWorkouts"
+      v-bind:importWorkouts="true"
+      v-on:import-workouts="importWorkouts"
+    ></PreviewList>
   </v-container>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
+import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 
 export default defineComponent({
   name: "AddWorkout",
@@ -111,12 +125,26 @@ export default defineComponent({
 
   components: {
     PreviewList,
+    QrcodeReader,
   },
 
   data() {
     return {
       time: null,
+      importedWorkouts: [],
+      imported: false,
     };
+  },
+
+  methods: {
+    importWorkouts(workouts) {
+      this.$emit("import-workouts", workouts);
+    },
+
+    previewImportedWorkouts(workouts) {
+      this.importedWorkouts = JSON.parse(workouts);
+      this.imported = true;
+    },
   },
 });
 </script>
