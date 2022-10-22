@@ -55,7 +55,9 @@
           <v-col class="d-flex justify-center">
             <v-btn variant="outlined" prepend-icon="mdi-arrow-bottom-left">
               Receive
-              <QrcodeReader v-on:preview-imported-workouts="previewImportedWorkouts" />
+              <QrcodeReader
+                v-on:preview-imported-workouts="previewImportedWorkouts"
+              />
             </v-btn>
           </v-col>
         </v-row>
@@ -83,6 +85,7 @@
               class="go-btn"
               prepend-icon="mdi-weight-lifter"
               color="secondary"
+              @click="generateWorkout"
             >
               GO
             </v-btn>
@@ -121,7 +124,7 @@ import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 
 export default defineComponent({
   name: "AddWorkout",
-  props: ["workoutSummary", "lastWorkout", "allWorkouts"],
+  props: ["workoutSummary", "lastWorkout", "allWorkouts", "currentWorkout"],
 
   components: {
     PreviewList,
@@ -137,6 +140,31 @@ export default defineComponent({
   },
 
   methods: {
+    generateWorkout() {
+      const validList =
+        this.time !== null
+          ? this.generateValidWorkoutsList()
+          : [...this.allWorkouts];
+      if (validList.length > 0) {
+        let workout = {};
+        do {
+          workout = validList[Math.floor(Math.random() * validList.length)];
+        } while (workout.id === this.currentWorkout.id);
+        this.$emit("select-workout", workout);
+        this.$router.push({ name: 'workout-view' });
+      } else {
+        //TODO show notification
+      }
+    },
+
+    generateValidWorkoutsList() {
+      let validList = [];
+      for (const workout of this.allWorkouts) {
+        if (workout.time <= this.time) validList = [...validList, workout];
+      }
+      return validList;
+    },
+
     importWorkouts(workouts) {
       this.$emit("import-workouts", workouts);
     },
