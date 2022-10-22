@@ -115,22 +115,8 @@
       v-on:import-workouts="importWorkouts"
     ></PreviewList>
 
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="timeout"
-    >
+    <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
     </v-snackbar>
   </v-container>
 </template>
@@ -155,7 +141,7 @@ export default defineComponent({
       importedWorkouts: [],
       imported: false,
       snackbar: false,
-      text: '',
+      text: "",
       timeout: 2000,
     };
   },
@@ -172,11 +158,12 @@ export default defineComponent({
           workout = validList[Math.floor(Math.random() * validList.length)];
         } while (workout.id === this.currentWorkout.id);
         this.$emit("select-workout", workout);
-        this.$router.push({ name: 'workout-view' });
+        this.$router.push({ name: "workout-view" });
       } else {
         //TODO show notification
         this.snackbar = true;
-        this.text = 'There is no workout with less than '+ this.time + ' minutes.'
+        this.text =
+          "There is no workout with less than " + this.time + " minutes.";
       }
     },
 

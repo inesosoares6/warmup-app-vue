@@ -21,6 +21,10 @@
       <v-card-text v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
     </v-card>
+
+    <v-snackbar v-model="snackbar" :timeout="timeout">
+      {{ text }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -34,7 +38,15 @@ export default defineComponent({
   data() {
     return {
       checkbox: false,
+      snackbar: false,
+      text: "",
+      timeout: 2000,
     };
+  },
+
+  created() {
+    this.snackbar = this.currentWorkout.name === undefined;
+    this.text = 'No workout selected';
   },
 
   methods: {
