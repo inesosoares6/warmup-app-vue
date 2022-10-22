@@ -1,6 +1,13 @@
 <template>
   <v-dialog v-model="previewList" activator="parent">
     <v-card title="Select Workouts">
+      <template v-slot:append>
+        <v-checkbox
+          v-model="selectedAll"
+          hide-details
+          @change="updateListAll()"
+        ></v-checkbox>
+      </template>
       <v-card-text>
         <v-list class="wod-list" lines="two" v-if="allWorkouts.length > 0">
           <v-list-item
@@ -18,8 +25,9 @@
             </template>
             <template v-slot:append>
               <v-checkbox
-                v-model="selected"
+                v-model="selected[index]"
                 hide-details
+                @change="updateList(selected[index], workout)"
               ></v-checkbox>
             </template>
           </v-list-item>
@@ -29,7 +37,7 @@
         <v-spacer></v-spacer>
         <v-btn color="secondary">
           Generate QR Code
-          <QrcodeGenerator :message="'Hello World'"/>
+          <QrcodeGenerator :message="JSON.stringify(workoutList)" />
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -48,13 +56,42 @@ export default defineComponent({
     QrcodeGenerator,
   },
 
+  created() {
+    this.updateCheckboxes(false);
+  },
+
   data() {
     return {
       previewList: false,
-      selected: false,
+      selected: [],
+      selectedAll: false,
+      workoutList: [],
     };
   },
 
-  methods: {},
+  methods: {
+    updateCheckboxes(value) {
+      this.selected = new Array(this.allWorkouts.length).fill(value);
+    },
+
+    updateList(insert, newWorkout) {
+      if (insert !== false) {
+        this.workoutList = [...this.workoutList, newWorkout];
+        if( this.selected.every(v => v === true) ) {
+          this.selectedAll = true;
+        }
+      } else {
+        this.workoutList = this.workoutList.filter(
+          (workout) => workout.id !== newWorkout.id
+        );
+        this.selectedAll = false;
+      }
+    },
+
+    updateListAll() {
+      this.updateCheckboxes(this.selectedAll);
+      this.workoutList = this.selectedAll ? [...this.allWorkouts] : [];
+    },
+  },
 });
 </script>
