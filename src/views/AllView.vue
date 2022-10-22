@@ -27,7 +27,7 @@
       </v-list-item>
     </v-list>
 
-    <v-snackbar class="d-flex justify-center" v-model="snackbar" :timeout="timeout">
+    <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
     </v-snackbar>
   </v-container>
