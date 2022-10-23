@@ -14,7 +14,6 @@
           ></VueQRCodeComponent>
         </div>
       </v-card-text>
-      <v-card-text>{{ message }}</v-card-text>
     </v-card>
   </v-dialog>
 </template>

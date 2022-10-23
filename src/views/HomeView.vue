@@ -180,6 +180,7 @@ export default defineComponent({
     },
 
     importWorkouts(workouts) {
+      this.imported = false;
       this.$emit("import-workouts", workouts);
     },
 

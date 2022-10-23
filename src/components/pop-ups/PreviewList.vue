@@ -35,11 +35,23 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="exportWorkouts" color="secondary">
+        <v-btn
+          v-if="exportWorkouts"
+          color="secondary"
+          :disabled="workoutList.length < 1"
+        >
           Generate QR Code
-          <QrcodeGenerator :message="JSON.stringify(workoutList)" />
+          <QrcodeGenerator
+            v-if="workoutList.length > 0"
+            :message="JSON.stringify(workoutList)"
+          />
         </v-btn>
-        <v-btn v-else color="secondary" @click="importWorkoutsFunction">
+        <v-btn
+          v-else
+          color="secondary"
+          :disabled="workoutList.length < 1"
+          @click="importWorkoutsFunction"
+        >
           Import
         </v-btn>
       </v-card-actions>
@@ -75,7 +87,7 @@ export default defineComponent({
   methods: {
     importWorkoutsFunction() {
       this.$emit("import-workouts", this.workoutList);
-      this.previewList = false;
+      this.$router.push({ name: "all-view" });
     },
 
     updateCheckboxes(value) {
