@@ -152,14 +152,18 @@ export default defineComponent({
         this.time !== null
           ? this.generateValidWorkoutsList()
           : [...this.allWorkouts];
-      if (validList.length > 0) {
+      if (validList.length > 1) {
         let workout = {};
         do {
           workout = validList[Math.floor(Math.random() * validList.length)];
         } while (workout.id === this.currentWorkout.id);
         this.$emit("select-workout", workout);
         this.$router.push({ name: "workout-view" });
-      } else {
+      } else if (validList.length === 1){
+        this.$emit("select-workout", validList[0]);
+        this.$router.push({ name: "workout-view" });
+      }
+      else {
         //TODO show notification
         this.snackbar = true;
         this.text =
