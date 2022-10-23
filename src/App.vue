@@ -114,9 +114,12 @@ export default {
     },
 
     deleteWorkout(id) {
-      this.allWorkouts = this.allWorkouts.filter(
-        (workout) => workout.id !== id
-      );
+      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === id);
+      this.updateSummary(this.allWorkouts[objIndex], this.allWorkouts[objIndex].completions, -1);
+      // this.allWorkouts.splice(objIndex, 1);
+      // this.allWorkouts = this.allWorkouts.filter(
+      //   (workout) => workout.id !== id
+      // );
     },
 
     editWorkout(workout) {
