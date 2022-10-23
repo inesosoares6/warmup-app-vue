@@ -21,6 +21,16 @@
       <v-card-text v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
     </v-card>
+    <v-col class="text-right">
+      <v-btn
+        class="floating-button"
+        color="secondary"
+        icon
+        @click="copyWorkout"
+      >
+        <v-icon>mdi-content-copy</v-icon>
+      </v-btn>
+    </v-col>
 
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
@@ -46,13 +56,47 @@ export default defineComponent({
 
   created() {
     this.snackbar = this.currentWorkout.name === undefined;
-    this.text = 'No workout selected';
+    this.text = "No workout selected";
   },
 
   methods: {
+    copyWorkout() {
+      navigator.clipboard
+        .writeText(this.createStringWorkout())
+        .then(() => {
+          alert("successfully copied");
+        })
+        .catch((error) => {
+          alert(error);
+        });
+      this.snackbar = true;
+      this.text = "Copied workout to clipboard";
+    },
+
+    createStringWorkout() {
+      return (
+        this.currentWorkout.name +
+        "\n" +
+        this.currentWorkout.type +
+        " - " +
+        this.currentWorkout.time +
+        " min" +
+        "\n-------------\n" +
+        this.currentWorkout.exercises
+      );
+    },
+
     updateWorkout() {
       if (this.checkbox) this.$emit("update-workout", this.currentWorkout);
     },
   },
 });
 </script>
+
+<style>
+.floating-button {
+  position: absolute;
+  bottom: 70px;
+  right: 10px;
+}
+</style>
