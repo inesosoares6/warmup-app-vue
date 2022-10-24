@@ -87,30 +87,30 @@ export default {
 
     deleteCache() {
       this.allWorkouts = [];
-      (this.currentWorkout = {}),
-        (this.lastWorkout = {}),
-        (this.workoutSummary = {
-          done: 0,
-          todo: 0,
-          types: [
-            {
-              type: "WOD",
-              value: 0,
-            },
-            {
-              type: "AFAP",
-              value: 0,
-            },
-            {
-              type: "AMRAP",
-              value: 0,
-            },
-            {
-              type: "EMOM",
-              value: 0,
-            },
-          ],
-        });
+      this.currentWorkout = {};
+      this.lastWorkout = {};
+      this.workoutSummary = {
+        done: 0,
+        todo: 0,
+        types: [
+          {
+            type: "WOD",
+            value: 0,
+          },
+          {
+            type: "AFAP",
+            value: 0,
+          },
+          {
+            type: "AMRAP",
+            value: 0,
+          },
+          {
+            type: "EMOM",
+            value: 0,
+          },
+        ],
+      };
     },
 
     deleteWorkout(id) {
