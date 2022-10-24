@@ -87,50 +87,58 @@ export default {
 
     deleteCache() {
       this.allWorkouts = [];
-      this.currentWorkout = {},
-      this.lastWorkout = {},
-      this.workoutSummary = {
-        done: 0,
-        todo: 0,
-        types: [
-          {
-            type: "WOD",
-            value: 0,
-          },
-          {
-            type: "AFAP",
-            value: 0,
-          },
-          {
-            type: "AMRAP",
-            value: 0,
-          },
-          {
-            type: "EMOM",
-            value: 0,
-          },
-        ],
-      };
+      (this.currentWorkout = {}),
+        (this.lastWorkout = {}),
+        (this.workoutSummary = {
+          done: 0,
+          todo: 0,
+          types: [
+            {
+              type: "WOD",
+              value: 0,
+            },
+            {
+              type: "AFAP",
+              value: 0,
+            },
+            {
+              type: "AMRAP",
+              value: 0,
+            },
+            {
+              type: "EMOM",
+              value: 0,
+            },
+          ],
+        });
     },
 
     deleteWorkout(id) {
       var objIndex = this.allWorkouts.findIndex((obj) => obj.id === id);
-      this.updateSummary(this.allWorkouts[objIndex], this.allWorkouts[objIndex].completions, -1);
+      this.updateSummary(
+        this.allWorkouts[objIndex],
+        this.allWorkouts[objIndex].completions,
+        -1
+      );
       // this.allWorkouts.splice(objIndex, 1);
-      // this.allWorkouts = this.allWorkouts.filter(
-      //   (workout) => workout.id !== id
-      // );
+      this.allWorkouts = this.allWorkouts.filter(
+        (workout) => workout.id !== id
+      );
     },
 
     editWorkout(workout) {
       var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
-      this.updateSummary(workout, workout.completions, -1);
+      this.updateSummary(
+        this.allWorkouts[objIndex],
+        this.allWorkouts[objIndex].completions,
+        -1
+      );
       this.allWorkouts[objIndex] = { ...workout };
       this.updateSummary(workout, workout.completions, 1);
     },
 
     importWorkouts(workouts) {
-      for( const workout of workouts) {
+      for (const workout of workouts) {
         workout.id = uuidv4();
         this.addWorkout(workout);
       }
