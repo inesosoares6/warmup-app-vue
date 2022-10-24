@@ -43,28 +43,7 @@ export default {
       allWorkouts: [],
       currentWorkout: {},
       lastWorkout: {},
-      workoutSummary: {
-        done: 0,
-        todo: 0,
-        types: [
-          {
-            type: "WOD",
-            value: 0,
-          },
-          {
-            type: "AFAP",
-            value: 0,
-          },
-          {
-            type: "AMRAP",
-            value: 0,
-          },
-          {
-            type: "EMOM",
-            value: 0,
-          },
-        ],
-      },
+      workoutSummary: this.clearWorkoutSummary(),
     };
   },
 
@@ -85,11 +64,8 @@ export default {
       this.updateSummary(newWorkout, newWorkout.completions, 1);
     },
 
-    deleteCache() {
-      this.allWorkouts = [];
-      this.currentWorkout = {};
-      this.lastWorkout = {};
-      this.workoutSummary = {
+    clearWorkoutSummary() {
+      return {
         done: 0,
         todo: 0,
         types: [
@@ -111,6 +87,13 @@ export default {
           },
         ],
       };
+    },
+
+    deleteCache() {
+      this.allWorkouts = [];
+      this.currentWorkout = {};
+      this.lastWorkout = {};
+      this.workoutSummary = this.clearWorkoutSummary();
     },
 
     deleteWorkout(id) {
