@@ -3,13 +3,13 @@
     <v-list class="wod-list" lines="two" v-if="allWorkouts.length > 0">
       <v-list-item
         v-for="(workout, index) in allWorkouts"
-        :key="index"
+        :key="workout.id"
         :title="workout.name"
         :subtitle="workout.type + ' - ' + workout.time + ' min'"
       >
         <PreviewWorkout
           :workout="workout"
-          v-on:delete-workout="deleteWorkout"
+          v-on:delete-workout="deleteWorkout(index)"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
         ></PreviewWorkout>
@@ -59,8 +59,8 @@ export default defineComponent({
   },
 
   methods: {
-    deleteWorkout(id) {
-      this.$emit("delete-workout", id);
+    deleteWorkout(index) {
+      this.$emit("delete-workout", index);
     },
 
     editWorkout(workout) {

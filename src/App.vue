@@ -96,17 +96,13 @@ export default {
       this.workoutSummary = this.clearWorkoutSummary();
     },
 
-    deleteWorkout(id) {
-      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === id);
+    deleteWorkout(index) {
       this.updateSummary(
-        this.allWorkouts[objIndex],
-        this.allWorkouts[objIndex].completions,
+        this.allWorkouts[index],
+        this.allWorkouts[index].completions,
         -1
       );
-      // this.allWorkouts.splice(objIndex, 1);
-      this.allWorkouts = this.allWorkouts.filter(
-        (workout) => workout.id !== id
-      );
+      this.allWorkouts.splice(index, 1);
     },
 
     editWorkout(workout) {

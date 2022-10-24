@@ -47,7 +47,7 @@ export default defineComponent({
 
   methods: {
     deleteWorkout() {
-      this.$emit("delete-workout", this.workout.id);
+      this.$emit("delete-workout");
       this.previewWorkout = false;
     },
 

@@ -12,7 +12,7 @@
         <v-list class="wod-list" lines="two" v-if="allWorkouts.length > 0">
           <v-list-item
             v-for="(workout, index) in allWorkouts"
-            :key="index"
+            :key="workout.id"
             :title="workout.name"
             :subtitle="workout.type + ' - ' + workout.time + ' min'"
           >
