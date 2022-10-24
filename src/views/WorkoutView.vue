@@ -6,6 +6,7 @@
       </v-col>
       <v-col>
         <v-checkbox
+          v-if="currentWorkout.name !== undefined"
           v-model="checkbox"
           label="Mark as done"
           hide-details
