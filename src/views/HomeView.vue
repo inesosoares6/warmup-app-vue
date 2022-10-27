@@ -48,7 +48,7 @@
               <PreviewList
                 v-if="allWorkouts.length > 0"
                 v-bind:allWorkouts="allWorkouts"
-                v-bind:exportWorkouts="true"
+                v-bind:action="'export'"
               ></PreviewList>
             </v-btn>
           </v-col>
@@ -111,7 +111,7 @@
       v-model="imported"
       v-if="imported && importedWorkouts.length > 0"
       v-bind:allWorkouts="importedWorkouts"
-      v-bind:exportWorkouts="false"
+      v-bind:action="'import'"
       v-on:import-workouts="importWorkouts"
     ></PreviewList>
 

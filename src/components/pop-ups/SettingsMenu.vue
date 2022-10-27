@@ -11,10 +11,30 @@
           hide-details
           @change="toggleTheme"
         ></v-switch>
+
+        <v-divider />
+
+        <h3>Delete</h3>
+        <v-row>
+          <v-col class="d-flex justify-center">
+            <v-btn variant="outlined" color="error">
+              Workouts
+              <PreviewList
+                v-if="allWorkouts.length > 0"
+                v-bind:allWorkouts="allWorkouts"
+                v-bind:action="'delete'"
+                v-on:delete-workouts="deleteWorkouts"
+              ></PreviewList>
+            </v-btn>
+          </v-col>
+          <v-col class="d-flex justify-center">
+            <v-btn variant="outlined" color="error" @click="deleteCache">
+              All Cache
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card-text>
-      <v-card-actions>
-        <v-btn color="error" @click="deleteCache"> Delete Cache </v-btn>
-      </v-card-actions>
+      <v-card-actions> </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -22,9 +42,15 @@
 <script>
 import { defineComponent } from "vue";
 import { useTheme } from "vuetify";
+import PreviewList from "@/components/pop-ups/PreviewList.vue";
 
 export default defineComponent({
   name: "SettingsMenu",
+  props: ["allWorkouts"],
+
+  components: {
+    PreviewList,
+  },
 
   setup() {
     const theme = useTheme();
@@ -50,6 +76,22 @@ export default defineComponent({
       this.$emit("delete-cache");
       this.settingsMenu = false;
     },
+
+    deleteWorkouts(workoutList) {
+      this.$emit("delete-workouts", workoutList);
+      this.settingsMenu = false;
+    },
   },
 });
 </script>
+
+<style>
+.v-divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.v-row {
+  margin-top: 10px;
+}
+</style>

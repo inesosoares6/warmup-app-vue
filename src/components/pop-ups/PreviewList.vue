@@ -36,7 +36,15 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          v-if="exportWorkouts"
+          v-if="action === 'delete'"
+          color="secondary"
+          :disabled="workoutList.length < 1"
+          @click="deleteWorkouts"
+        >
+          Delete</v-btn
+        >
+        <v-btn
+          v-else-if="action === 'export'"
           color="secondary"
           :disabled="workoutList.length < 1"
         >
@@ -50,7 +58,7 @@
           v-else
           color="secondary"
           :disabled="workoutList.length < 1"
-          @click="importWorkoutsFunction"
+          @click="importWorkouts"
         >
           Import
         </v-btn>
@@ -65,7 +73,7 @@ import QrcodeGenerator from "@/components/pop-ups/QrcodeGenerator.vue";
 
 export default defineComponent({
   name: "PreviewList",
-  props: ["allWorkouts", "exportWorkouts"],
+  props: ["allWorkouts", "action"],
 
   components: {
     QrcodeGenerator,
@@ -85,7 +93,12 @@ export default defineComponent({
   },
 
   methods: {
-    importWorkoutsFunction() {
+    deleteWorkouts(){
+      this.$emit("delete-workouts", this.workoutList);
+      this.previewList = false;
+    },
+
+    importWorkouts() {
       this.$emit("import-workouts", this.workoutList);
       this.$router.push({ name: "all-view" });
     },

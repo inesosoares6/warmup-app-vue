@@ -7,14 +7,16 @@
       <template v-slot:append>
         <v-btn icon color="grey">
           <v-icon>mdi-pencil</v-icon>
-          <EditWorkout v-bind:workout="workout" v-on:edit-workout="editWorkout"/>
+          <EditWorkout
+            v-bind:workout="workout"
+            v-on:edit-workout="editWorkout"
+          />
         </v-btn>
       </template>
       <v-card-text v-html="workout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer
-        ><v-btn color="error" @click="deleteWorkout"> Delete </v-btn>
+        <v-spacer></v-spacer>
         <v-btn
           color="secondary"
           @click="selectWorkout"
@@ -46,11 +48,6 @@ export default defineComponent({
   },
 
   methods: {
-    deleteWorkout() {
-      this.$emit("delete-workout");
-      this.previewWorkout = false;
-    },
-
     editWorkout(workout) {
       this.$emit("edit-workout", workout);
     },

@@ -8,7 +8,11 @@
       </v-btn>
       <v-btn>
         <v-icon>mdi-cog</v-icon>
-        <SettingsMenu v-on:delete-cache="deleteCache"></SettingsMenu>
+        <SettingsMenu
+          :allWorkouts="allWorkouts"
+          v-on:delete-cache="deleteCache"
+          v-on:delete-workouts="deleteWorkouts"
+        ></SettingsMenu>
       </v-btn>
     </v-app-bar>
   </div>
@@ -21,6 +25,7 @@ import AddWorkout from "./pop-ups/AddWorkout.vue";
 
 export default defineComponent({
   name: "TopToolbar",
+  props: ["allWorkouts"],
 
   components: {
     SettingsMenu,
@@ -35,10 +40,14 @@ export default defineComponent({
     addWorkout(newWorkout) {
       this.$emit("add-workout", newWorkout);
     },
-    
+
     deleteCache() {
       this.$emit("delete-cache");
-    }
+    },
+
+    deleteWorkouts(workoutList) {
+      this.$emit("delete-workouts", workoutList);
+    },
   },
 });
 </script>

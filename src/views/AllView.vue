@@ -2,14 +2,13 @@
   <v-container>
     <v-list class="wod-list" lines="two" v-if="allWorkouts.length > 0">
       <v-list-item
-        v-for="(workout, index) in allWorkouts"
+        v-for="workout in allWorkouts"
         :key="workout.id"
         :title="workout.name"
         :subtitle="workout.type + ' - ' + workout.time + ' min'"
       >
         <PreviewWorkout
           :workout="workout"
-          v-on:delete-workout="deleteWorkout(index)"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
         ></PreviewWorkout>
@@ -59,10 +58,6 @@ export default defineComponent({
   },
 
   methods: {
-    deleteWorkout(index) {
-      this.$emit("delete-workout", index);
-    },
-
     editWorkout(workout) {
       this.$emit("edit-workout", workout);
     },

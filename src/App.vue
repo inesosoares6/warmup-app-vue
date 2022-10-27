@@ -2,8 +2,10 @@
   <v-app>
     <BottomToolbar></BottomToolbar>
     <TopToolbar
+      :allWorkouts="allWorkouts"
       v-on:add-workout="addWorkout"
       v-on:delete-cache="deleteCache"
+      v-on:delete-workouts="deleteWorkouts"
     ></TopToolbar>
     <v-main>
       <router-view v-slot="{ Component, route }">
@@ -14,7 +16,6 @@
           :workoutSummary="workoutSummary"
           :currentWorkout="currentWorkout"
           :lastWorkout="lastWorkout"
-          v-on:delete-workout="deleteWorkout"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
@@ -60,7 +61,7 @@ export default {
 
   methods: {
     addWorkout(newWorkout) {
-      this.allWorkouts = [...this.allWorkouts, newWorkout];
+      this.allWorkouts.push(newWorkout);
       this.updateSummary(newWorkout, newWorkout.completions, 1);
     },
 
@@ -96,13 +97,23 @@ export default {
       this.workoutSummary = this.clearWorkoutSummary();
     },
 
-    deleteWorkout(index) {
-      this.updateSummary(
-        this.allWorkouts[index],
-        this.allWorkouts[index].completions,
-        -1
-      );
-      this.allWorkouts.splice(index, 1);
+    deleteWorkouts(workoutList) {
+      if (workoutList.length === this.allWorkouts.length) {
+        this.allWorkouts = [];
+        this.workoutSummary = this.clearWorkoutSummary();
+      } else {
+        for (const workout of workoutList) {
+          var index = this.allWorkouts.findIndex(
+            (obj) => obj.id === workout.id
+          );
+          this.updateSummary(
+            this.allWorkouts[index],
+            this.allWorkouts[index].completions,
+            -1
+          );
+          this.allWorkouts.splice(index, 1);
+        }
+      }
     },
 
     editWorkout(workout) {
