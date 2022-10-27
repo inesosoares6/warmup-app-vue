@@ -24,6 +24,7 @@
     </v-card>
     <v-col class="text-right">
       <v-btn
+        v-if="currentWorkout.name !== undefined"
         class="floating-button"
         color="secondary"
         icon
@@ -41,6 +42,7 @@
 
 <script>
 import { defineComponent } from "vue";
+import { Clipboard } from "@capacitor/clipboard";
 
 export default defineComponent({
   name: "WorkoutView",
@@ -62,14 +64,17 @@ export default defineComponent({
 
   methods: {
     copyWorkout() {
-      navigator.clipboard
-        .writeText(this.createStringWorkout())
-        .then(() => {
-          alert("successfully copied");
-        })
-        .catch((error) => {
-          alert(error);
-        });
+      // navigator.clipboard
+      //   .writeText(this.createStringWorkout())
+      //   .then(() => {
+      //     alert("successfully copied");
+      //   })
+      //   .catch((error) => {
+      //     alert(error);
+      //   });
+      Clipboard.write({
+        string: this.createStringWorkout(),
+      });
       this.snackbar = true;
       this.text = "Copied workout to clipboard";
     },
