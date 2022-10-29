@@ -37,7 +37,7 @@
         <v-spacer></v-spacer>
         <v-btn
           v-if="action === 'delete'"
-          color="secondary"
+          color="error"
           :disabled="workoutList.length < 1"
           @click="deleteWorkouts"
         >
@@ -48,10 +48,10 @@
           color="secondary"
           :disabled="workoutList.length < 1"
         >
-          Generate QR Code
+          Generate
           <QrcodeGenerator
             v-if="workoutList.length > 0"
-            :message="JSON.stringify(workoutList)"
+            :workoutList="workoutList"
           />
         </v-btn>
         <v-btn

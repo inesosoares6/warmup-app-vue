@@ -34,7 +34,10 @@
       </v-btn>
     </v-col>
 
-    <v-snackbar v-model="snackbar" :timeout="timeout">
+    <v-snackbar v-model="snackbar" :timeout="timeout" 
+      color="secondary"
+      rounded="pill"
+      variant="outlined">
       {{ text }}
     </v-snackbar>
   </v-container>
