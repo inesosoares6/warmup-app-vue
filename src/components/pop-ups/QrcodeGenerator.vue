@@ -27,7 +27,6 @@
         <v-card-text class="d-flex justify-center">
           <v-text-field
             v-model="name"
-            :rules="[(v) => !!v || 'Field is required']"
             label="File name"
             required
             hide-details
@@ -36,7 +35,6 @@
         <v-card-actions>
           <v-spacer></v-spacer
           ><v-btn
-            :disabled="name.length === 0"
             color="secondary"
             @click="downloadFile"
           >
@@ -75,15 +73,19 @@ export default defineComponent({
 
   methods: {
     downloadFile() {
-      const blob = new Blob([JSON.stringify(this.workoutList, null, 4)], {
-        type: "application/json",
-      });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = this.name + ".json";
-      link.click();
-      URL.revokeObjectURL(link.href);
-      this.qrcodeGenerator = false;
+      try {
+        const blob = new Blob([JSON.stringify(this.workoutList, null, 4)], {
+          type: "application/json",
+        });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = (this.name.length === 0 ? 'Workout' : this.name ) + ".json";
+        link.click();
+        URL.revokeObjectURL(link.href);
+        this.qrcodeGenerator = false;
+      } catch (error) {
+        alert(error);
+      }
     },
   },
 });
