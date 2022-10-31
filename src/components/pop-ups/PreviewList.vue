@@ -134,3 +134,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.wod-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+</style>
