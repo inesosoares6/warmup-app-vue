@@ -76,7 +76,7 @@ export default defineComponent({
     };
   },
 
-  created() {
+  updated() {
     this.file = this.workoutList.length > 1;
   },
 
