@@ -14,10 +14,15 @@
       </v-card-title>
       <div v-if="!showCamera">
         <v-card-subtitle
-          >Select the QR Code image of the workouts</v-card-subtitle
+          >Select the workouts file</v-card-subtitle
         >
         <v-card-text>
-          <qr-capture @decode="onDecode" class="mb"></qr-capture>
+          <v-file-input
+          type="file"
+          label="Import workouts"
+          accept=".json"
+          @change="importFile"
+          hide-details />
         </v-card-text>
       </div>
       <div v-else>
@@ -36,15 +41,13 @@
 
 <script>
 import { defineComponent} from "vue";
-import { QrStream, QrCapture } from "vue3-qr-reader";
+import { QrStream } from "vue3-qr-reader";
 
 export default defineComponent({
   name: "QrcodeReader",
-  props: ["message"],
 
   components: {
     QrStream,
-    QrCapture,
   },
 
   data() {
@@ -56,9 +59,22 @@ export default defineComponent({
 
   methods: {
     onDecode(data) {
-      this.$emit("preview-imported-workouts", data);
+      this.openPreviewList(data);
+    },
+
+    openPreviewList(list) {
+      this.$emit("preview-imported-workouts", list);
       this.qrcodeReader = false;
-    }
+    },
+
+    importFile(event) {
+      const file = event.target.files[0];
+      var reader = new FileReader();
+      reader.addEventListener("load", () => {
+        this.openPreviewList(reader.result);
+      });
+      reader.readAsText(file);
+    },
   },
 });
 </script>
