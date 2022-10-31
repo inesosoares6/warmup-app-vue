@@ -9,7 +9,7 @@
         ></v-checkbox>
       </template>
       <v-card-text>
-        <v-list class="wod-list" lines="two" v-if="allWorkouts.length > 0">
+        <v-list class="preview-wod-list" lines="two" v-if="allWorkouts.length > 0">
           <v-list-item
             v-for="(workout, index) in allWorkouts"
             :key="workout.id"
@@ -135,8 +135,8 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.wod-list {
+<style scoped>
+.preview-wod-list {
   max-height: 500px;
   overflow-y: auto;
 }
