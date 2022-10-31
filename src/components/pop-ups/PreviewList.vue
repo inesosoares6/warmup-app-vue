@@ -52,6 +52,7 @@
           <QrcodeGenerator
             v-if="workoutList.length > 0"
             :workoutList="workoutList"
+            v-on:close-menu="downloadedWorkouts"
           />
         </v-btn>
         <v-btn
@@ -95,6 +96,11 @@ export default defineComponent({
   methods: {
     deleteWorkouts(){
       this.$emit("delete-workouts", this.workoutList);
+      this.previewList = false;
+    },
+
+    downloadedWorkouts(fileName) {
+      this.$emit("downloaded-workouts", fileName);
       this.previewList = false;
     },
 

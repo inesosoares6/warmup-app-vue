@@ -49,6 +49,7 @@
                 v-if="allWorkouts.length > 0"
                 v-bind:allWorkouts="allWorkouts"
                 v-bind:action="'export'"
+                v-on:downloaded-workouts="downloadedWorkouts"
               ></PreviewList>
             </v-btn>
           </v-col>
@@ -147,6 +148,11 @@ export default defineComponent({
   },
 
   methods: {
+    downloadedWorkouts(fileName) {
+      this.text = fileName + " exported to Documents folder."
+      this.snackbar = true;
+    },
+
     generateWorkout() {
       const validList =
         this.time !== null

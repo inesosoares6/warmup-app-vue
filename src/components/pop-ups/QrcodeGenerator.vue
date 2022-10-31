@@ -21,6 +21,15 @@
             ></VueQRCodeComponent>
           </div>
         </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer
+          ><v-btn
+            color="secondary"
+            @click="closeMenu"
+          >
+            Done
+          </v-btn>
+        </v-card-actions>
       </div>
       <div v-else>
         <v-card-subtitle>Download and import in another device</v-card-subtitle>
@@ -49,6 +58,7 @@
 <script>
 import { defineComponent } from "vue";
 import VueQRCodeComponent from "vue-qrcode-component";
+import { Filesystem, Directory, Encoding  } from '@capacitor/filesystem';
 
 export default defineComponent({
   name: "QrcodeGenerator",
@@ -63,7 +73,6 @@ export default defineComponent({
       qrcodeGenerator: false,
       size: 200,
       file: false,
-      name: "",
     };
   },
 
@@ -72,19 +81,22 @@ export default defineComponent({
   },
 
   methods: {
-    downloadFile() {
+    closeMenu() {
+      this.qrcodeGenerator = false;
+      this.$emit("close-menu", (this.name.length === 0 ? 'Workout' : this.name ) + ".json");
+    },
+
+    async downloadFile() {
       try {
-        const blob = new Blob([JSON.stringify(this.workoutList, null, 4)], {
-          type: "application/json",
-        });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = (this.name.length === 0 ? 'Workout' : this.name ) + ".json";
-        link.click();
-        URL.revokeObjectURL(link.href);
-        this.qrcodeGenerator = false;
-      } catch (error) {
-        alert(error);
+        await Filesystem.writeFile({
+          path: (this.name.length === 0 ? 'Workout' : this.name ) + ".json",
+          data: JSON.stringify(this.workoutList, null, 4),
+          directory: Directory.Documents,
+          encoding: Encoding.UTF8
+        })
+        this.closeMenu();
+      } catch(e) {
+        alert('Unable to write file', e);
       }
     },
   },
