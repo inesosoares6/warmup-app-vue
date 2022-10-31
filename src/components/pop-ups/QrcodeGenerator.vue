@@ -73,6 +73,7 @@ export default defineComponent({
       qrcodeGenerator: false,
       size: 200,
       file: false,
+      name: "",
     };
   },
 
