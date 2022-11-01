@@ -34,11 +34,13 @@
       </v-btn>
     </v-col>
 
-    <v-snackbar v-model="snackbar" :timeout="timeout" 
-      color="secondary"
-      rounded="pill"
-      variant="outlined">
+    <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
+      <template v-slot:actions>
+        <v-btn color="error" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
     </v-snackbar>
   </v-container>
 </template>

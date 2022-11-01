@@ -137,7 +137,7 @@ export default {
       this.currentWorkout = {};
       this.lastWorkout = {};
       this.workoutSummary = this.clearWorkoutSummary();
-      this.timeline = this.this.clearTimeline();
+      this.timeline = this.clearTimeline();
     },
 
     deleteWorkouts(workoutList) {

@@ -79,7 +79,7 @@
     </v-card> -->
 
     <v-card>
-      <v-card-title> 
+      <v-card-title>
         <v-icon color="secondary">mdi-checkbox-marked-circle-outline</v-icon>
         Week Overview
       </v-card-title>
@@ -91,8 +91,10 @@
             :key="index"
             :dot-color="timeline[index].color"
           >
-          <template v-if="index % 2 !== 0"> {{ item.day }} </template>
-          <template v-if="index % 2 === 0" v-slot:opposite> {{ item.day }} </template>
+            <template v-if="index % 2 !== 0"> {{ item.day }} </template>
+            <template v-if="index % 2 === 0" v-slot:opposite>
+              {{ item.day }}
+            </template>
           </v-timeline-item>
         </v-timeline>
       </v-card-text>
@@ -138,6 +140,11 @@
 
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
+      <template v-slot:actions>
+        <v-btn color="error" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
     </v-snackbar>
   </v-container>
 </template>
@@ -149,7 +156,13 @@ import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 
 export default defineComponent({
   name: "AddWorkout",
-  props: ["workoutSummary", "lastWorkout", "allWorkouts", "currentWorkout", "timeline"],
+  props: [
+    "workoutSummary",
+    "lastWorkout",
+    "allWorkouts",
+    "currentWorkout",
+    "timeline",
+  ],
 
   components: {
     PreviewList,
