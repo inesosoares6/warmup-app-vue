@@ -141,7 +141,7 @@
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
       <template v-slot:actions>
-        <v-btn color="error" variant="text" @click="snackbar = false">
+        <v-btn :color="this.color" variant="text" @click="snackbar = false">
           Close
         </v-btn>
       </template>
@@ -175,6 +175,7 @@ export default defineComponent({
       importedWorkouts: [],
       imported: false,
       snackbar: false,
+      color: "",
       text: "",
       timeout: 2000,
     };
@@ -185,6 +186,7 @@ export default defineComponent({
       if (fileName !== "") {
         this.text = fileName + " exported to Documents folder.";
         this.snackbar = true;
+        this.color = "secondary";
       }
     },
 
@@ -205,6 +207,7 @@ export default defineComponent({
         this.$router.push({ name: "workout-view" });
       } else {
         this.snackbar = true;
+        this.color = "error";
         this.text =
           "There is no workout with less than " + this.time + " minutes.";
       }
