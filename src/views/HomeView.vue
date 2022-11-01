@@ -95,7 +95,7 @@
       </v-card-text>
     </v-card>
     <v-divider thickness="0px"></v-divider>
-    <v-card v-if="lastWorkout.name !== undefined">
+    <!-- <v-card v-if="lastWorkout.name !== undefined">
       <v-card-title>
         <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
         Last Workout
@@ -105,6 +105,26 @@
         <div>{{ lastWorkout.type + " - " + lastWorkout.time + " min" }}</div>
       </v-card-subtitle>
       <v-card-text v-html="lastWorkout.exercises.replaceAll('\n', '<br/>')">
+      </v-card-text>
+    </v-card> -->
+
+    <v-card>
+      <v-card-title> 
+        <v-icon color="secondary">mdi-checkbox-marked-circle-outline</v-icon>
+        Workouts this week 
+      </v-card-title>
+      <v-card-text>
+        <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
+          <v-timeline-item
+            v-for="(item, index) in timeline"
+            size="x-small"
+            :key="index"
+            :dot-color="timeline[index].color"
+          >
+          <template v-if="index % 2 !== 0"> {{ item.day }} </template>
+          <template v-if="index % 2 === 0" v-slot:opposite> {{ item.day }} </template>
+          </v-timeline-item>
+        </v-timeline>
       </v-card-text>
     </v-card>
 
@@ -129,7 +149,7 @@ import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 
 export default defineComponent({
   name: "AddWorkout",
-  props: ["workoutSummary", "lastWorkout", "allWorkouts", "currentWorkout"],
+  props: ["workoutSummary", "lastWorkout", "allWorkouts", "currentWorkout", "timeline"],
 
   components: {
     PreviewList,
@@ -149,7 +169,7 @@ export default defineComponent({
 
   methods: {
     downloadedWorkouts(fileName) {
-      this.text = fileName + " exported to Documents folder."
+      this.text = fileName + " exported to Documents folder.";
       this.snackbar = true;
     },
 
@@ -165,11 +185,10 @@ export default defineComponent({
         } while (workout.id === this.currentWorkout.id);
         this.$emit("select-workout", workout);
         this.$router.push({ name: "workout-view" });
-      } else if (validList.length === 1){
+      } else if (validList.length === 1) {
         this.$emit("select-workout", validList[0]);
         this.$router.push({ name: "workout-view" });
-      }
-      else {
+      } else {
         //TODO show notification
         this.snackbar = true;
         this.text =

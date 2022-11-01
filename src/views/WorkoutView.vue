@@ -67,14 +67,6 @@ export default defineComponent({
 
   methods: {
     copyWorkout() {
-      // navigator.clipboard
-      //   .writeText(this.createStringWorkout())
-      //   .then(() => {
-      //     alert("successfully copied");
-      //   })
-      //   .catch((error) => {
-      //     alert(error);
-      //   });
       Clipboard.write({
         string: this.createStringWorkout(),
       });
