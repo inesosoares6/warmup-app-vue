@@ -25,7 +25,7 @@
           <v-spacer></v-spacer
           ><v-btn
             color="secondary"
-            @click="closeMenu"
+            @click="closeMenu('')"
           >
             Done
           </v-btn>
@@ -82,20 +82,21 @@ export default defineComponent({
   },
 
   methods: {
-    closeMenu() {
+    closeMenu(fileName) {
       this.qrcodeGenerator = false;
-      this.$emit("close-menu", (this.name.length === 0 ? 'Workout' : this.name ) + ".json");
+      this.$emit("close-menu", fileName);
     },
 
     async downloadFile() {
       try {
+        const fileName = (this.name.length === 0 ? 'Workout' : this.name ) + ".json";
         await Filesystem.writeFile({
-          path: (this.name.length === 0 ? 'Workout' : this.name ) + ".json",
+          path: fileName,
           data: JSON.stringify(this.workoutList, null, 4),
           directory: Directory.Documents,
           encoding: Encoding.UTF8
         })
-        this.closeMenu();
+        this.closeMenu(fileName);
       } catch(e) {
         alert('Unable to write file', e);
       }

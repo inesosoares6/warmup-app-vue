@@ -182,8 +182,10 @@ export default defineComponent({
 
   methods: {
     downloadedWorkouts(fileName) {
-      this.text = fileName + " exported to Documents folder.";
-      this.snackbar = true;
+      if (fileName !== "") {
+        this.text = fileName + " exported to Documents folder.";
+        this.snackbar = true;
+      }
     },
 
     generateWorkout() {
