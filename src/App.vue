@@ -16,6 +16,7 @@
           :workoutSummary="workoutSummary"
           :currentWorkout="currentWorkout"
           :lastWorkout="lastWorkout"
+          :timeline="timeline"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
@@ -45,6 +46,8 @@ export default {
       currentWorkout: {},
       lastWorkout: {},
       workoutSummary: this.clearWorkoutSummary(),
+      timeline: this.clearTimeline(),
+      weekNumber: 0,
     };
   },
 
@@ -57,12 +60,51 @@ export default {
       this.currentWorkout = JSON.parse(localStorage.getItem("currentWorkout"));
     if (localStorage.getItem("lastWorkout"))
       this.lastWorkout = JSON.parse(localStorage.getItem("lastWorkout"));
+    if (localStorage.getItem("timeline"))
+      this.timeline = JSON.parse(localStorage.getItem("timeline"));
+    if (localStorage.getItem("weekNumber"))
+      this.weekNumber = localStorage.getItem("weekNumber");
+
+    this.updateWeek();
   },
 
   methods: {
     addWorkout(newWorkout) {
       this.allWorkouts.push(newWorkout);
       this.updateSummary(newWorkout, newWorkout.completions, 1);
+    },
+
+    clearTimeline() {
+      return [
+        {
+          day: "Mon",
+          color: "error",
+        },
+        {
+          day: "Tue",
+          color: "error",
+        },
+        {
+          day: "Wed",
+          color: "error",
+        },
+        {
+          day: "Thu",
+          color: "error",
+        },
+        {
+          day: "Fri",
+          color: "error",
+        },
+        {
+          day: "Sat",
+          color: "error",
+        },
+        {
+          day: "Sun",
+          color: "error",
+        },
+      ];
     },
 
     clearWorkoutSummary() {
@@ -95,6 +137,7 @@ export default {
       this.currentWorkout = {};
       this.lastWorkout = {};
       this.workoutSummary = this.clearWorkoutSummary();
+      this.timeline = this.this.clearTimeline();
     },
 
     deleteWorkouts(workoutList) {
@@ -138,6 +181,27 @@ export default {
       this.currentWorkout = workout;
     },
 
+    updateTimeline(day) {
+      this.timeline.forEach((item) => {
+        if (item.day === day) {
+          item.color = "secondary";
+        }
+      });
+    },
+
+    updateWeek() {
+      const currentDate = new Date();
+      const startDate = new Date(currentDate.getFullYear(), 0, 1);
+      const days = Math.floor(
+        (currentDate - startDate) / (24 * 60 * 60 * 1000)
+      );
+      const nextWeekNumber = Math.ceil(days / 7);
+      if(this.weekNumber !== nextWeekNumber) {
+        this.clearTimeline();
+        this.weekNumber = nextWeekNumber;
+      }
+    },
+
     updateWorkout(workout) {
       this.lastWorkout = { ...workout };
       this.allWorkouts.forEach((item, index) => {
@@ -148,6 +212,7 @@ export default {
           this.allWorkouts[index].completions =
             this.allWorkouts[index].completions + 1;
           this.updateSummary(workout, 1, 1);
+          this.updateTimeline(new Date().toDateString().substring(0, 3));
         }
       });
     },
@@ -191,6 +256,19 @@ export default {
         localStorage.setItem("lastWorkout", JSON.stringify(this.lastWorkout));
       },
       deep: true,
+    },
+
+    timeline: {
+      handler() {
+        localStorage.setItem("timeline", JSON.stringify(this.timeline));
+      },
+      deep: true,
+    },
+
+    weekNumber: {
+      handler() {
+        localStorage.setItem("weekNumber", this.weekNumber);
+      },
     },
 
     workoutSummary: {
