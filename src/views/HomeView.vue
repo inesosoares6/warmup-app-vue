@@ -37,36 +37,6 @@
     <v-divider thickness="0px"></v-divider>
     <v-card>
       <v-card-title>
-        <v-icon color="secondary">mdi-swap-horizontal</v-icon>
-        Exchange WODs
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col class="d-flex justify-center">
-            <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
-              Send
-              <PreviewList
-                v-if="allWorkouts.length > 0"
-                v-bind:allWorkouts="allWorkouts"
-                v-bind:action="'export'"
-                v-on:downloaded-workouts="downloadedWorkouts"
-              ></PreviewList>
-            </v-btn>
-          </v-col>
-          <v-col class="d-flex justify-center">
-            <v-btn variant="outlined" prepend-icon="mdi-arrow-bottom-left">
-              Receive
-              <QrcodeReader
-                v-on:preview-imported-workouts="previewImportedWorkouts"
-              />
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-    <v-divider thickness="0px"></v-divider>
-    <v-card>
-      <v-card-title>
         <v-icon class="dumbbell-icon" color="secondary">mdi-dumbbell</v-icon>
         Generate Random
       </v-card-title>
@@ -111,7 +81,7 @@
     <v-card>
       <v-card-title> 
         <v-icon color="secondary">mdi-checkbox-marked-circle-outline</v-icon>
-        Workouts this week 
+        Week Overview
       </v-card-title>
       <v-card-text>
         <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
@@ -125,6 +95,36 @@
           <template v-if="index % 2 === 0" v-slot:opposite> {{ item.day }} </template>
           </v-timeline-item>
         </v-timeline>
+      </v-card-text>
+    </v-card>
+    <v-divider thickness="0px"></v-divider>
+    <v-card>
+      <v-card-title>
+        <v-icon color="secondary">mdi-swap-horizontal</v-icon>
+        Exchange WODs
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col class="d-flex justify-center">
+            <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
+              Send
+              <PreviewList
+                v-if="allWorkouts.length > 0"
+                v-bind:allWorkouts="allWorkouts"
+                v-bind:action="'export'"
+                v-on:downloaded-workouts="downloadedWorkouts"
+              ></PreviewList>
+            </v-btn>
+          </v-col>
+          <v-col class="d-flex justify-center">
+            <v-btn variant="outlined" prepend-icon="mdi-arrow-bottom-left">
+              Receive
+              <QrcodeReader
+                v-on:preview-imported-workouts="previewImportedWorkouts"
+              />
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
 
@@ -189,7 +189,6 @@ export default defineComponent({
         this.$emit("select-workout", validList[0]);
         this.$router.push({ name: "workout-view" });
       } else {
-        //TODO show notification
         this.snackbar = true;
         this.text =
           "There is no workout with less than " + this.time + " minutes.";
