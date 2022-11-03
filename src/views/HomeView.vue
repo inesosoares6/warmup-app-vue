@@ -6,7 +6,7 @@
         :show-arrows="false"
         hide-delimiter-background
         delimiter-icon="mdi-square"
-        height="330"
+        height="320"
       >
         <v-carousel-item>
           <v-card class="cards-carousel">
@@ -34,17 +34,19 @@
                 </v-col>
               </v-row>
               <v-divider class="divider" thickness="1px"></v-divider>
-              <v-row class="center-btns">
-                <v-col
+              <v-slide-group>
+                <v-slide-group-item
                   v-for="(item, index) in workoutSummary.types"
                   :key="index"
                 >
-                  <v-avatar :color="'secondary'"> {{ item.value }} </v-avatar
-                  ><br />
-                  <v-divider thickness="0px"></v-divider>
-                  {{ item.type }}
-                </v-col>
-              </v-row>
+                  <div class="types-avatar">
+                    <v-avatar :color="'secondary'"> {{ item.value }} </v-avatar
+                    ><br />
+                    <v-divider thickness="0px"></v-divider>
+                    {{ item.type }}
+                  </div>
+                </v-slide-group-item>
+              </v-slide-group>
             </v-card-text>
           </v-card>
         </v-carousel-item>
@@ -202,14 +204,6 @@ export default defineComponent({
       color: "",
       text: "",
       timeout: 2000,
-      colors: [
-        "green",
-        "secondary",
-        "yellow darken-4",
-        "red lighten-2",
-        "orange darken-1",
-      ],
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
 
@@ -272,8 +266,8 @@ export default defineComponent({
   margin-bottom: 5px;
 }
 .divider {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .go-btn {
@@ -294,7 +288,17 @@ export default defineComponent({
 }
 
 .cards-carousel {
-  height: 280px;
+  height: 270px;
   overflow-y: auto;
+}
+
+.types-avatar {
+  text-align: center;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.v-slide-group__content {
+  justify-content: center;
 }
 </style>
