@@ -12,7 +12,7 @@
           @change="toggleTheme"
         ></v-switch>
         <v-switch
-          v-model="groupByType"
+          v-model="groupByTypeEnabled"
           label="Group Workouts by Type"
           color="secondary"
           inset
@@ -54,10 +54,14 @@ import PreviewList from "@/components/pop-ups/PreviewList.vue";
 
 export default defineComponent({
   name: "SettingsMenu",
-  props: ["allWorkouts"],
+  props: ["allWorkouts", "groupByType"],
 
   components: {
     PreviewList,
+  },
+
+  updated() {
+    this.groupByTypeEnabled = this.groupByType;
   },
 
   setup() {
@@ -76,7 +80,7 @@ export default defineComponent({
     return {
       settingsMenu: false,
       isDarkMode: true,
-      groupByType: false,
+      groupByTypeEnabled: false,
     };
   },
 
@@ -92,8 +96,7 @@ export default defineComponent({
     },
 
     groupByTypeFunction() {
-      console.log("group by type");
-      this.$emit("group-by-types", this.groupByType);
+      this.$emit("group-by-types", this.groupByTypeEnabled);
     },
   },
 });

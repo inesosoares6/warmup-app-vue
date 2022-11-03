@@ -3,6 +3,7 @@
     <BottomToolbar></BottomToolbar>
     <TopToolbar
       :allWorkouts="allWorkouts"
+      :groupByType="groupByType"
       v-on:add-workout="addWorkout"
       v-on:delete-cache="deleteCache"
       v-on:delete-workouts="deleteWorkouts"
@@ -71,7 +72,7 @@ export default {
     if (localStorage.getItem("weekNumber"))
       this.weekNumber = localStorage.getItem("weekNumber");
     if (localStorage.getItem("groupByType"))
-      this.groupByType = localStorage.getItem("groupByType");
+      this.groupByType = localStorage.getItem("groupByType")==='true' ? true : false;
 
     this.updateWeek();
   },

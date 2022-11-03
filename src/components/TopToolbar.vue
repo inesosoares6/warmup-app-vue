@@ -10,6 +10,7 @@
         <v-icon>mdi-cog</v-icon>
         <SettingsMenu
           :allWorkouts="allWorkouts"
+          :groupByType="groupByType"
           v-on:delete-cache="deleteCache"
           v-on:delete-workouts="deleteWorkouts"
           v-on:group-by-types="groupByTypeFunction"
@@ -26,7 +27,7 @@ import AddWorkout from "./pop-ups/AddWorkout.vue";
 
 export default defineComponent({
   name: "TopToolbar",
-  props: ["allWorkouts"],
+  props: ["allWorkouts", "groupByType"],
 
   components: {
     SettingsMenu,
