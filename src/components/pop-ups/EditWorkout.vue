@@ -20,7 +20,7 @@
           <v-text-field v-if="workoutEdited.type === '--> Add new type'"
             v-model="newType"
             :rules="nameRules"
-            label="Add new type"
+            label="New type"
             required
           ></v-text-field>
           <v-row
