@@ -229,12 +229,20 @@ export default {
       if (workout.completions > 0) {
         this.workoutSummary.done =
           this.workoutSummary.done + numTimes * addRemove;
-        if(this.workoutSummary.types.some((e) => e === workout.type)) {
-          let index = this.workoutSummary.types.indexOf(workout.type);
+        if (this.workoutSummary.types.some((e) => e.type === workout.type)) {
+          let index = this.workoutSummary.types.findIndex((object) => {
+            return object.type === workout.type;
+          });
           this.workoutSummary.types[index].value =
-              this.workoutSummary.types[index].value + numTimes * addRemove;
+            this.workoutSummary.types[index].value + numTimes * addRemove;
+          if(this.workoutSummary.types[index].value === 0) {
+            this.workoutSummary.types.splice(index, 1);
+          }
         } else {
-          this.workoutSummary.types = [...this.workoutSummary.types, {type: workout.type, value: numTimes}]
+          this.workoutSummary.types = [
+            ...this.workoutSummary.types,
+            { type: workout.type, value: numTimes },
+          ];
         }
       } else {
         this.workoutSummary.todo = this.workoutSummary.todo + addRemove;
