@@ -1,9 +1,6 @@
 <template>
   <v-container>
-    <v-list
-      v-if="!groupByType && allWorkouts.length > 0"
-      lines="two"
-    >
+    <v-list v-if="!groupByType && allWorkouts.length > 0" lines="two">
       <v-list-item
         v-for="workout in allWorkouts"
         :key="workout.id"
@@ -31,37 +28,39 @@
 
     <v-expansion-panels v-if="groupByType">
       <v-expansion-panel
-        title="Title"
+        v-for="(list, index) in groupWorkoutsByType()"
+        :key="index"
+        :title="list.type"
       >
-      <v-expansion-panel-text>
-        <v-list lines="two">
-          <v-list-item
-            v-for="workout in allWorkouts"
-            :key="workout.id"
-            :title="workout.name"
-            :subtitle="workout.type + ' - ' + workout.time + ' min'"
-          >
-            <PreviewWorkout
-              :workout="workout"
-              v-on:edit-workout="editWorkout"
-              v-on:select-workout="selectWorkout"
-            ></PreviewWorkout>
+        <v-expansion-panel-text>
+          <v-list lines="two">
+            <v-list-item
+              v-for="workout in list.details"
+              :key="workout.id"
+              :title="workout.name"
+              :subtitle="workout.type + ' - ' + workout.time + ' min'"
+            >
+              <PreviewWorkout
+                :workout="workout"
+                v-on:edit-workout="editWorkout"
+                v-on:select-workout="selectWorkout"
+              ></PreviewWorkout>
 
-            <template v-slot:prepend>
-              <v-avatar
-                :color="workout.completions > 0 ? 'secondary' : 'error'"
-              >
-                <v-icon>mdi-dumbbell</v-icon>
-              </v-avatar>
-            </template>
-            <template v-slot:append>
-              <v-avatar outline color="grey">
-                {{ workout.completions }}
-              </v-avatar>
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-expansion-panel-text>
+              <template v-slot:prepend>
+                <v-avatar
+                  :color="workout.completions > 0 ? 'secondary' : 'error'"
+                >
+                  <v-icon>mdi-dumbbell</v-icon>
+                </v-avatar>
+              </template>
+              <template v-slot:append>
+                <v-avatar outline color="grey">
+                  {{ workout.completions }}
+                </v-avatar>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
 
@@ -104,6 +103,22 @@ export default defineComponent({
   methods: {
     editWorkout(workout) {
       this.$emit("edit-workout", workout);
+    },
+
+    groupWorkoutsByType() {
+      let returnList = [];
+      this.allWorkouts.forEach((item) => {
+        if (returnList.some((e) => e.type === item.type)) {
+          returnList.forEach((typeList, index) => {
+            if (typeList.type === item.type) {
+              returnList[index].details.push(item);
+            }
+          });
+        } else {
+          returnList.push({ type: item.type, details: [item] });
+        }
+      });
+      return returnList;
     },
 
     selectWorkout(workout) {

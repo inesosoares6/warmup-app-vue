@@ -45,6 +45,7 @@ export default {
   data() {
     return {
       allWorkouts: [],
+      types: ["WOD", "AFAP", "AMRAP", "EMOM"],
       currentWorkout: {},
       lastWorkout: {},
       workoutSummary: this.clearWorkoutSummary(),
@@ -57,6 +58,8 @@ export default {
   mounted() {
     if (localStorage.getItem("allWorkouts"))
       this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
+    if (localStorage.getItem("types"))
+      this.types = JSON.parse(localStorage.getItem("types"));
     if (localStorage.getItem("workoutSummary"))
       this.workoutSummary = JSON.parse(localStorage.getItem("workoutSummary"));
     if (localStorage.getItem("currentWorkout"))
@@ -276,6 +279,13 @@ export default {
     timeline: {
       handler() {
         localStorage.setItem("timeline", JSON.stringify(this.timeline));
+      },
+      deep: true,
+    },
+
+    types: {
+      handler() {
+        localStorage.setItem("types", JSON.stringify(this.types));
       },
       deep: true,
     },
