@@ -177,7 +177,7 @@ export default {
           types.push(element.type);
         }
       });
-      types.push("Other");
+      types.push("--> Add new type");
       return types;
     },
 

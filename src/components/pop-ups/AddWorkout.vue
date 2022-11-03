@@ -17,7 +17,7 @@
             label="Type"
             required
           ></v-select>
-          <v-text-field v-if="type === 'Other'"
+          <v-text-field v-if="type === '--> Add new type'"
             v-model="newType"
             :rules="nameRules"
             label="Add new type"
@@ -87,7 +87,7 @@ export default defineComponent({
         this.$emit("add-workout", {
           id: uuidv4(),
           name: this.name,
-          type: this.type === 'Other' ? this.newType : this.type,
+          type: this.type === '--> Add new type' ? this.newType : this.type,
           time: this.time,
           exercises: this.exercises,
           completions: this.alreadyDone ? 1 : 0,
