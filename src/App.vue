@@ -4,6 +4,7 @@
     <TopToolbar
       :allWorkouts="allWorkouts"
       :groupByType="groupByType"
+      :types="getTypes()"
       v-on:add-workout="addWorkout"
       v-on:delete-cache="deleteCache"
       v-on:delete-workouts="deleteWorkouts"
@@ -19,6 +20,7 @@
           :currentWorkout="currentWorkout"
           :lastWorkout="lastWorkout"
           :timeline="timeline"
+          :types="getTypes()"
           :groupByType="groupByType"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
@@ -59,8 +61,6 @@ export default {
   mounted() {
     if (localStorage.getItem("allWorkouts"))
       this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
-    if (localStorage.getItem("types"))
-      this.types = JSON.parse(localStorage.getItem("types"));
     if (localStorage.getItem("workoutSummary"))
       this.workoutSummary = JSON.parse(localStorage.getItem("workoutSummary"));
     if (localStorage.getItem("currentWorkout"))
@@ -170,6 +170,17 @@ export default {
       }
     },
 
+    getTypes() {
+      let types = [];
+      this.allWorkouts.forEach((element) => {
+        if (!types.some((e) => e === element.type)) {
+          types.push(element.type);
+        }
+      });
+      types.push("Other");
+      return types;
+    },
+
     groupByTypeFunction(value) {
       this.groupByType = value;
     },
@@ -218,12 +229,13 @@ export default {
       if (workout.completions > 0) {
         this.workoutSummary.done =
           this.workoutSummary.done + numTimes * addRemove;
-        this.workoutSummary.types.forEach((item, index) => {
-          if (workout.type === item.type) {
-            this.workoutSummary.types[index].value =
+        if(this.workoutSummary.types.some((e) => e === workout.type)) {
+          let index = this.workoutSummary.types.indexOf(workout.type);
+          this.workoutSummary.types[index].value =
               this.workoutSummary.types[index].value + numTimes * addRemove;
-          }
-        });
+        } else {
+          this.workoutSummary.types = [...this.workoutSummary.types, {type: workout.type, value: numTimes}]
+        }
       } else {
         this.workoutSummary.todo = this.workoutSummary.todo + addRemove;
       }
@@ -264,13 +276,6 @@ export default {
     timeline: {
       handler() {
         localStorage.setItem("timeline", JSON.stringify(this.timeline));
-      },
-      deep: true,
-    },
-
-    types: {
-      handler() {
-        localStorage.setItem("types", JSON.stringify(this.types));
       },
       deep: true,
     },

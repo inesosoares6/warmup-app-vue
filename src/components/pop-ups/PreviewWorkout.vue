@@ -9,6 +9,7 @@
           <v-icon>mdi-pencil</v-icon>
           <EditWorkout
             v-bind:workout="workout"
+            v-bind:types="types"
             v-on:edit-workout="editWorkout"
           />
         </v-btn>
@@ -35,7 +36,7 @@ import EditWorkout from "@/components/pop-ups/EditWorkout.vue";
 
 export default defineComponent({
   name: "PreviewWorkout",
-  props: ["workout"],
+  props: ["workout", "types"],
 
   components: {
     EditWorkout,

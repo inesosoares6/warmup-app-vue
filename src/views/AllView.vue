@@ -9,6 +9,7 @@
       >
         <PreviewWorkout
           :workout="workout"
+          :types="types"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
         ></PreviewWorkout>
@@ -42,6 +43,7 @@
             >
               <PreviewWorkout
                 :workout="workout"
+                :types="types"
                 v-on:edit-workout="editWorkout"
                 v-on:select-workout="selectWorkout"
               ></PreviewWorkout>
@@ -81,7 +83,7 @@ import PreviewWorkout from "@/components/pop-ups/PreviewWorkout.vue";
 
 export default defineComponent({
   name: "AllView",
-  props: ["allWorkouts", "groupByType"],
+  props: ["allWorkouts", "groupByType", "types"],
 
   components: {
     PreviewWorkout,

@@ -6,7 +6,7 @@
         <v-icon>mdi-plus</v-icon>
         <AddWorkout
           v-on:add-workout="addWorkout"
-          :types="getTypes()"
+          :types="types"
         ></AddWorkout>
       </v-btn>
       <v-btn>
@@ -30,7 +30,7 @@ import AddWorkout from "./pop-ups/AddWorkout.vue";
 
 export default defineComponent({
   name: "TopToolbar",
-  props: ["allWorkouts", "groupByType"],
+  props: ["allWorkouts", "groupByType", "types"],
 
   components: {
     SettingsMenu,
@@ -52,17 +52,6 @@ export default defineComponent({
 
     deleteWorkouts(workoutList) {
       this.$emit("delete-workouts", workoutList);
-    },
-
-    getTypes() {
-      let types = [];
-      this.allWorkouts.forEach((element) => {
-        if (!types.some((e) => e === element.type)) {
-          types.push(element.type);
-        }
-      });
-      types.push("Other");
-      return types;
     },
 
     groupByTypeFunction(value) {

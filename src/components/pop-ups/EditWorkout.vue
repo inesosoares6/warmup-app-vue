@@ -17,6 +17,12 @@
             label="Type"
             required
           ></v-select>
+          <v-text-field v-if="workoutEdited.type === 'Other'"
+            v-model="newType"
+            :rules="nameRules"
+            label="Add new type"
+            required
+          ></v-text-field>
           <v-row
             ><v-col>
               <v-text-field
@@ -57,7 +63,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "EditWorkout",
-  props: ["workout"],
+  props: ["workout", "types"],
 
   mounted() {
     this.workoutEdited = { ...this.workout };
@@ -70,14 +76,17 @@ export default defineComponent({
         (v) => !!v || "Field is required",
         (v) => v >= 0 || "Time must be greater than 0",
       ],
-      types: ["WOD", "AFAP", "AMRAP", "EMOM"],
       workoutEdited: {},
+      newType: "",
     };
   },
 
   methods: {
     updateWorkout() {
       this.editWorkout = false;
+      if(this.workoutEdited.type === 'Other') {
+        this.workoutEdited.type = this.newType;
+      }
       this.$emit("edit-workout", this.workoutEdited);
     },
     resetForm() {

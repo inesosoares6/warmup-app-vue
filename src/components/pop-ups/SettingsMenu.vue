@@ -5,7 +5,7 @@
       <v-card-text>
         <v-switch
           v-model="isDarkMode"
-          label="Dark Mode"
+          label="Dark mode"
           color="secondary"
           inset
           hide-details
@@ -13,7 +13,7 @@
         ></v-switch>
         <v-switch
           v-model="groupByTypeEnabled"
-          label="Group Workouts by Type"
+          label="Group workouts by type"
           color="secondary"
           inset
           hide-details
