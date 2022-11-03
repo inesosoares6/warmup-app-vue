@@ -46,7 +46,7 @@ export default {
   data() {
     return {
       allWorkouts: [],
-      types: ["WOD", "AFAP", "AMRAP", "EMOM"],
+      types: [],
       currentWorkout: {},
       lastWorkout: {},
       workoutSummary: this.clearWorkoutSummary(),
@@ -72,7 +72,8 @@ export default {
     if (localStorage.getItem("weekNumber"))
       this.weekNumber = localStorage.getItem("weekNumber");
     if (localStorage.getItem("groupByType"))
-      this.groupByType = localStorage.getItem("groupByType")==='true' ? true : false;
+      this.groupByType =
+        localStorage.getItem("groupByType") === "true" ? true : false;
 
     this.updateWeek();
   },
@@ -120,24 +121,7 @@ export default {
       return {
         done: 0,
         todo: 0,
-        types: [
-          {
-            type: "WOD",
-            value: 0,
-          },
-          {
-            type: "AFAP",
-            value: 0,
-          },
-          {
-            type: "AMRAP",
-            value: 0,
-          },
-          {
-            type: "EMOM",
-            value: 0,
-          },
-        ],
+        types: [],
       };
     },
 

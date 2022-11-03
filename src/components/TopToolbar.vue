@@ -4,7 +4,10 @@
       <v-toolbar-title>WOD App</v-toolbar-title>
       <v-btn>
         <v-icon>mdi-plus</v-icon>
-        <AddWorkout v-on:add-workout="addWorkout"></AddWorkout>
+        <AddWorkout
+          v-on:add-workout="addWorkout"
+          :types="getTypes()"
+        ></AddWorkout>
       </v-btn>
       <v-btn>
         <v-icon>mdi-cog</v-icon>
@@ -51,9 +54,20 @@ export default defineComponent({
       this.$emit("delete-workouts", workoutList);
     },
 
+    getTypes() {
+      let types = [];
+      this.allWorkouts.forEach((element) => {
+        if (!types.some((e) => e === element.type)) {
+          types.push(element.type);
+        }
+      });
+      types.push("Other");
+      return types;
+    },
+
     groupByTypeFunction(value) {
       this.$emit("group-by-types", value);
-    }
+    },
   },
 });
 </script>

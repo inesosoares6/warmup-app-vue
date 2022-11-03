@@ -17,6 +17,12 @@
             label="Type"
             required
           ></v-select>
+          <v-text-field v-if="type === 'Other'"
+            v-model="newType"
+            :rules="nameRules"
+            label="Add new type"
+            required
+          ></v-text-field>
           <v-text-field
             v-model="time"
             type="number"
@@ -53,6 +59,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default defineComponent({
   name: "AddWorkout",
+  props: ["types"],
 
   data() {
     return {
@@ -68,7 +75,7 @@ export default defineComponent({
         (v) => !!v || "Field is required",
         (v) => v >= 0 || "Time must be greater than 0",
       ],
-      types: ["WOD", "AFAP", "AMRAP", "EMOM"],
+      newType: "",
     };
   },
 
@@ -80,7 +87,7 @@ export default defineComponent({
         this.$emit("add-workout", {
           id: uuidv4(),
           name: this.name,
-          type: this.type,
+          type: this.type === 'Other' ? this.newType : this.type,
           time: this.time,
           exercises: this.exercises,
           completions: this.alreadyDone ? 1 : 0,
