@@ -6,6 +6,7 @@
       v-on:add-workout="addWorkout"
       v-on:delete-cache="deleteCache"
       v-on:delete-workouts="deleteWorkouts"
+      v-on:group-by-types="groupByTypeFunction"
     ></TopToolbar>
     <v-main>
       <router-view v-slot="{ Component, route }">
@@ -17,6 +18,7 @@
           :currentWorkout="currentWorkout"
           :lastWorkout="lastWorkout"
           :timeline="timeline"
+          :groupByType="groupByType"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
@@ -48,6 +50,7 @@ export default {
       workoutSummary: this.clearWorkoutSummary(),
       timeline: this.clearTimeline(),
       weekNumber: 0,
+      groupByType: false,
     };
   },
 
@@ -64,6 +67,8 @@ export default {
       this.timeline = JSON.parse(localStorage.getItem("timeline"));
     if (localStorage.getItem("weekNumber"))
       this.weekNumber = localStorage.getItem("weekNumber");
+    if (localStorage.getItem("groupByType"))
+      this.groupByType = localStorage.getItem("groupByType");
 
     this.updateWeek();
   },
@@ -177,6 +182,10 @@ export default {
       }
     },
 
+    groupByTypeFunction(value) {
+      this.groupByType = value;
+    },
+
     selectWorkout(workout) {
       this.currentWorkout = workout;
     },
@@ -196,7 +205,7 @@ export default {
         (currentDate - startDate) / (24 * 60 * 60 * 1000)
       );
       const nextWeekNumber = Math.ceil(days / 7);
-      if(this.weekNumber !== nextWeekNumber) {
+      if (this.weekNumber !== nextWeekNumber) {
         this.clearTimeline();
         this.weekNumber = nextWeekNumber;
       }
@@ -249,6 +258,12 @@ export default {
         );
       },
       deep: true,
+    },
+
+    groupByType: {
+      handler() {
+        localStorage.setItem("groupByType", this.groupByType);
+      },
     },
 
     lastWorkout: {

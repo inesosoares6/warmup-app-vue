@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-list class="wod-list" lines="two" v-if="allWorkouts.length > 0">
+    <v-list
+      v-if="!groupByType && allWorkouts.length > 0"
+      lines="two"
+    >
       <v-list-item
         v-for="workout in allWorkouts"
         :key="workout.id"
@@ -26,6 +29,42 @@
       </v-list-item>
     </v-list>
 
+    <v-expansion-panels v-if="groupByType">
+      <v-expansion-panel
+        title="Title"
+      >
+      <v-expansion-panel-text>
+        <v-list lines="two">
+          <v-list-item
+            v-for="workout in allWorkouts"
+            :key="workout.id"
+            :title="workout.name"
+            :subtitle="workout.type + ' - ' + workout.time + ' min'"
+          >
+            <PreviewWorkout
+              :workout="workout"
+              v-on:edit-workout="editWorkout"
+              v-on:select-workout="selectWorkout"
+            ></PreviewWorkout>
+
+            <template v-slot:prepend>
+              <v-avatar
+                :color="workout.completions > 0 ? 'secondary' : 'error'"
+              >
+                <v-icon>mdi-dumbbell</v-icon>
+              </v-avatar>
+            </template>
+            <template v-slot:append>
+              <v-avatar outline color="grey">
+                {{ workout.completions }}
+              </v-avatar>
+            </template>
+          </v-list-item>
+        </v-list>
+      </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
       <template v-slot:actions>
@@ -43,7 +82,7 @@ import PreviewWorkout from "@/components/pop-ups/PreviewWorkout.vue";
 
 export default defineComponent({
   name: "AllView",
-  props: ["allWorkouts"],
+  props: ["allWorkouts", "groupByType"],
 
   components: {
     PreviewWorkout,

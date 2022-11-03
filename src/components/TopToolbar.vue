@@ -12,6 +12,7 @@
           :allWorkouts="allWorkouts"
           v-on:delete-cache="deleteCache"
           v-on:delete-workouts="deleteWorkouts"
+          v-on:group-by-types="groupByTypeFunction"
         ></SettingsMenu>
       </v-btn>
     </v-app-bar>
@@ -48,6 +49,10 @@ export default defineComponent({
     deleteWorkouts(workoutList) {
       this.$emit("delete-workouts", workoutList);
     },
+
+    groupByTypeFunction(value) {
+      this.$emit("group-by-types", value);
+    }
   },
 });
 </script>

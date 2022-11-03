@@ -11,6 +11,14 @@
           hide-details
           @change="toggleTheme"
         ></v-switch>
+        <v-switch
+          v-model="groupByType"
+          label="Group Workouts by Type"
+          color="secondary"
+          inset
+          hide-details
+          @change="groupByTypeFunction"
+        ></v-switch>
 
         <v-divider />
 
@@ -68,6 +76,7 @@ export default defineComponent({
     return {
       settingsMenu: false,
       isDarkMode: true,
+      groupByType: false,
     };
   },
 
@@ -80,6 +89,11 @@ export default defineComponent({
     deleteWorkouts(workoutList) {
       this.$emit("delete-workouts", workoutList);
       this.settingsMenu = false;
+    },
+
+    groupByTypeFunction() {
+      console.log("group by type");
+      this.$emit("group-by-types", this.groupByType);
     },
   },
 });
