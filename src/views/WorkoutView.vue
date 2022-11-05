@@ -40,7 +40,7 @@
 
     <v-divider thickness="0px"></v-divider>
 
-    <v-card v-if="currentWorkout.name !== undefined">
+    <v-card v-if="currentWorkout.name !== undefined" :color="(stopwatch.isRunning || timer.isRunning) ? 'error' : 'secondary'">
       <v-card-title>
         <v-btn-toggle border>
           <v-btn size="small" :active="!isTimer" @click="isTimer = false">
