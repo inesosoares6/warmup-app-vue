@@ -40,16 +40,30 @@
 
     <v-divider thickness="0px"></v-divider>
 
-    <v-card v-if="currentWorkout.name !== undefined" :color="(stopwatch.isRunning || timer.isRunning) ? 'error' : 'secondary'">
+    <v-card
+      v-if="currentWorkout.name !== undefined"
+      :color="stopwatch.isRunning || timer.isRunning ? 'error' : 'secondary'"
+    >
       <v-card-title>
-        <v-btn-toggle border>
-          <v-btn size="small" :active="!isTimer" @click="isTimer = false">
-            <v-icon>mdi-timer</v-icon>
-          </v-btn>
-          <v-btn size="small" :active="isTimer" @click="isTimer = true">
-            <v-icon>mdi-timer-sand</v-icon>
-          </v-btn>
-        </v-btn-toggle>
+        <v-row class="timer-title">
+          <v-btn-toggle border>
+            <v-btn size="small" :active="!isTimer" @click="isTimer = false">
+              <v-icon>mdi-timer</v-icon>
+            </v-btn>
+            <v-btn size="small" :active="isTimer" @click="isTimer = true">
+              <v-icon>mdi-timer-sand</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-if="isTimer"
+            v-model="seconds"
+            @change="restartTimer()"
+            type="number"
+            label="Timer (sec)"
+            hide-details
+          ></v-text-field>
+        </v-row>
       </v-card-title>
       <v-card-text v-if="!isTimer">
         <div class="timer-text" justify="center">
@@ -156,6 +170,7 @@ export default defineComponent({
       stopwatch: null,
       time: null,
       timer: null,
+      seconds: 600,
     };
   },
 
@@ -192,7 +207,7 @@ export default defineComponent({
 
     restartTimer() {
       this.time = new Date();
-      this.time.setSeconds(this.time.getSeconds() + 600);
+      this.time.setSeconds(this.time.getSeconds() + this.seconds);
       this.timer = useTimer(this.time);
       this.timer.pause();
     },
@@ -231,5 +246,18 @@ export default defineComponent({
 .v-divider {
   margin-top: 5px;
   margin-bottom: 10px;
+}
+
+.v-text-field {
+  width: 10px !important;
+}
+
+.v-card-title {
+  margin-bottom: 10px;
+  margin-top: 0px;
+}
+
+.timer-title {
+  height: 55px;
 }
 </style>
