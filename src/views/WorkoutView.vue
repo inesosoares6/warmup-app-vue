@@ -66,7 +66,7 @@
             label="Timer (sec)"
             hide-details
           ></v-text-field>
-          <v-btn v-if="mode === 2" size="small" icon color="grey">
+          <v-btn v-if="mode === 2" size="small" icon color="grey" style="margin-right: 5px;">
             <v-icon>mdi-dots-vertical</v-icon>
             <TabataSettings v-on:created-tabata="updateTabata" />
           </v-btn>
