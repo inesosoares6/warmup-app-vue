@@ -20,20 +20,111 @@
       :subtitle="currentWorkout.type + ' - ' + currentWorkout.time + ' min'"
     >
       <v-divider></v-divider>
-      <v-card-text class="exercises" v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')">
+      <v-card-text
+        class="exercises"
+        v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')"
+      >
+      </v-card-text>
+      <v-col class="text-right">
+        <v-btn
+          v-if="currentWorkout.name !== undefined"
+          class="floating-button"
+          color="secondary"
+          icon
+          @click="copyWorkout"
+        >
+          <v-icon>mdi-content-copy</v-icon>
+        </v-btn>
+      </v-col>
+    </v-card>
+
+    <v-divider thickness="0px"></v-divider>
+
+    <v-card v-if="currentWorkout.name !== undefined">
+      <v-card-title>
+        <v-btn-toggle border>
+          <v-btn size="small" :active="!isTimer" @click="isTimer = false">
+            <v-icon>mdi-timer</v-icon>
+          </v-btn>
+          <v-btn size="small" :active="isTimer" @click="isTimer = true">
+            <v-icon>mdi-timer-sand</v-icon>
+          </v-btn>
+        </v-btn-toggle>
+      </v-card-title>
+      <v-card-text v-if="!isTimer">
+        <div class="timer-text" justify="center">
+          <span>{{ stopwatch.minutes }}</span
+          >&nbsp;:&nbsp;<span>{{ stopwatch.seconds }}</span>
+        </div>
+        <v-row align="center" justify="center">
+          <v-btn
+            class="stopwatch-btns"
+            size="x-small"
+            color="grey"
+            icon
+            @click="stopwatch.start()"
+          >
+            <v-icon>mdi-play</v-icon>
+          </v-btn>
+          <v-btn
+            class="stopwatch-btns"
+            size="x-small"
+            color="grey"
+            icon
+            @click="stopwatch.pause()"
+          >
+            <v-icon>mdi-pause</v-icon>
+          </v-btn>
+          <v-btn
+            class="stopwatch-btns"
+            size="x-small"
+            color="grey"
+            icon
+            @click="
+              stopwatch.reset();
+              stopwatch.pause();
+            "
+          >
+            <v-icon>mdi-reload</v-icon>
+          </v-btn>
+        </v-row>
+      </v-card-text>
+      <v-card-text v-else>
+        <div class="timer-text" justify="center">
+          <span>{{ timer.minutes }}</span
+          >&nbsp;:&nbsp;<span>{{ timer.seconds }}</span>
+        </div>
+        <v-row align="center" justify="center">
+          <v-btn
+            class="stopwatch-btns"
+            size="x-small"
+            color="grey"
+            icon
+            @click="timer.resume()"
+          >
+            <v-icon>mdi-play</v-icon>
+          </v-btn>
+          <v-btn
+            class="stopwatch-btns"
+            size="x-small"
+            color="grey"
+            icon
+            @click="timer.pause()"
+          >
+            <v-icon>mdi-pause</v-icon>
+          </v-btn>
+          <v-btn
+            class="stopwatch-btns"
+            size="x-small"
+            color="grey"
+            icon
+            @click="restartTimer()"
+          >
+            <v-icon>mdi-reload</v-icon>
+          </v-btn>
+        </v-row>
       </v-card-text>
     </v-card>
-    <v-col class="text-right">
-      <v-btn
-        v-if="currentWorkout.name !== undefined"
-        class="floating-button"
-        color="secondary"
-        icon
-        @click="copyWorkout"
-      >
-        <v-icon>mdi-content-copy</v-icon>
-      </v-btn>
-    </v-col>
 
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
@@ -49,6 +140,7 @@
 <script>
 import { defineComponent } from "vue";
 import { Clipboard } from "@capacitor/clipboard";
+import { useStopwatch, useTimer } from "vue-timer-hook";
 
 export default defineComponent({
   name: "WorkoutView",
@@ -60,12 +152,20 @@ export default defineComponent({
       snackbar: false,
       text: "",
       timeout: 2000,
+      isTimer: false,
+      stopwatch: null,
+      time: null,
+      timer: null,
     };
   },
 
   created() {
     this.snackbar = this.currentWorkout.name === undefined;
     this.text = "No workout selected";
+    this.stopwatch = useStopwatch();
+    this.stopwatch.reset();
+    this.stopwatch.pause();
+    this.restartTimer();
   },
 
   methods: {
@@ -90,6 +190,13 @@ export default defineComponent({
       );
     },
 
+    restartTimer() {
+      this.time = new Date();
+      this.time.setSeconds(this.time.getSeconds() + 600);
+      this.timer = useTimer(this.time);
+      this.timer.pause();
+    },
+
     updateWorkout() {
       if (this.checkbox) this.$emit("update-workout", this.currentWorkout);
     },
@@ -100,12 +207,29 @@ export default defineComponent({
 <style scoped>
 .floating-button {
   position: absolute;
-  bottom: 70px;
-  right: 10px;
+  bottom: 5px;
+  right: 5px;
 }
 
 .exercises {
   text-align: center;
   font-size: 20px;
+}
+
+.stopwatch-btns {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+
+.timer-text {
+  padding: 10px 10px 10px 10px;
+  text-align: center;
+  font-size: 40px;
+}
+
+.v-divider {
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 </style>
