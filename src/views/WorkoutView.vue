@@ -46,26 +46,33 @@
     >
       <v-card-title>
         <v-row class="timer-title">
-          <v-btn-toggle border>
-            <v-btn size="small" :active="!isTimer" @click="isTimer = false">
+          <v-btn-toggle border v-model="toggle_exclusive" divided>
+            <v-btn size="small" @click="mode = 0">
               <v-icon>mdi-timer</v-icon>
             </v-btn>
-            <v-btn size="small" :active="isTimer" @click="isTimer = true">
+            <v-btn size="small" @click="mode = 1">
               <v-icon>mdi-timer-sand</v-icon>
+            </v-btn>
+            <v-btn size="small" @click="mode = 2">
+              <v-icon>mdi-camera-timer</v-icon>
             </v-btn>
           </v-btn-toggle>
           <v-spacer></v-spacer>
           <v-text-field
-            v-if="isTimer"
+            v-if="mode === 1"
             v-model="seconds"
             @change="restartTimer()"
             type="number"
             label="Timer (sec)"
             hide-details
           ></v-text-field>
+          <v-btn v-if="mode === 2" size="small" icon color="grey">
+            <v-icon>mdi-dots-vertical</v-icon>
+            <TabataSettings v-on:created-tabata="updateTabata" />
+          </v-btn>
         </v-row>
       </v-card-title>
-      <v-card-text v-if="!isTimer">
+      <v-card-text v-if="mode === 0">
         <div class="timer-text" justify="center">
           <span>{{ stopwatch.minutes }}</span
           >&nbsp;:&nbsp;<span>{{ stopwatch.seconds }}</span>
@@ -103,7 +110,7 @@
           </v-btn>
         </v-row>
       </v-card-text>
-      <v-card-text v-else>
+      <v-card-text v-else-if="mode === 1">
         <div class="timer-text" justify="center">
           <span>{{ timer.minutes }}</span
           >&nbsp;:&nbsp;<span>{{ timer.seconds }}</span>
@@ -138,6 +145,55 @@
           </v-btn>
         </v-row>
       </v-card-text>
+      <v-card-text v-else>
+        <div class="timer-text" justify="center">
+          <span>{{ tabataTimer.minutes }}</span
+          >&nbsp;:&nbsp;<span>{{ tabataTimer.seconds }}</span>
+        </div>
+        <v-row align="center" justify="center">
+          <v-col cols="2">
+            <p class="cycles-sets-numbers">
+              {{ currentSet }}/{{ tabata.sets }}
+            </p>
+            <p class="cycles-sets-text">Sets</p>
+          </v-col>
+          <v-col cols="8" class="d-flex justify-center">
+            <v-btn
+              class="stopwatch-btns"
+              size="x-small"
+              color="grey"
+              icon
+              @click="startTabata()"
+            >
+              <v-icon>mdi-play</v-icon>
+            </v-btn>
+            <v-btn
+              class="stopwatch-btns"
+              size="x-small"
+              color="grey"
+              icon
+              @click="tabataTimer.pause()"
+            >
+              <v-icon>mdi-pause</v-icon>
+            </v-btn>
+            <v-btn
+              class="stopwatch-btns"
+              size="x-small"
+              color="grey"
+              icon
+              @click="restartTabata()"
+            >
+              <v-icon>mdi-reload</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="2">
+            <p class="cycles-sets-numbers">
+              {{ currentCycle }}/{{ tabata.cycles }}
+            </p>
+            <p class="cycles-sets-text">Cycles</p>
+          </v-col>
+        </v-row>
+      </v-card-text>
     </v-card>
 
     <v-snackbar v-model="snackbar" :timeout="timeout">
@@ -155,10 +211,15 @@
 import { defineComponent } from "vue";
 import { Clipboard } from "@capacitor/clipboard";
 import { useStopwatch, useTimer } from "vue-timer-hook";
+import TabataSettings from "@/components/pop-ups/TabataSettings.vue";
 
 export default defineComponent({
   name: "WorkoutView",
   props: ["currentWorkout"],
+
+  components: {
+    TabataSettings,
+  },
 
   data() {
     return {
@@ -166,12 +227,31 @@ export default defineComponent({
       snackbar: false,
       text: "",
       timeout: 2000,
-      isTimer: false,
+      mode: 1,
       stopwatch: null,
       time: null,
       timer: null,
-      seconds: 600,
+      tabataTime: null,
+      tabataTimer: null,
+      seconds: 5,
+      toggle_exclusive: 1,
+      currentSet: 0,
+      currentCycle: 0,
+      tabata: {
+        prepareTime: 5,
+        workTime: 10,
+        rest: 0,
+        cycles: 1,
+        sets: 1,
+        restBetweenSets: 0,
+      },
+      endedTimer: false,
     };
+  },
+
+  updated(){
+    this.endedTimer = this.timer.isExpired.value;
+    console.log(this.endedTimer);
   },
 
   created() {
@@ -181,6 +261,12 @@ export default defineComponent({
     this.stopwatch.reset();
     this.stopwatch.pause();
     this.restartTimer();
+    this.restartTabata();
+  },
+
+  mounted() {
+    
+    console.log(this.timer.isExpired.value);
   },
 
   methods: {
@@ -205,11 +291,29 @@ export default defineComponent({
       );
     },
 
+    restartTabata() {
+      this.tabataTime = new Date();
+      this.tabataTime.setSeconds(
+        this.tabataTime.getSeconds() + this.tabata.prepareTime
+      );
+      this.tabataTimer = useTimer(this.tabataTime);
+      this.tabataTimer.pause();
+    },
+
     restartTimer() {
       this.time = new Date();
       this.time.setSeconds(this.time.getSeconds() + this.seconds);
       this.timer = useTimer(this.time);
       this.timer.pause();
+    },
+
+    startTabata() {
+      this.tabataTimer.resume();
+    },
+
+    updateTabata(data) {
+      console.log(data);
+      this.tabata = { ...data };
     },
 
     updateWorkout() {
@@ -259,5 +363,17 @@ export default defineComponent({
 
 .timer-title {
   height: 55px;
+}
+
+.cycles-sets-numbers {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cycles-sets-text {
+  text-align: center;
+  font-size: 11px;
+  color: grey;
 }
 </style>

@@ -16,6 +16,7 @@
             :rules="[(v) => !!v || 'Type is required']"
             label="Type"
             required
+            hide-details
           ></v-select>
           <v-text-field v-if="workoutEdited.type === '--> Add new type'"
             v-model="newType"
