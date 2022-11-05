@@ -64,7 +64,9 @@
                 {{ lastWorkout.type + " - " + lastWorkout.time + " min" }}
               </div>
             </v-card-subtitle>
+            <v-divider></v-divider>
             <v-card-text
+              class="exercises"
               v-html="lastWorkout.exercises.replaceAll('\n', '<br/>')"
             >
             </v-card-text>
@@ -300,5 +302,9 @@ export default defineComponent({
 
 .v-slide-group__content {
   justify-content: center;
+}
+
+.exercises {
+  text-align: center;
 }
 </style>

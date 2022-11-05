@@ -19,7 +19,8 @@
       :title="currentWorkout.name"
       :subtitle="currentWorkout.type + ' - ' + currentWorkout.time + ' min'"
     >
-      <v-card-text v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')">
+      <v-divider></v-divider>
+      <v-card-text class="exercises" v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
     </v-card>
     <v-col class="text-right">
@@ -96,10 +97,15 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .floating-button {
   position: absolute;
   bottom: 70px;
   right: 10px;
+}
+
+.exercises {
+  text-align: center;
+  font-size: 20px;
 }
 </style>
