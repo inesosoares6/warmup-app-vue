@@ -36,15 +36,16 @@
 
     <v-card
       v-if="currentWorkout.name !== undefined"
-      :color="stopwatch.isRunning || timer.isRunning ? 'error' : 'secondary'"
+      :color="getColor()"
+      height="200px"
     >
       <v-card-title>
         <v-row class="timer-title">
           <v-btn-toggle border v-model="toggle_exclusive" divided>
-            <v-btn size="small" @click="mode = 0">
+            <v-btn size="small" @click="mode = 0; timer.pause();">
               <v-icon>mdi-timer</v-icon>
             </v-btn>
-            <v-btn size="small" @click="mode = 1">
+            <v-btn size="small" @click="mode = 1; stopwatch.pause();">
               <v-icon>mdi-timer-sand</v-icon>
             </v-btn>
             <v-btn size="small" @click="mode = 2">
@@ -71,7 +72,7 @@
           <span>{{ stopwatch.minutes }}</span
           >&nbsp;:&nbsp;<span>{{ stopwatch.seconds }}</span>
         </div>
-        <v-row align="center" justify="center">
+        <v-row align="center" justify="center" class="play-btns">
           <v-btn
             class="stopwatch-btns"
             size="x-small"
@@ -109,7 +110,7 @@
           <span>{{ timer.minutes }}</span
           >&nbsp;:&nbsp;<span>{{ timer.seconds }}</span>
         </div>
-        <v-row align="center" justify="center">
+        <v-row align="center" justify="center" class="play-btns">
           <v-btn
             class="stopwatch-btns"
             size="x-small"
@@ -258,11 +259,6 @@ export default defineComponent({
     this.restartTabata();
   },
 
-  mounted() {
-    
-    console.log(this.timer.isExpired.value);
-  },
-
   methods: {
     copyWorkout() {
       Clipboard.write({
@@ -283,6 +279,21 @@ export default defineComponent({
         "\n-------------\n" +
         this.currentWorkout.exercises
       );
+    },
+
+    getColor() {
+      if(this.stopwatch.isRunning || this.timer.isRunning) {
+        return 'error'
+      } else if(this.tabataTimer.isRunning) {
+        switch(this.tabataMode){
+          case 'working':
+            return 'error';
+          case 'rest':
+            return 'yellow';
+        }
+      } else {
+        return 'secondary';
+      }
     },
 
     restartTabata() {
@@ -369,5 +380,9 @@ export default defineComponent({
   text-align: center;
   font-size: 11px;
   color: grey;
+}
+
+.play-btns{
+  margin-top: 22px;;
 }
 </style>
