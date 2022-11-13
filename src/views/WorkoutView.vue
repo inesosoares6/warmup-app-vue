@@ -1,24 +1,18 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col>
-        <h1 class="headline">Workout</h1>
-      </v-col>
-      <v-col>
-        <v-checkbox
-          v-if="currentWorkout.name !== undefined"
-          v-model="checkbox"
-          label="Mark as done"
-          hide-details
-          @change="updateWorkout"
-        ></v-checkbox>
-      </v-col>
-    </v-row>
     <v-card
       v-if="currentWorkout.name !== undefined"
       :title="currentWorkout.name"
       :subtitle="currentWorkout.type + ' - ' + currentWorkout.time + ' min'"
     >
+    <template v-slot:append>
+      <v-checkbox
+          v-model="checkbox"
+          label="Done"
+          hide-details
+          @change="updateWorkout"
+        ></v-checkbox>
+      </template>
       <v-divider></v-divider>
       <v-card-text
         class="exercises"
