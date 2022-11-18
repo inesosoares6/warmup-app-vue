@@ -204,8 +204,8 @@ export default {
         (currentDate - startDate) / (24 * 60 * 60 * 1000)
       );
       const nextWeekNumber = Math.ceil(days / 7);
-      if (this.weekNumber !== nextWeekNumber) {
-        this.clearTimeline();
+      if (this.weekNumber != nextWeekNumber) {
+        this.timeline = this.clearTimeline();
         this.weekNumber = nextWeekNumber;
       }
     },
