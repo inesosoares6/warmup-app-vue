@@ -268,8 +268,8 @@ export default defineComponent({
     let tabataTime = new Date();
     tabataTime.setSeconds(tabataTime.getSeconds() + tabata.value.prepareTime);
     let tabataTimer = useTimer(tabataTime);
-    let tabataMode = ref(0);
     tabataTimer.pause();
+    let tabataMode = ref(0);
 
     const updateTabata = (data) => {
       tabata.value = { ...data };
@@ -322,7 +322,7 @@ export default defineComponent({
     };
     onMounted(() => {
       watchEffect(async () => {
-        var audioFinish = new Audio(require("../assets/Finish_sound.mp3")); // path to file
+        var audioFinish = new Audio(require("../assets/Finish_sound.mp3"));
         if (timer.isExpired.value) {
           audioFinish.play();
         }
@@ -369,17 +369,17 @@ export default defineComponent({
     });
     return {
       timer,
-      restartTimer,
       seconds,
-      getColor,
       stopwatch,
-      restartTabata,
-      updateTabata,
       tabata,
       tabataTimer,
       tabataMode,
       currentSet,
       currentCycle,
+      restartTimer,
+      getColor,
+      restartTabata,
+      updateTabata,
       resetTabata,
       getTabataText,
     };
