@@ -203,7 +203,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, watchEffect, onMounted, ref } from "vue";
 import { Clipboard } from "@capacitor/clipboard";
 import { useStopwatch, useTimer } from "vue-timer-hook";
 import TabataSettings from "@/components/pop-ups/TabataSettings.vue";
@@ -215,6 +215,65 @@ export default defineComponent({
   components: {
     TabataSettings,
   },
+  
+  setup() {
+    //STOPWATCH
+    let stopwatch = useStopwatch();
+    stopwatch.reset();
+    stopwatch.pause();
+
+    //TIMER
+    let time = new Date();
+    let seconds = ref(5);
+    time.setSeconds(time.getSeconds() + seconds.value);
+    let timer = useTimer(time);
+    timer.pause();
+    const restartTimer = () => {
+      const time = new Date();
+      time.setSeconds(time.getSeconds() + seconds.value);
+      timer.restart(time);
+      timer.pause();
+    }
+
+    //TABATA
+    const restartTabata = () => {
+    //   const tabataTime = new Date();
+    //   tabataTime.setSeconds(
+    //     tabataTime.getSeconds() + this.tabata.prepareTime
+    //   );
+    //   const tabataTimer = useTimer(tabataTime);
+    //   tabataTimer.pause();
+    }
+    const getColor = () => {
+      if(stopwatch.isRunning.value || timer.isRunning.value) {
+        return 'error'
+      // } else if(this.tabataTimer.isRunning) {
+      //   switch(this.tabataMode){
+      //     case 'working':
+      //       return 'error';
+      //     case 'rest':
+      //       return 'yellow';
+      //   }
+      } else {
+        return 'secondary';
+      }
+    }
+    onMounted(() => {
+      watchEffect(async () => {
+        if(timer.isExpired.value) {
+            console.warn('IsExpired')
+        }
+      })
+    })
+    return {
+        timer,
+        restartTimer,
+        seconds,
+        getColor,
+        stopwatch,
+        restartTabata
+     };
+  },
 
   data() {
     return {
@@ -224,12 +283,6 @@ export default defineComponent({
       timeout: 2000,
       mode: 0,
       toggle_exclusive: 0,
-      stopwatch: null,
-      time: null,
-      timer: null,
-      tabataTime: null,
-      tabataTimer: null,
-      seconds: 5,
       currentSet: 0,
       currentCycle: 0,
       tabata: {
@@ -244,19 +297,9 @@ export default defineComponent({
     };
   },
 
-  updated(){
-    this.endedTimer = this.timer.isExpired.value;
-    console.log(this.endedTimer);
-  },
-
   created() {
     this.snackbar = this.currentWorkout.name === undefined;
     this.text = "No workout selected";
-    this.stopwatch = useStopwatch();
-    this.stopwatch.reset();
-    this.stopwatch.pause();
-    this.restartTimer();
-    this.restartTabata();
   },
 
   methods: {
@@ -279,41 +322,6 @@ export default defineComponent({
         "\n-------------\n" +
         this.currentWorkout.exercises
       );
-    },
-
-    getColor() {
-      if(this.stopwatch.isRunning || this.timer.isRunning) {
-        return 'error'
-      } else if(this.tabataTimer.isRunning) {
-        switch(this.tabataMode){
-          case 'working':
-            return 'error';
-          case 'rest':
-            return 'yellow';
-        }
-      } else {
-        return 'secondary';
-      }
-    },
-
-    restartTabata() {
-      this.tabataTime = new Date();
-      this.tabataTime.setSeconds(
-        this.tabataTime.getSeconds() + this.tabata.prepareTime
-      );
-      this.tabataTimer = useTimer(this.tabataTime);
-      this.tabataTimer.pause();
-    },
-
-    restartTimer() {
-      this.time = new Date();
-      this.time.setSeconds(this.time.getSeconds() + this.seconds);
-      this.timer = useTimer(this.time);
-      this.timer.pause();
-    },
-
-    startTabata() {
-      this.tabataTimer.resume();
     },
 
     updateTabata(data) {
