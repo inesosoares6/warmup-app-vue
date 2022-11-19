@@ -329,13 +329,11 @@ export default defineComponent({
         if (tabataTimer.isExpired.value) {
           if (tabataMode.value === 0) {
             // PREPARE
-            console.log("PREPARE TIME");
             currentCycle.value = 1;
             currentSet.value = 1;
             goToState(tabata.value.workTime, 1);
           } else if (tabataMode.value === 1) {
             // WORK
-            console.log("WORK TIME");
             if (
               currentCycle.value === tabata.value.cycles &&
               currentSet.value < tabata.value.sets
@@ -354,7 +352,6 @@ export default defineComponent({
             }
           } else if (tabataMode.value === 2) {
             // REST
-            console.log("REST TIME");
             if (currentCycle.value < tabata.value.cycles) {
               goToState(tabata.value.workTime, 1);
               currentCycle.value = currentCycle.value + 1;
@@ -363,7 +360,6 @@ export default defineComponent({
             }
           } else if (tabataMode.value === 3) {
             // REST BETWEEN SETS
-            console.log("REST BETWEEN SETS TIME");
             currentCycle.value = 1;
             currentSet.value = currentSet.value + 1;
             goToState(tabata.value.workTime, 1);
