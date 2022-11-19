@@ -5,8 +5,8 @@
       :title="currentWorkout.name"
       :subtitle="currentWorkout.type + ' - ' + currentWorkout.time + ' min'"
     >
-    <template v-slot:append>
-      <v-checkbox
+      <template v-slot:append>
+        <v-checkbox
           v-model="checkbox"
           label="Done"
           hide-details
@@ -42,10 +42,22 @@
       <v-card-title>
         <v-row class="timer-title">
           <v-btn-toggle border v-model="toggle_exclusive" divided>
-            <v-btn size="small" @click="mode = 0; timer.pause();">
+            <v-btn
+              size="small"
+              @click="
+                mode = 0;
+                timer.pause();
+              "
+            >
               <v-icon>mdi-timer</v-icon>
             </v-btn>
-            <v-btn size="small" @click="mode = 1; stopwatch.pause();">
+            <v-btn
+              size="small"
+              @click="
+                mode = 1;
+                stopwatch.pause();
+              "
+            >
               <v-icon>mdi-timer-sand</v-icon>
             </v-btn>
             <v-btn size="small" @click="mode = 2">
@@ -61,7 +73,13 @@
             label="Timer (sec)"
             hide-details
           ></v-text-field>
-          <v-btn v-if="mode === 2" size="small" icon color="grey" style="margin-right: 5px;">
+          <v-btn
+            v-if="mode === 2"
+            size="small"
+            icon
+            color="grey"
+            style="margin-right: 5px"
+          >
             <v-icon>mdi-dots-vertical</v-icon>
             <TabataSettings v-on:created-tabata="updateTabata" />
           </v-btn>
@@ -215,7 +233,7 @@ export default defineComponent({
   components: {
     TabataSettings,
   },
-  
+
   setup() {
     //STOPWATCH
     let stopwatch = useStopwatch();
@@ -233,46 +251,47 @@ export default defineComponent({
       time.setSeconds(time.getSeconds() + seconds.value);
       timer.restart(time);
       timer.pause();
-    }
+    };
 
     //TABATA
     const restartTabata = () => {
-    //   const tabataTime = new Date();
-    //   tabataTime.setSeconds(
-    //     tabataTime.getSeconds() + this.tabata.prepareTime
-    //   );
-    //   const tabataTimer = useTimer(tabataTime);
-    //   tabataTimer.pause();
-    }
+      //   const tabataTime = new Date();
+      //   tabataTime.setSeconds(
+      //     tabataTime.getSeconds() + this.tabata.prepareTime
+      //   );
+      //   const tabataTimer = useTimer(tabataTime);
+      //   tabataTimer.pause();
+    };
     const getColor = () => {
-      if(stopwatch.isRunning.value || timer.isRunning.value) {
-        return 'error'
-      // } else if(this.tabataTimer.isRunning) {
-      //   switch(this.tabataMode){
-      //     case 'working':
-      //       return 'error';
-      //     case 'rest':
-      //       return 'yellow';
-      //   }
+      if (stopwatch.isRunning.value || timer.isRunning.value) {
+        return "error";
+        // } else if(this.tabataTimer.isRunning) {
+        //   switch(this.tabataMode){
+        //     case 'working':
+        //       return 'error';
+        //     case 'rest':
+        //       return 'yellow';
+        //   }
       } else {
-        return 'secondary';
+        return "secondary";
       }
-    }
+    };
     onMounted(() => {
       watchEffect(async () => {
-        if(timer.isExpired.value) {
-            console.warn('IsExpired')
+        if (timer.isExpired.value) {
+          var audio = new Audio(require("../assets/Finish_sound.mp3")); // path to file
+          audio.play();
         }
-      })
-    })
+      });
+    });
     return {
-        timer,
-        restartTimer,
-        seconds,
-        getColor,
-        stopwatch,
-        restartTabata
-     };
+      timer,
+      restartTimer,
+      seconds,
+      getColor,
+      stopwatch,
+      restartTabata,
+    };
   },
 
   data() {
@@ -390,7 +409,7 @@ export default defineComponent({
   color: grey;
 }
 
-.play-btns{
-  margin-top: 22px;;
+.play-btns {
+  margin-top: 22px;
 }
 </style>
