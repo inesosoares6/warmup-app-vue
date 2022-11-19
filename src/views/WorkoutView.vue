@@ -74,6 +74,8 @@
             </v-btn>
           </v-btn-toggle>
           <v-spacer></v-spacer>
+          <span class="tabata-text" v-if="mode == 2 && tabataTimer.isRunning.value">{{getTabataText()}}</span>
+          <v-spacer></v-spacer>
           <v-text-field
             v-if="mode === 1"
             v-model="seconds"
@@ -292,11 +294,23 @@ export default defineComponent({
       restartTabata(tabata.value.prepareTime);
       currentCycle.value = 0;
       currentSet.value = 0;
+      tabataMode = 0;
     };
     const goToState = (time, state) => {
       restartTabata(time);
       tabataTimer.resume();
       tabataMode = state;
+    };
+    const getTabataText = () => {
+      switch (tabataMode) {
+        case 0:
+          return "PREPARE";
+        case 1:
+          return "WORK";
+        case 2:
+        case 3:
+          return "REST";
+      }
     };
     const getColor = () => {
       if (stopwatch.isRunning.value || timer.isRunning.value) {
@@ -372,6 +386,7 @@ export default defineComponent({
       currentSet,
       currentCycle,
       resetTabata,
+      getTabataText,
     };
   },
 
@@ -476,5 +491,9 @@ export default defineComponent({
 
 .play-btns {
   margin-top: 22px;
+}
+
+.tabata-text {
+  margin-top: 8px;
 }
 </style>
