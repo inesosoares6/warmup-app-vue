@@ -262,7 +262,7 @@ export default defineComponent({
       workTime: 5,
       rest: 3,
       cycles: 1,
-      sets: 1,
+      sets: 2,
       restBetweenSets: 0,
     });
     let tabataTime = new Date();
@@ -322,13 +322,15 @@ export default defineComponent({
     };
     onMounted(() => {
       watchEffect(async () => {
-        var audioFinish = new Audio(require("../assets/Finish_sound.mp3"));
+        var audioFinish = new Audio(require("../assets/finish.mp3"));
+        var audioBuzzer = new Audio(require("../assets/buzzer.mp3"));
         if (timer.isExpired.value) {
           audioFinish.play();
         }
         if (tabataTimer.isExpired.value) {
           if (tabataMode.value === 0) {
             // PREPARE
+            audioBuzzer.play();
             currentCycle.value = 1;
             currentSet.value = 1;
             goToState(tabata.value.workTime, 1);
@@ -338,6 +340,7 @@ export default defineComponent({
               currentCycle.value === tabata.value.cycles &&
               currentSet.value < tabata.value.sets
             ) {
+              audioBuzzer.play();
               goToState(
                 tabata.value.restBetweenSets > 0
                   ? tabata.value.restBetweenSets
@@ -345,6 +348,7 @@ export default defineComponent({
                 3
               );
             } else if (currentCycle.value < tabata.value.cycles) {
+              audioBuzzer.play();
               goToState(tabata.value.rest, 2);
             } else {
               audioFinish.play();
@@ -352,6 +356,7 @@ export default defineComponent({
             }
           } else if (tabataMode.value === 2) {
             // REST
+            audioBuzzer.play();
             if (currentCycle.value < tabata.value.cycles) {
               goToState(tabata.value.workTime, 1);
               currentCycle.value = currentCycle.value + 1;
@@ -363,6 +368,7 @@ export default defineComponent({
             currentCycle.value = 1;
             currentSet.value = currentSet.value + 1;
             goToState(tabata.value.workTime, 1);
+            audioBuzzer.play();
           }
         }
       });
