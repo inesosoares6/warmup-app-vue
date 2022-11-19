@@ -48,6 +48,9 @@
                 mode = 0;
                 timer.pause();
               "
+              :disabled="
+                stopwatch.isRunning.value || timer.isRunning.value || tabataTimer.isRunning.value
+              "
             >
               <v-icon>mdi-timer</v-icon>
             </v-btn>
@@ -57,10 +60,19 @@
                 mode = 1;
                 stopwatch.pause();
               "
+              :disabled="
+                stopwatch.isRunning.value || timer.isRunning.value || tabataTimer.isRunning.value
+              "
             >
               <v-icon>mdi-timer-sand</v-icon>
             </v-btn>
-            <v-btn size="small" @click="mode = 2">
+            <v-btn
+              size="small"
+              @click="mode = 2"
+              :disabled="
+                stopwatch.isRunning.value || timer.isRunning.value || tabataTimer.isRunning.value
+              "
+            >
               <v-icon>mdi-camera-timer</v-icon>
             </v-btn>
           </v-btn-toggle>
@@ -372,7 +384,7 @@ export default defineComponent({
       snackbar: false,
       text: "",
       timeout: 2000,
-      mode: 2,
+      mode: 0,
       toggle_exclusive: 0,
     };
   },
