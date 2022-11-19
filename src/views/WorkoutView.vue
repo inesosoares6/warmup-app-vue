@@ -74,7 +74,9 @@
             </v-btn>
           </v-btn-toggle>
           <v-spacer></v-spacer>
-          <span class="tabata-text" v-if="mode == 2 && tabataTimer.isRunning.value">{{getTabataText()}}</span>
+          <span class="tabata-text" v-if="mode == 2">{{
+            getTabataText()
+          }}</span>
           <v-spacer></v-spacer>
           <v-text-field
             v-if="mode === 1"
@@ -270,15 +272,15 @@ export default defineComponent({
     let tabata = ref({
       prepareTime: 2,
       workTime: 5,
-      rest: 2,
-      cycles: 2,
-      sets: 2,
-      restBetweenSets: 3,
+      rest: 3,
+      cycles: 1,
+      sets: 1,
+      restBetweenSets: 0,
     });
     let tabataTime = new Date();
     tabataTime.setSeconds(tabataTime.getSeconds() + tabata.value.prepareTime);
     let tabataTimer = useTimer(tabataTime);
-    let tabataMode = 0;
+    let tabataMode = ref(0);
     tabataTimer.pause();
 
     const updateTabata = (data) => {
@@ -294,15 +296,15 @@ export default defineComponent({
       restartTabata(tabata.value.prepareTime);
       currentCycle.value = 0;
       currentSet.value = 0;
-      tabataMode = 0;
+      tabataMode.value = 0;
     };
     const goToState = (time, state) => {
       restartTabata(time);
       tabataTimer.resume();
-      tabataMode = state;
+      tabataMode.value = state;
     };
     const getTabataText = () => {
-      switch (tabataMode) {
+      switch (tabataMode.value) {
         case 0:
           return "PREPARE";
         case 1:
@@ -310,13 +312,15 @@ export default defineComponent({
         case 2:
         case 3:
           return "REST";
+        case 4:
+          return "FINISHED";
       }
     };
     const getColor = () => {
       if (stopwatch.isRunning.value || timer.isRunning.value) {
         return "error";
       } else if (tabataTimer.isRunning.value) {
-        switch (tabataMode) {
+        switch (tabataMode.value) {
           case 0:
           case 2:
           case 3:
@@ -335,26 +339,32 @@ export default defineComponent({
           audioFinish.play();
         }
         if (tabataTimer.isExpired.value) {
-          if (tabataMode === 0) {
+          if (tabataMode.value === 0) {
             // PREPARE
             console.log("PREPARE TIME");
             currentCycle.value = 1;
             currentSet.value = 1;
             goToState(tabata.value.workTime, 1);
-          } else if (tabataMode === 1) {
+          } else if (tabataMode.value === 1) {
             // WORK
             console.log("WORK TIME");
             if (
               currentCycle.value === tabata.value.cycles &&
               currentSet.value < tabata.value.sets
             ) {
-              goToState(tabata.value.restBetweenSets, 3);
+              goToState(
+                tabata.value.restBetweenSets > 0
+                  ? tabata.value.restBetweenSets
+                  : tabata.value.rest,
+                3
+              );
             } else if (currentCycle.value < tabata.value.cycles) {
               goToState(tabata.value.rest, 2);
             } else {
               audioFinish.play();
+              tabataMode.value = 4;
             }
-          } else if (tabataMode === 2) {
+          } else if (tabataMode.value === 2) {
             // REST
             console.log("REST TIME");
             if (currentCycle.value < tabata.value.cycles) {
@@ -363,7 +373,7 @@ export default defineComponent({
             } else if (currentSet.value < tabata.value.sets) {
               goToState(tabata.value.restBetweenSets, 3);
             }
-          } else if (tabataMode === 3) {
+          } else if (tabataMode.value === 3) {
             // REST BETWEEN SETS
             console.log("REST BETWEEN SETS TIME");
             currentCycle.value = 1;
@@ -383,6 +393,7 @@ export default defineComponent({
       updateTabata,
       tabata,
       tabataTimer,
+      tabataMode,
       currentSet,
       currentCycle,
       resetTabata,
