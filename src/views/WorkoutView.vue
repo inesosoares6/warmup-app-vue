@@ -176,7 +176,7 @@
               size="x-small"
               color="grey"
               icon
-              @click="startTabata()"
+              @click="tabataTimer.resume()"
             >
               <v-icon>mdi-play</v-icon>
             </v-btn>
@@ -194,7 +194,7 @@
               size="x-small"
               color="grey"
               icon
-              @click="restartTabata()"
+              @click="resetTabata()"
             >
               <v-icon>mdi-reload</v-icon>
             </v-btn>
@@ -254,33 +254,99 @@ export default defineComponent({
     };
 
     //TABATA
-    const restartTabata = () => {
-      //   const tabataTime = new Date();
-      //   tabataTime.setSeconds(
-      //     tabataTime.getSeconds() + this.tabata.prepareTime
-      //   );
-      //   const tabataTimer = useTimer(tabataTime);
-      //   tabataTimer.pause();
+    let currentSet = ref(0);
+    let currentCycle = ref(0);
+    let tabata = ref({
+      prepareTime: 2,
+      workTime: 5,
+      rest: 2,
+      cycles: 2,
+      sets: 2,
+      restBetweenSets: 3,
+    });
+    let tabataTime = new Date();
+    tabataTime.setSeconds(tabataTime.getSeconds() + tabata.value.prepareTime);
+    let tabataTimer = useTimer(tabataTime);
+    let tabataMode = 0;
+    tabataTimer.pause();
+
+    const updateTabata = (data) => {
+      tabata.value = { ...data };
+    };
+    const restartTabata = (time) => {
+      const tabataTime = new Date();
+      tabataTime.setSeconds(tabataTime.getSeconds() + time);
+      tabataTimer.restart(tabataTime);
+      tabataTimer.pause();
+    };
+    const resetTabata = () => {
+      restartTabata(tabata.value.prepareTime);
+      currentCycle.value = 0;
+      currentSet.value = 0;
+    };
+    const goToState = (time, state) => {
+      restartTabata(time);
+      tabataTimer.resume();
+      tabataMode = state;
     };
     const getColor = () => {
       if (stopwatch.isRunning.value || timer.isRunning.value) {
         return "error";
-        // } else if(this.tabataTimer.isRunning) {
-        //   switch(this.tabataMode){
-        //     case 'working':
-        //       return 'error';
-        //     case 'rest':
-        //       return 'yellow';
-        //   }
+      } else if (tabataTimer.isRunning.value) {
+        switch (tabataMode) {
+          case 0:
+          case 2:
+          case 3:
+            return "yellow";
+          case 1:
+            return "error";
+        }
       } else {
         return "secondary";
       }
     };
     onMounted(() => {
       watchEffect(async () => {
+        var audioFinish = new Audio(require("../assets/Finish_sound.mp3")); // path to file
         if (timer.isExpired.value) {
-          var audio = new Audio(require("../assets/Finish_sound.mp3")); // path to file
-          audio.play();
+          audioFinish.play();
+        }
+        if (tabataTimer.isExpired.value) {
+          if (tabataMode === 0) {
+            // PREPARE
+            console.log("PREPARE TIME");
+            currentCycle.value = 1;
+            currentSet.value = 1;
+            goToState(tabata.value.workTime, 1);
+          } else if (tabataMode === 1) {
+            // WORK
+            console.log("WORK TIME");
+            if (
+              currentCycle.value === tabata.value.cycles &&
+              currentSet.value < tabata.value.sets
+            ) {
+              goToState(tabata.value.restBetweenSets, 3);
+            } else if (currentCycle.value < tabata.value.cycles) {
+              goToState(tabata.value.rest, 2);
+            } else {
+              audioFinish.play();
+            }
+          } else if (tabataMode === 2) {
+            // REST
+            console.log("REST TIME");
+            if (currentCycle.value < tabata.value.cycles) {
+              goToState(tabata.value.workTime, 1);
+              currentCycle.value = currentCycle.value + 1;
+            } else if (currentSet.value < tabata.value.sets) {
+              goToState(tabata.value.restBetweenSets, 3);
+            }
+          } else if (tabataMode === 3) {
+            // REST BETWEEN SETS
+            console.log("REST BETWEEN SETS TIME");
+            currentCycle.value = 1;
+            currentSet.value = currentSet.value + 1;
+            goToState(tabata.value.workTime, 1);
+          }
         }
       });
     });
@@ -291,6 +357,12 @@ export default defineComponent({
       getColor,
       stopwatch,
       restartTabata,
+      updateTabata,
+      tabata,
+      tabataTimer,
+      currentSet,
+      currentCycle,
+      resetTabata,
     };
   },
 
@@ -300,19 +372,8 @@ export default defineComponent({
       snackbar: false,
       text: "",
       timeout: 2000,
-      mode: 0,
+      mode: 2,
       toggle_exclusive: 0,
-      currentSet: 0,
-      currentCycle: 0,
-      tabata: {
-        prepareTime: 5,
-        workTime: 10,
-        rest: 0,
-        cycles: 1,
-        sets: 1,
-        restBetweenSets: 0,
-      },
-      endedTimer: false,
     };
   },
 
@@ -341,11 +402,6 @@ export default defineComponent({
         "\n-------------\n" +
         this.currentWorkout.exercises
       );
-    },
-
-    updateTabata(data) {
-      console.log(data);
-      this.tabata = { ...data };
     },
 
     updateWorkout() {
