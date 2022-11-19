@@ -51,22 +51,10 @@
               tabataTimer.isRunning.value
             "
           >
-            <v-btn
-              size="small"
-              @click="
-                mode = 0;
-                timer.pause();
-              "
-            >
+            <v-btn size="small" @click="mode = 0">
               <v-icon>mdi-timer</v-icon>
             </v-btn>
-            <v-btn
-              size="small"
-              @click="
-                mode = 1;
-                stopwatch.pause();
-              "
-            >
+            <v-btn size="small" @click="mode = 1">
               <v-icon>mdi-timer-sand</v-icon>
             </v-btn>
             <v-btn size="small" @click="mode = 2">
