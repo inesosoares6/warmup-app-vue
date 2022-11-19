@@ -41,15 +41,21 @@
     >
       <v-card-title>
         <v-row class="timer-title">
-          <v-btn-toggle border v-model="toggle_exclusive" divided>
+          <v-btn-toggle
+            border
+            v-model="toggle_exclusive"
+            divided
+            :disabled="
+              stopwatch.isRunning.value ||
+              timer.isRunning.value ||
+              tabataTimer.isRunning.value
+            "
+          >
             <v-btn
               size="small"
               @click="
                 mode = 0;
                 timer.pause();
-              "
-              :disabled="
-                stopwatch.isRunning.value || timer.isRunning.value || tabataTimer.isRunning.value
               "
             >
               <v-icon>mdi-timer</v-icon>
@@ -60,19 +66,10 @@
                 mode = 1;
                 stopwatch.pause();
               "
-              :disabled="
-                stopwatch.isRunning.value || timer.isRunning.value || tabataTimer.isRunning.value
-              "
             >
               <v-icon>mdi-timer-sand</v-icon>
             </v-btn>
-            <v-btn
-              size="small"
-              @click="mode = 2"
-              :disabled="
-                stopwatch.isRunning.value || timer.isRunning.value || tabataTimer.isRunning.value
-              "
-            >
+            <v-btn size="small" @click="mode = 2">
               <v-icon>mdi-camera-timer</v-icon>
             </v-btn>
           </v-btn-toggle>
