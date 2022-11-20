@@ -29,6 +29,7 @@
           v-on:import-workouts="importWorkouts"
           v-on:add-details="addDetails"
           v-on:add-personal-record="addPR"
+          v-on:edit-personal-record="updatePR"
         />
       </router-view>
     </v-main>
@@ -79,7 +80,9 @@ export default {
       this.groupByType =
         localStorage.getItem("groupByType") === "true" ? true : false;
     if (localStorage.getItem("personalRecords"))
-      this.personalRecords = JSON.parse(localStorage.getItem("personalRecords"));
+      this.personalRecords = JSON.parse(
+        localStorage.getItem("personalRecords")
+      );
 
     this.updateWeek();
   },
@@ -148,6 +151,13 @@ export default {
       this.timeline = this.clearTimeline();
     },
 
+    deletePR(personalRecord) {
+      var index = this.personalRecords.findIndex(
+        (obj) => obj.id === personalRecord.id
+      );
+      this.personalRecords.splice(index, 1);
+    },
+
     deleteWorkouts(workoutList) {
       if (workoutList.length === this.allWorkouts.length) {
         this.allWorkouts = [];
@@ -212,6 +222,13 @@ export default {
       });
     },
 
+    updatePR(personalRecord) {
+      var objIndex = this.personalRecords.findIndex(
+        (obj) => obj.id === personalRecord.id
+      );
+      this.personalRecords[objIndex] = personalRecord;
+    },
+
     updateWeek() {
       const currentDate = new Date();
       const startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -250,7 +267,7 @@ export default {
           });
           this.workoutSummary.types[index].value =
             this.workoutSummary.types[index].value + numTimes * addRemove;
-          if(this.workoutSummary.types[index].value === 0) {
+          if (this.workoutSummary.types[index].value === 0) {
             this.workoutSummary.types.splice(index, 1);
           }
         } else {
@@ -298,7 +315,10 @@ export default {
 
     personalRecords: {
       handler() {
-        localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
+        localStorage.setItem(
+          "personalRecords",
+          JSON.stringify(this.personalRecords)
+        );
       },
       deep: true,
     },

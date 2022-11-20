@@ -57,7 +57,9 @@
             <template v-slot:append>
               <v-btn icon color="#424242" size="35">
                 <v-icon size="small">mdi-plus</v-icon>
-                <AddPersonalRecord v-on:add-personal-record="addPR"></AddPersonalRecord>
+                <AddPersonalRecord
+                  v-on:add-personal-record="addPR"
+                ></AddPersonalRecord>
               </v-btn>
             </template>
             <v-divider></v-divider>
@@ -72,6 +74,10 @@
                       <v-icon size="small">mdi-check</v-icon>
                     </v-avatar>
                   </template>
+                  <EditPersonalRecord
+                    v-bind:personalRecord="record"
+                    v-on:edit-personal-record="updatePR"
+                  ></EditPersonalRecord>
                 </v-list-item>
               </v-list>
             </v-card-text>
@@ -208,6 +214,7 @@ import { defineComponent } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 import AddPersonalRecord from "@/components/pop-ups/AddPersonalRecord.vue";
+import EditPersonalRecord from "@/components/pop-ups/EditPersonalRecord.vue";
 
 export default defineComponent({
   name: "AddWorkout",
@@ -223,8 +230,9 @@ export default defineComponent({
   components: {
     PreviewList,
     QrcodeReader,
-    AddPersonalRecord
-},
+    AddPersonalRecord,
+    EditPersonalRecord,
+  },
 
   data() {
     return {
@@ -290,6 +298,10 @@ export default defineComponent({
     previewImportedWorkouts(workouts) {
       this.importedWorkouts = JSON.parse(workouts);
       this.imported = true;
+    },
+
+    updatePR(personalRecord) {
+      this.$emit("edit-personal-record", personalRecord);
     },
   },
 });

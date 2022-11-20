@@ -1,17 +1,17 @@
 <template>
-  <v-dialog v-model="addPersonalRecord" activator="parent">
+  <v-dialog v-model="editPersonalRecord" activator="parent">
     <v-card>
-      <v-card-title> Add Personal Record </v-card-title>
+      <v-card-title> Edit Personal Record </v-card-title>
       <v-card-text>
         <v-form ref="form">
           <v-text-field
-            v-model="name"
+            v-model="personalRecordEdited.name"
             :rules="[(v) => !!v || 'Field is required']"
             label="Exercise Name"
             required
           ></v-text-field>
           <v-text-field
-            v-model="value"
+            v-model="personalRecordEdited.value"
             :rules="[(v) => !!v || 'Field is required']"
             label="Value"
             required
@@ -20,7 +20,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="addPR"> Add PR </v-btn>
+        <v-btn color="secondary" @click="updatePR"> Update </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -28,29 +28,26 @@
 
 <script>
 import { defineComponent } from "vue";
-import { v4 as uuidv4 } from "uuid";
 
 export default defineComponent({
-  name: "AddPersonalRecord",
+  name: "EditPersonalRecord",
+  props: ["personalRecord"],
+
+  mounted() {
+    this.personalRecordEdited = { ...this.personalRecord };
+  },
 
   data() {
     return {
-      addPersonalRecord: false,
-      name: "",
-      value: "",
+      editPersonalRecord: false,
+      personalRecordEdited: {},
     };
   },
 
   methods: {
-    addPR() {
-      this.$emit("add-personal-record", {
-        id: uuidv4(),
-        name: this.name,
-        value: this.value,
-      });
-      this.name = "";
-      this.value = "";
-      this.addPersonalRecord = false;
+    updatePR() {
+      this.$emit("edit-personal-record", this.personalRecordEdited);
+      this.editPersonalRecord = false;
     },
   },
 });
