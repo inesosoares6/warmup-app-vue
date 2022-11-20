@@ -9,13 +9,12 @@
         height="320"
       >
         <v-carousel-item>
-          <v-card class="cards-carousel">
-            <v-card-title>
+          <v-card class="cards-carousel" title="Summary">
+            <template v-slot:prepend>
               <v-icon class="dumbbell-icon" color="secondary"
                 >mdi-clipboard-check-multiple-outline</v-icon
               >
-              Summary
-            </v-card-title>
+            </template>
             <v-card-text>
               <v-row class="center-btns">
                 <v-col class="done-todo">
@@ -50,14 +49,41 @@
             </v-card-text>
           </v-card>
         </v-carousel-item>
+        <v-carousel-item v-if="personalRecords !== []">
+          <v-card class="cards-carousel" title="Personal Records">
+            <template v-slot:prepend>
+              <v-icon class="dumbbell-icon" color="secondary">mdi-medal</v-icon>
+            </template>
+            <template v-slot:append>
+              <v-btn icon color="#424242" size="35">
+                <v-icon size="small">mdi-plus</v-icon>
+                <AddPersonalRecord v-on:add-personal-record="addPR"></AddPersonalRecord>
+              </v-btn>
+            </template>
+            <v-divider></v-divider>
+            <v-card-text>
+              <v-list>
+                <v-list-item
+                  v-for="(record, index) in personalRecords"
+                  :key="index"
+                  :title="record.name + ': ' + record.value"
+                  ><template v-slot:prepend>
+                    <v-avatar size="25" color="secondary">
+                      <v-icon size="small">mdi-check</v-icon>
+                    </v-avatar>
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-carousel-item>
         <v-carousel-item v-if="lastWorkout.name !== undefined">
-          <v-card class="cards-carousel">
-            <v-card-title>
+          <v-card class="cards-carousel" title="Last Workout">
+            <template v-slot:prepend>
               <v-icon class="dumbbell-icon" color="secondary"
                 >mdi-history</v-icon
               >
-              Last Workout
-            </v-card-title>
+            </template>
             <v-card-subtitle>
               <div>{{ lastWorkout.name }}</div>
               <div>
@@ -181,6 +207,7 @@
 import { defineComponent } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
+import AddPersonalRecord from "@/components/pop-ups/AddPersonalRecord.vue";
 
 export default defineComponent({
   name: "AddWorkout",
@@ -190,12 +217,14 @@ export default defineComponent({
     "allWorkouts",
     "currentWorkout",
     "timeline",
+    "personalRecords",
   ],
 
   components: {
     PreviewList,
     QrcodeReader,
-  },
+    AddPersonalRecord
+},
 
   data() {
     return {
@@ -210,6 +239,10 @@ export default defineComponent({
   },
 
   methods: {
+    addPR(personalRecord) {
+      this.$emit("add-personal-record", personalRecord);
+    },
+
     downloadedWorkouts(fileName) {
       if (fileName !== "") {
         this.text = fileName + " exported to Documents folder.";

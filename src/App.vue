@@ -22,11 +22,13 @@
           :timeline="timeline"
           :types="getTypes()"
           :groupByType="groupByType"
+          :personalRecords="personalRecords"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
           v-on:import-workouts="importWorkouts"
           v-on:add-details="addDetails"
+          v-on:add-personal-record="addPR"
         />
       </router-view>
     </v-main>
@@ -56,6 +58,7 @@ export default {
       timeline: this.clearTimeline(),
       weekNumber: 0,
       groupByType: false,
+      personalRecords: [],
     };
   },
 
@@ -75,6 +78,8 @@ export default {
     if (localStorage.getItem("groupByType"))
       this.groupByType =
         localStorage.getItem("groupByType") === "true" ? true : false;
+    if (localStorage.getItem("personalRecords"))
+      this.personalRecords = JSON.parse(localStorage.getItem("personalRecords"));
 
     this.updateWeek();
   },
@@ -83,6 +88,10 @@ export default {
     addDetails(workout) {
       var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
       this.allWorkouts[objIndex].details = workout.details;
+    },
+
+    addPR(personalRecord) {
+      this.personalRecords.push(personalRecord);
     },
 
     addWorkout(newWorkout) {
@@ -283,6 +292,13 @@ export default {
     lastWorkout: {
       handler() {
         localStorage.setItem("lastWorkout", JSON.stringify(this.lastWorkout));
+      },
+      deep: true,
+    },
+
+    personalRecords: {
+      handler() {
+        localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
       },
       deep: true,
     },
