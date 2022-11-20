@@ -5,10 +5,12 @@
       :allWorkouts="allWorkouts"
       :groupByType="groupByType"
       :types="getTypes()"
+      :personalRecords="personalRecords"
       v-on:add-workout="addWorkout"
       v-on:delete-cache="deleteCache"
       v-on:delete-workouts="deleteWorkouts"
       v-on:group-by-types="groupByTypeFunction"
+      v-on:delete-personal-records="deletePRs"
     ></TopToolbar>
     <v-main>
       <router-view v-slot="{ Component, route }">
@@ -151,11 +153,17 @@ export default {
       this.timeline = this.clearTimeline();
     },
 
-    deletePR(personalRecord) {
-      var index = this.personalRecords.findIndex(
-        (obj) => obj.id === personalRecord.id
-      );
-      this.personalRecords.splice(index, 1);
+    deletePRs(personalRecordsList) {
+      if (personalRecordsList.length === this.personalRecords.length) {
+        this.personalRecords = [];
+      } else {
+        for (const record of personalRecordsList) {
+          var index = this.personalRecords.findIndex(
+            (obj) => obj.id === record.id
+          );
+          this.personalRecords.splice(index, 1);
+        }
+      }
     },
 
     deleteWorkouts(workoutList) {

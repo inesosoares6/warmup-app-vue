@@ -36,6 +36,16 @@
             </v-btn>
           </v-col>
           <v-col class="d-flex justify-center">
+            <v-btn variant="outlined" color="error">
+              PR
+              <PreviewRecords
+                v-if="personalRecords.length > 0"
+                v-bind:personalRecords="personalRecords"
+                v-on:delete-personal-records="deletePRs"
+              ></PreviewRecords>
+            </v-btn>
+          </v-col>
+          <v-col class="d-flex justify-center">
             <v-btn variant="outlined" color="error" @click="deleteCache">
               All Cache
             </v-btn>
@@ -51,13 +61,15 @@
 import { defineComponent } from "vue";
 import { useTheme } from "vuetify";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
+import PreviewRecords from "@/components/pop-ups/PreviewRecords.vue";
 
 export default defineComponent({
   name: "SettingsMenu",
-  props: ["allWorkouts", "groupByType"],
+  props: ["allWorkouts", "groupByType", "personalRecords"],
 
   components: {
     PreviewList,
+    PreviewRecords,
   },
 
   updated() {
@@ -87,6 +99,11 @@ export default defineComponent({
   methods: {
     deleteCache() {
       this.$emit("delete-cache");
+      this.settingsMenu = false;
+    },
+
+    deletePRs(records) {
+      this.$emit("delete-personal-records", records);
       this.settingsMenu = false;
     },
 
