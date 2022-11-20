@@ -7,10 +7,10 @@
       "
     >
       <template v-slot:append>
-        <v-btn v-if="!addDetails" icon color="grey" @click="addDetails = true">
+        <v-btn v-if="!addDetails" icon color="#424242" @click="addDetails = true">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-        <v-btn v-else icon color="grey" @click="addDetails = false">
+        <v-btn v-else icon color="#424242" @click="addDetails = false">
           <v-icon>mdi-minus</v-icon>
         </v-btn>
       </template>
