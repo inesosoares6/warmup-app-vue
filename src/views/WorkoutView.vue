@@ -14,14 +14,22 @@
         ></v-checkbox>
       </template>
       <v-divider></v-divider>
+      <v-col>
+        <v-btn class="details-button" color="grey" icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+          <WorkoutDetails
+            v-bind:workout="currentWorkout"
+            v-on:edited-workout="addDetails"
+          ></WorkoutDetails>
+        </v-btn>
+      </v-col>
       <v-card-text
         class="exercises"
         v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')"
       >
       </v-card-text>
-      <v-col class="text-right">
+      <v-col>
         <v-btn
-          v-if="currentWorkout.name !== undefined"
           class="floating-button"
           color="secondary"
           icon
@@ -226,6 +234,7 @@ import { defineComponent, watchEffect, onMounted, ref } from "vue";
 import { Clipboard } from "@capacitor/clipboard";
 import { useStopwatch, useTimer } from "vue-timer-hook";
 import TabataSettings from "@/components/pop-ups/TabataSettings.vue";
+import WorkoutDetails from "@/components/pop-ups/WorkoutDetails.vue";
 
 export default defineComponent({
   name: "WorkoutView",
@@ -233,6 +242,7 @@ export default defineComponent({
 
   components: {
     TabataSettings,
+    WorkoutDetails,
   },
 
   setup() {
@@ -408,6 +418,10 @@ export default defineComponent({
   },
 
   methods: {
+    addDetails(workout) {
+      this.$emit("add-details", workout);
+    },
+
     copyWorkout() {
       Clipboard.write({
         string: this.createStringWorkout(),
@@ -441,6 +455,12 @@ export default defineComponent({
   position: absolute;
   bottom: 5px;
   right: 5px;
+}
+
+.details-button {
+  position: absolute;
+  top: 100px;
+  left: 5px;
 }
 
 .exercises {

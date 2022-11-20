@@ -26,6 +26,7 @@
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
           v-on:import-workouts="importWorkouts"
+          v-on:add-details="addDetails"
         />
       </router-view>
     </v-main>
@@ -79,6 +80,11 @@ export default {
   },
 
   methods: {
+    addDetails(workout) {
+      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
+      this.allWorkouts[objIndex].details = workout.details;
+    },
+
     addWorkout(newWorkout) {
       this.allWorkouts.push(newWorkout);
       this.updateSummary(newWorkout, newWorkout.completions, 1);
