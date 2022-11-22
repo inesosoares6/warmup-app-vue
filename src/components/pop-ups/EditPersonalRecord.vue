@@ -59,6 +59,9 @@ export default defineComponent({
           zoom: {
             enabled: false,
           },
+          toolbar: {
+            show: false,
+          },
         },
         title: {
           text: "Evolution",
