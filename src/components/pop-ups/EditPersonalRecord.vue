@@ -5,15 +5,10 @@
       <v-card-text>
         <v-form ref="form">
           <v-text-field
-            v-model="personalRecordEdited.name"
+            v-model="newValue"
             :rules="[(v) => !!v || 'Field is required']"
-            label="Exercise Name"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="personalRecordEdited.value"
-            :rules="[(v) => !!v || 'Field is required']"
-            label="Value"
+            label="Add new value"
+            type="number"
             required
           ></v-text-field>
         </v-form>
@@ -35,17 +30,20 @@ export default defineComponent({
 
   mounted() {
     this.personalRecordEdited = { ...this.personalRecord };
+    this.newValue = this.personalRecord.value[this.personalRecord.value.length-1];
   },
 
   data() {
     return {
       editPersonalRecord: false,
       personalRecordEdited: {},
+      newValue: 0,
     };
   },
 
   methods: {
     updatePR() {
+      this.personalRecordEdited.value.push(this.newValue);
       this.$emit("edit-personal-record", this.personalRecordEdited);
       this.editPersonalRecord = false;
     },
@@ -53,8 +51,15 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .v-card-title {
   margin-top: 10px;
+}
+
+.v-text-field :deep(input::-webkit-outer-spin-button),
+.v-text-field :deep(input::-webkit-inner-spin-button) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
 }
 </style>

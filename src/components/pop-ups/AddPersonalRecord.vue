@@ -14,6 +14,8 @@
             v-model="value"
             :rules="[(v) => !!v || 'Field is required']"
             label="Value"
+            type="number"
+            suffix="kg"
             required
           ></v-text-field>
         </v-form>
@@ -46,7 +48,7 @@ export default defineComponent({
       this.$emit("add-personal-record", {
         id: uuidv4(),
         name: this.name,
-        value: this.value,
+        value: [this.value],
       });
       this.name = "";
       this.value = "";
@@ -56,8 +58,15 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .v-card-title {
   margin-top: 10px;
+}
+
+.v-text-field :deep(input::-webkit-outer-spin-button),
+.v-text-field :deep(input::-webkit-inner-spin-button) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
 }
 </style>
