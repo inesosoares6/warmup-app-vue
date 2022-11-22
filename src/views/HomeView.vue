@@ -1,76 +1,42 @@
 <template>
   <v-container>
-    <v-card elevation="24" max-width="444" class="mx-auto">
-      <v-carousel
-        :continuous="false"
-        :show-arrows="false"
-        hide-delimiter-background
-        delimiter-icon="mdi-square"
-        height="320"
-      >
-        <v-carousel-item>
-          <v-card class="cards-carousel" title="Summary">
-            <template v-slot:prepend>
-              <v-icon class="dumbbell-icon" color="secondary"
-                >mdi-clipboard-check-multiple-outline</v-icon
-              >
-            </template>
-            <v-card-text>
-              <v-row class="center-btns">
-                <v-col class="done-todo">
-                  <v-avatar size="60" :color="'secondary'">
-                    {{ workoutSummary.done }} </v-avatar
-                  ><br />
-                  <v-divider thickness="0px"></v-divider>
-                  Done
-                </v-col>
-                <v-col class="done-todo">
-                  <v-avatar size="60" :color="'error'">
-                    {{ workoutSummary.todo }} </v-avatar
-                  ><br />
-                  <v-divider thickness="0px"></v-divider>
-                  To Do
-                </v-col>
-              </v-row>
-              <v-divider class="divider" thickness="1px"></v-divider>
-              <v-slide-group>
-                <v-slide-group-item
-                  v-for="(item, index) in workoutSummary.types"
-                  :key="index"
-                >
-                  <div class="types-avatar">
-                    <v-avatar :color="'secondary'"> {{ item.value }} </v-avatar
-                    ><br />
-                    <v-divider thickness="0px"></v-divider>
-                    {{ item.type }}
-                  </div>
-                </v-slide-group-item>
-              </v-slide-group>
-            </v-card-text>
-          </v-card>
-        </v-carousel-item>
-        <v-carousel-item v-if="lastWorkout.name !== undefined">
-          <v-card class="cards-carousel" title="Last Workout">
-            <template v-slot:prepend>
-              <v-icon class="dumbbell-icon" color="secondary"
-                >mdi-history</v-icon
-              >
-            </template>
-            <v-card-subtitle>
-              <div>{{ lastWorkout.name }}</div>
-              <div>
-                {{ lastWorkout.type + " - " + lastWorkout.time + " min" }}
-              </div>
-            </v-card-subtitle>
-            <v-divider></v-divider>
-            <v-card-text
-              class="exercises"
-              v-html="lastWorkout.exercises.replaceAll('\n', '<br/>')"
-            >
-            </v-card-text>
-          </v-card>
-        </v-carousel-item>
-      </v-carousel>
+    <v-card title="Summary">
+      <template v-slot:prepend>
+        <v-icon class="dumbbell-icon" color="secondary"
+          >mdi-clipboard-check-multiple-outline</v-icon
+        >
+      </template>
+      <v-card-text>
+        <v-row class="center-btns">
+          <v-col class="done-todo">
+            <v-avatar size="60" :color="'secondary'">
+              {{ workoutSummary.done }} </v-avatar
+            ><br />
+            <v-divider thickness="0px"></v-divider>
+            Done
+          </v-col>
+          <v-col class="done-todo">
+            <v-avatar size="60" :color="'error'">
+              {{ workoutSummary.todo }} </v-avatar
+            ><br />
+            <v-divider thickness="0px"></v-divider>
+            To Do
+          </v-col>
+        </v-row>
+        <v-divider class="divider" thickness="1px"></v-divider>
+        <v-slide-group>
+          <v-slide-group-item
+            v-for="(item, index) in workoutSummary.types"
+            :key="index"
+          >
+            <div class="types-avatar">
+              <v-avatar :color="'secondary'"> {{ item.value }} </v-avatar><br />
+              <v-divider thickness="0px"></v-divider>
+              {{ item.type }}
+            </div>
+          </v-slide-group-item>
+        </v-slide-group>
+      </v-card-text>
     </v-card>
     <v-divider thickness="0px"></v-divider>
     <v-card>
@@ -184,7 +150,6 @@ export default defineComponent({
   name: "AddWorkout",
   props: [
     "workoutSummary",
-    "lastWorkout",
     "allWorkouts",
     "currentWorkout",
     "timeline",
@@ -208,7 +173,6 @@ export default defineComponent({
   },
 
   methods: {
-
     downloadedWorkouts(fileName) {
       if (fileName !== "") {
         this.text = fileName + " exported to Documents folder.";
@@ -286,11 +250,6 @@ export default defineComponent({
 .done-todo {
   font-size: 20px;
   font-weight: bold;
-}
-
-.cards-carousel {
-  height: 270px;
-  overflow-y: auto;
 }
 
 .types-avatar {

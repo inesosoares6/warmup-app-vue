@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card class="cards-carousel" title="Personal Records">
+    <v-card title="Personal Records">
       <template v-slot:prepend>
         <v-icon class="dumbbell-icon" color="secondary">mdi-medal</v-icon>
       </template>
@@ -18,7 +18,9 @@
           <v-list-item
             v-for="(record, index) in personalRecords"
             :key="index"
-            :title="record.name + ': ' + record.value[record.value.length-1] + ' kg'"
+            :title="
+              record.name + ': ' + record.value[record.value.length - 1] + ' kg'
+            "
             ><template v-slot:prepend>
               <v-avatar size="25" color="secondary">
                 <v-icon size="small">mdi-check</v-icon>
@@ -32,6 +34,24 @@
         </v-list>
       </v-card-text>
     </v-card>
+    <v-divider thickness="0px"></v-divider>
+    <v-card title="Last Workout">
+      <template v-slot:prepend>
+        <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
+      </template>
+      <v-card-subtitle>
+        <div>{{ lastWorkout.name }}</div>
+        <div>
+          {{ lastWorkout.type + " - " + lastWorkout.time + " min" }}
+        </div>
+      </v-card-subtitle>
+      <v-divider></v-divider>
+      <v-card-text
+        class="exercises"
+        v-html="lastWorkout.exercises.replaceAll('\n', '<br/>')"
+      >
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -42,7 +62,7 @@ import EditPersonalRecord from "@/components/pop-ups/EditPersonalRecord.vue";
 
 export default defineComponent({
   name: "PersonalView",
-  props: ["personalRecords"],
+  props: ["personalRecords", "lastWorkout"],
 
   components: {
     AddPersonalRecord,
