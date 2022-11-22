@@ -26,7 +26,7 @@
         <v-row>
           <v-col class="d-flex justify-center">
             <v-btn variant="outlined" color="error">
-              Workouts
+              WODs
               <PreviewList
                 v-if="allWorkouts.length > 0"
                 v-bind:allWorkouts="allWorkouts"
