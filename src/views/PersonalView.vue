@@ -79,10 +79,6 @@ export default defineComponent({
     apexchart: VueApexCharts,
   },
 
-  mounted() {
-    console.log(this.personalRecords);
-  },
-
   data() {
     return {
       chartOptions: {
