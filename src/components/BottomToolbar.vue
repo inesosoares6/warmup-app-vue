@@ -14,6 +14,11 @@
       <v-icon>mdi-format-list-bulleted</v-icon>
       All
     </v-btn>
+
+    <v-btn value="personal" :to="{ name: 'personal-view' }">
+      <v-icon>mdi-account</v-icon>
+      User
+    </v-btn>
   </v-bottom-navigation>
 </template>
 
