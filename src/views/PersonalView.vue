@@ -32,6 +32,14 @@
             ></EditPersonalRecord>
           </v-list-item>
         </v-list>
+        <div>
+          <apexchart
+            type="line"
+            :options="chartOptions"
+            :series="series"
+            width="100%"
+          ></apexchart>
+        </div>
       </v-card-text>
     </v-card>
     <v-divider thickness="0px"></v-divider>
@@ -59,6 +67,7 @@
 import { defineComponent } from "vue";
 import AddPersonalRecord from "@/components/pop-ups/AddPersonalRecord.vue";
 import EditPersonalRecord from "@/components/pop-ups/EditPersonalRecord.vue";
+import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "PersonalView",
@@ -67,10 +76,37 @@ export default defineComponent({
   components: {
     AddPersonalRecord,
     EditPersonalRecord,
+    apexchart: VueApexCharts,
+  },
+
+  mounted() {
+    console.log(this.personalRecords);
   },
 
   data() {
-    return {};
+    return {
+      chartOptions: {
+        chart: {
+          id: "personal-records-average",
+          zoom: {
+            enabled: false,
+          },
+        },
+        title: {
+          text: "Average",
+          align: "left",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+      },
+      series: [
+        {
+          name: "series-1",
+          data: this.personalRecords[0].value,
+        },
+      ],
+    };
   },
   methods: {
     addPR(personalRecord) {

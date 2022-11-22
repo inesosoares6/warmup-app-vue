@@ -1,7 +1,11 @@
 <template>
   <v-dialog v-model="editPersonalRecord" activator="parent">
-    <v-card>
-      <v-card-title> Edit Personal Record </v-card-title>
+    <v-card :title="personalRecord.name">
+      <template v-slot:prepend>
+        <v-avatar size="25" color="secondary">
+          <v-icon size="small">mdi-trophy</v-icon>
+        </v-avatar>
+      </template>
       <v-card-text>
         <v-form ref="form">
           <v-text-field
@@ -13,6 +17,13 @@
           ></v-text-field>
         </v-form>
       </v-card-text>
+      <div class="graph">
+        <apexchart
+          type="line"
+          :options="chartOptions"
+          :series="series"
+        ></apexchart>
+      </div>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="secondary" @click="updatePR"> Update </v-btn>
@@ -23,21 +34,46 @@
 
 <script>
 import { defineComponent } from "vue";
+import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "EditPersonalRecord",
   props: ["personalRecord"],
 
+  components: {
+    apexchart: VueApexCharts,
+  },
+
   mounted() {
     this.personalRecordEdited = { ...this.personalRecord };
-    this.newValue = this.personalRecord.value[this.personalRecord.value.length-1];
   },
 
   data() {
     return {
       editPersonalRecord: false,
       personalRecordEdited: {},
-      newValue: 0,
+      newValue: null,
+      chartOptions: {
+        chart: {
+          id: "personal-record-evolution",
+          zoom: {
+            enabled: false,
+          },
+        },
+        title: {
+          text: "Evolution",
+          align: "left",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+      },
+      series: [
+        {
+          name: "series-1",
+          data: this.personalRecord.value,
+        },
+      ],
     };
   },
 
@@ -61,5 +97,10 @@ export default defineComponent({
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
+}
+
+.graph {
+  margin: auto;
+  width: 90%;
 }
 </style>
