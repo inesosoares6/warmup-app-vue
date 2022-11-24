@@ -289,7 +289,10 @@ export default {
         (currentDate - startDate) / (24 * 60 * 60 * 1000)
       );
       const nextWeekNumber = Math.ceil(days / 7);
-      if (this.weekNumber != nextWeekNumber) {
+      if (
+        this.weekNumber != nextWeekNumber &&
+        currentDate.toString().split(" ")[0] !== "Sun"
+      ) {
         this.timeline = this.clearTimeline();
         this.weekNumber = nextWeekNumber;
       }
