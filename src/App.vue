@@ -1,20 +1,20 @@
 <template>
   <v-app>
     <BottomToolbar></BottomToolbar>
+    <TopToolbar
+      :allWorkouts="allWorkouts"
+      :groupByType="groupByType"
+      :types="getTypes()"
+      :personalRecords="personalRecords"
+      :theme="themeString"
+      v-on:add-workout="addWorkout"
+      v-on:delete-cache="deleteCache"
+      v-on:delete-workouts="deleteWorkouts"
+      v-on:group-by-types="groupByTypeFunction"
+      v-on:delete-personal-records="deletePRs"
+      v-on:toggle-theme="toggleTheme"
+    ></TopToolbar>
     <v-main>
-      <TopToolbar
-        :allWorkouts="allWorkouts"
-        :groupByType="groupByType"
-        :types="getTypes()"
-        :personalRecords="personalRecords"
-        :theme="themeString"
-        v-on:add-workout="addWorkout"
-        v-on:delete-cache="deleteCache"
-        v-on:delete-workouts="deleteWorkouts"
-        v-on:group-by-types="groupByTypeFunction"
-        v-on:delete-personal-records="deletePRs"
-        v-on:toggle-theme="toggleTheme"
-      ></TopToolbar>
       <router-view v-slot="{ Component, route }">
         <component
           :is="Component"
@@ -28,7 +28,6 @@
           :groupByType="groupByType"
           :personalRecords="personalRecords"
           :averagePR="averagePR"
-          :theme="themeString"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"

@@ -79,16 +79,12 @@ import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "PersonalView",
-  props: ["personalRecords", "lastWorkout", "averagePR", "theme"],
+  props: ["personalRecords", "lastWorkout", "averagePR"],
 
   components: {
     AddPersonalRecord,
     EditPersonalRecord,
     apexchart: VueApexCharts,
-  },
-
-  mounted() {
-    this.chartOptions.tooltip.theme = 'light';
   },
 
   data() {
@@ -135,15 +131,6 @@ export default defineComponent({
 
     updatePR(personalRecord) {
       this.$emit("edit-personal-record", personalRecord);
-    },
-  },
-
-  watch: {
-    theme: {
-      handler() {
-        console.log(this.theme);
-        this.chartOptions.tooltip.theme = 'dark';
-      },
     },
   },
 });
