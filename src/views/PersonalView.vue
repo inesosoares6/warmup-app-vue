@@ -32,14 +32,22 @@
             ></EditPersonalRecord>
           </v-list-item>
         </v-list>
-        <div>
+        <v-card title="Average" color="#424242" v-if="averagePR.length > 0">
           <apexchart
+            id="averageGraph"
+            ref="averageGraph"
             type="line"
             :options="chartOptions"
-            :series="series"
+            :series="[
+              {
+                name: 'Average',
+                data: this.averagePR,
+              },
+            ]"
             width="100%"
+            height="70px"
           ></apexchart>
-        </div>
+        </v-card>
       </v-card-text>
     </v-card>
     <v-divider thickness="0px"></v-divider>
@@ -71,7 +79,7 @@ import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "PersonalView",
-  props: ["personalRecords", "lastWorkout"],
+  props: ["personalRecords", "lastWorkout", "averagePR"],
 
   components: {
     AddPersonalRecord,
@@ -84,6 +92,11 @@ export default defineComponent({
       chartOptions: {
         chart: {
           id: "personal-records-average",
+          group: "sparks",
+          type: "line",
+          sparkline: {
+            enabled: true,
+          },
           zoom: {
             enabled: false,
           },
@@ -91,20 +104,24 @@ export default defineComponent({
             show: false,
           },
         },
-        title: {
-          text: "Average",
-          align: "left",
+        tooltip: {
+          theme: "dark",
+        },
+        stroke: {
+          curve: "smooth",
+        },
+        grid: {
+          padding: {
+            top: 10,
+            bottom: 10,
+            left: 60,
+            right: 10,
+          },
         },
         dataLabels: {
           enabled: false,
         },
       },
-      series: [
-        {
-          name: "series-1",
-          data: this.personalRecords[0].value,
-        },
-      ],
     };
   },
   methods: {

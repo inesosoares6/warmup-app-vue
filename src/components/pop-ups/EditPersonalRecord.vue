@@ -17,13 +17,20 @@
           ></v-text-field>
         </v-form>
       </v-card-text>
-      <div class="graph">
+      <v-card
+        title="Evolution"
+        color="#424242"
+        width="85%"
+        style="margin: auto"
+      >
         <apexchart
           type="line"
           :options="chartOptions"
           :series="series"
+          width="100%"
+          height="70px"
         ></apexchart>
-      </div>
+      </v-card>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="secondary" @click="updatePR"> Update </v-btn>
@@ -55,7 +62,12 @@ export default defineComponent({
       newValue: null,
       chartOptions: {
         chart: {
-          id: "personal-record-evolution",
+          id: "personal-records-evolution",
+          group: "sparks",
+          type: "line",
+          sparkline: {
+            enabled: true,
+          },
           zoom: {
             enabled: false,
           },
@@ -63,17 +75,37 @@ export default defineComponent({
             show: false,
           },
         },
-        title: {
-          text: "Evolution",
-          align: "left",
+        tooltip: {
+          theme: "dark",
+        },
+        stroke: {
+          curve: "smooth",
+        },
+        grid: {
+          padding: {
+            top: 10,
+            bottom: 20,
+            left: 20,
+            right: 20,
+          },
+        },
+        xaxis: {
+          categories: this.personalRecord.date,
         },
         dataLabels: {
           enabled: false,
         },
+        markers: {
+          size: 6,
+          strokeWidth: 0,
+          hover: {
+            size: 9,
+          },
+        },
       },
       series: [
         {
-          name: "series-1",
+          name: this.personalRecord.name,
           data: this.personalRecord.value,
         },
       ],
@@ -83,6 +115,8 @@ export default defineComponent({
   methods: {
     updatePR() {
       this.personalRecordEdited.value.push(this.newValue);
+      let date = new Date().toString().split(' ');
+      this.personalRecordEdited.date.push(date[2] + ' ' + date[1] + ' ' + date[3]);
       this.$emit("edit-personal-record", this.personalRecordEdited);
       this.editPersonalRecord = false;
     },

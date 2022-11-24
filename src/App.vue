@@ -25,6 +25,7 @@
           :types="getTypes()"
           :groupByType="groupByType"
           :personalRecords="personalRecords"
+          :averagePR="averagePR"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
@@ -62,6 +63,7 @@ export default {
       weekNumber: 0,
       groupByType: false,
       personalRecords: [],
+      averagePR: [],
     };
   },
 
@@ -85,7 +87,7 @@ export default {
       this.personalRecords = JSON.parse(
         localStorage.getItem("personalRecords")
       );
-
+    this.averagePR = this.getAveragePR();
     this.updateWeek();
   },
 
@@ -97,6 +99,7 @@ export default {
 
     addPR(personalRecord) {
       this.personalRecords.push(personalRecord);
+      this.averagePR = this.getAveragePR();
     },
 
     addWorkout(newWorkout) {
@@ -156,6 +159,7 @@ export default {
     deletePRs(personalRecordsList) {
       if (personalRecordsList.length === this.personalRecords.length) {
         this.personalRecords = [];
+        this.averagePR = [];
       } else {
         for (const record of personalRecordsList) {
           var index = this.personalRecords.findIndex(
@@ -163,6 +167,7 @@ export default {
           );
           this.personalRecords.splice(index, 1);
         }
+        this.averagePR = this.getAveragePR();
       }
     },
 
@@ -203,6 +208,28 @@ export default {
       }
     },
 
+    getAveragePR() {
+      //Get max length array
+      let max = 0;
+      this.personalRecords.forEach((record) => {
+        max = record.value.length > max ? record.value.length : max;
+      });
+      //Calculate average
+      let average = [];
+      for (var k = 0; k < max; k++) {
+        let sum = 0;
+        this.personalRecords.forEach((record) => {
+          if (record.value[k] !== undefined) {
+            sum = sum + record.value[k];
+          } else {
+            sum = sum + record.value[record.value.length - 1];
+          }
+        });
+        average[k] = Math.round(sum / this.personalRecords.length);
+      }
+      return average;
+    },
+
     getTypes() {
       let types = [];
       this.allWorkouts.forEach((element) => {
@@ -235,6 +262,7 @@ export default {
         (obj) => obj.id === personalRecord.id
       );
       this.personalRecords[objIndex] = personalRecord;
+      this.averagePR = this.getAveragePR();
     },
 
     updateWeek() {

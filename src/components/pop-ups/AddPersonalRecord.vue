@@ -45,10 +45,12 @@ export default defineComponent({
 
   methods: {
     addPR() {
+      let date = new Date().toString().split(' ');
       this.$emit("add-personal-record", {
         id: uuidv4(),
         name: this.name,
         value: [this.value],
+        date: [date[2] + ' ' + date[1] + ' ' + date[3]]
       });
       this.name = "";
       this.value = "";
