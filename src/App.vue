@@ -1,20 +1,20 @@
 <template>
   <v-app>
     <BottomToolbar></BottomToolbar>
-    <TopToolbar
-      :allWorkouts="allWorkouts"
-      :groupByType="groupByType"
-      :types="getTypes()"
-      :personalRecords="personalRecords"
-      :theme="themeString"
-      v-on:add-workout="addWorkout"
-      v-on:delete-cache="deleteCache"
-      v-on:delete-workouts="deleteWorkouts"
-      v-on:group-by-types="groupByTypeFunction"
-      v-on:delete-personal-records="deletePRs"
-      v-on:toggle-theme="toggleTheme"
-    ></TopToolbar>
     <v-main>
+      <TopToolbar
+        :allWorkouts="allWorkouts"
+        :groupByType="groupByType"
+        :types="getTypes()"
+        :personalRecords="personalRecords"
+        :theme="themeString"
+        v-on:add-workout="addWorkout"
+        v-on:delete-cache="deleteCache"
+        v-on:delete-workouts="deleteWorkouts"
+        v-on:group-by-types="groupByTypeFunction"
+        v-on:delete-personal-records="deletePRs"
+        v-on:toggle-theme="toggleTheme"
+      ></TopToolbar>
       <router-view v-slot="{ Component, route }">
         <component
           :is="Component"
@@ -56,10 +56,6 @@ export default {
     BottomToolbar,
   },
 
-  created() {
-    this.theme = useTheme();
-  },
-
   data() {
     return {
       allWorkouts: [],
@@ -72,12 +68,12 @@ export default {
       groupByType: false,
       personalRecords: [],
       averagePR: [],
-      theme: null,
-      themeString: "dark",
+      theme: useTheme(),
+      themeString: "",
     };
   },
 
-  mounted() {
+  created() {
     if (localStorage.getItem("allWorkouts"))
       this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
     if (localStorage.getItem("workoutSummary"))
@@ -97,8 +93,10 @@ export default {
       this.personalRecords = JSON.parse(
         localStorage.getItem("personalRecords")
       );
-    if (localStorage.getItem("themeString"))
+    if (localStorage.getItem("themeString")) {
       this.themeString = localStorage.getItem("themeString");
+      this.theme.global.name = this.themeString;
+    }
 
     this.averagePR = this.getAveragePR();
     this.updateWeek();

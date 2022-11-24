@@ -38,10 +38,6 @@ export default defineComponent({
     AddWorkout,
   },
 
-  data() {
-    return {};
-  },
-
   methods: {
     addWorkout(newWorkout) {
       this.$emit("add-workout", newWorkout);

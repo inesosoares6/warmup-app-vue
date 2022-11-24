@@ -75,7 +75,7 @@ export default defineComponent({
     this.groupByTypeEnabled = this.groupByType;
   },
 
-  created() {
+  mounted() {
     this.isDarkMode = this.theme === 'dark';
   },
 

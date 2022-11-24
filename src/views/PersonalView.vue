@@ -88,7 +88,7 @@ export default defineComponent({
   },
 
   mounted() {
-    this.chartOptions.tooltip.theme = this.theme;
+    this.chartOptions.tooltip.theme = 'light';
   },
 
   data() {
@@ -109,7 +109,7 @@ export default defineComponent({
           },
         },
         tooltip: {
-          theme: 'dark',
+          theme: "dark",
         },
         stroke: {
           curve: "smooth",
@@ -135,6 +135,15 @@ export default defineComponent({
 
     updatePR(personalRecord) {
       this.$emit("edit-personal-record", personalRecord);
+    },
+  },
+
+  watch: {
+    theme: {
+      handler() {
+        console.log(this.theme);
+        this.chartOptions.tooltip.theme = 'dark';
+      },
     },
   },
 });
