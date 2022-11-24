@@ -59,13 +59,12 @@
 
 <script>
 import { defineComponent } from "vue";
-import { useTheme } from "vuetify";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import PreviewRecords from "@/components/pop-ups/PreviewRecords.vue";
 
 export default defineComponent({
   name: "SettingsMenu",
-  props: ["allWorkouts", "groupByType", "personalRecords"],
+  props: ["allWorkouts", "groupByType", "personalRecords", "theme"],
 
   components: {
     PreviewList,
@@ -76,16 +75,8 @@ export default defineComponent({
     this.groupByTypeEnabled = this.groupByType;
   },
 
-  setup() {
-    const theme = useTheme();
-
-    return {
-      theme,
-      toggleTheme: () =>
-        (theme.global.name.value = theme.global.current.value.dark
-          ? "light"
-          : "dark"),
-    };
+  created() {
+    this.isDarkMode = this.theme === 'dark';
   },
 
   data() {
@@ -114,6 +105,10 @@ export default defineComponent({
 
     groupByTypeFunction() {
       this.$emit("group-by-types", this.groupByTypeEnabled);
+    },
+
+    toggleTheme() {
+      this.$emit("toggle-theme");
     },
   },
 });

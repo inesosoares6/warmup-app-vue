@@ -6,11 +6,13 @@
       :groupByType="groupByType"
       :types="getTypes()"
       :personalRecords="personalRecords"
+      :theme="themeString"
       v-on:add-workout="addWorkout"
       v-on:delete-cache="deleteCache"
       v-on:delete-workouts="deleteWorkouts"
       v-on:group-by-types="groupByTypeFunction"
       v-on:delete-personal-records="deletePRs"
+      v-on:toggle-theme="toggleTheme"
     ></TopToolbar>
     <v-main>
       <router-view v-slot="{ Component, route }">
@@ -26,6 +28,7 @@
           :groupByType="groupByType"
           :personalRecords="personalRecords"
           :averagePR="averagePR"
+          :theme="themeString"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
@@ -43,6 +46,7 @@
 import TopToolbar from "./components/TopToolbar.vue";
 import BottomToolbar from "./components/BottomToolbar.vue";
 import { v4 as uuidv4 } from "uuid";
+import { useTheme } from "vuetify";
 
 export default {
   name: "App",
@@ -50,6 +54,10 @@ export default {
   components: {
     TopToolbar,
     BottomToolbar,
+  },
+
+  created() {
+    this.theme = useTheme();
   },
 
   data() {
@@ -64,6 +72,8 @@ export default {
       groupByType: false,
       personalRecords: [],
       averagePR: [],
+      theme: null,
+      themeString: "dark",
     };
   },
 
@@ -87,6 +97,9 @@ export default {
       this.personalRecords = JSON.parse(
         localStorage.getItem("personalRecords")
       );
+    if (localStorage.getItem("themeString"))
+      this.themeString = localStorage.getItem("themeString");
+
     this.averagePR = this.getAveragePR();
     this.updateWeek();
   },
@@ -249,6 +262,13 @@ export default {
       this.currentWorkout = workout;
     },
 
+    toggleTheme() {
+      this.theme.global.name = this.theme.global.current.dark
+        ? "light"
+        : "dark";
+      this.themeString = this.theme.global.name;
+    },
+
     updateTimeline(day) {
       this.timeline.forEach((item) => {
         if (item.day === day) {
@@ -357,6 +377,12 @@ export default {
         );
       },
       deep: true,
+    },
+
+    themeString: {
+      handler() {
+        localStorage.setItem("themeString", this.themeString);
+      },
     },
 
     timeline: {

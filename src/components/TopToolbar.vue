@@ -4,10 +4,7 @@
       <v-toolbar-title>WOD App</v-toolbar-title>
       <v-btn>
         <v-icon>mdi-plus</v-icon>
-        <AddWorkout
-          v-on:add-workout="addWorkout"
-          :types="types"
-        ></AddWorkout>
+        <AddWorkout v-on:add-workout="addWorkout" :types="types"></AddWorkout>
       </v-btn>
       <v-btn>
         <v-icon>mdi-cog</v-icon>
@@ -15,10 +12,12 @@
           :allWorkouts="allWorkouts"
           :groupByType="groupByType"
           :personalRecords="personalRecords"
+          :theme="theme"
           v-on:delete-cache="deleteCache"
           v-on:delete-workouts="deleteWorkouts"
           v-on:group-by-types="groupByTypeFunction"
           v-on:delete-personal-records="deletePRs"
+          v-on:toggle-theme="toggleTheme"
         ></SettingsMenu>
       </v-btn>
     </v-app-bar>
@@ -32,7 +31,7 @@ import AddWorkout from "./pop-ups/AddWorkout.vue";
 
 export default defineComponent({
   name: "TopToolbar",
-  props: ["allWorkouts", "groupByType", "types", "personalRecords"],
+  props: ["allWorkouts", "groupByType", "types", "personalRecords", "theme"],
 
   components: {
     SettingsMenu,
@@ -62,6 +61,10 @@ export default defineComponent({
 
     groupByTypeFunction(value) {
       this.$emit("group-by-types", value);
+    },
+
+    toggleTheme() {
+      this.$emit("toggle-theme");
     },
   },
 });
