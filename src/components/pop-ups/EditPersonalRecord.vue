@@ -13,6 +13,7 @@
             :rules="[(v) => !!v || 'Field is required']"
             label="Add new value"
             type="number"
+            suffix="kg"
             required
           ></v-text-field>
         </v-form>
