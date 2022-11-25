@@ -2,7 +2,7 @@
   <v-container>
     <v-card title="Personal Records">
       <template v-slot:prepend>
-        <v-icon class="dumbbell-icon" color="secondary">mdi-medal</v-icon>
+        <v-icon class="dumbbell-icon" color="secondary">mdi-clipboard-text</v-icon>
       </template>
       <template v-slot:append>
         <v-btn icon color="#424242" size="35">
