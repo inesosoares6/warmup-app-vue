@@ -28,7 +28,7 @@
           <v-row>
             <v-col>
               <v-text-field
-              v-if="unit!==''"
+                v-if="unit !== ''"
                 v-model="value"
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Value"
@@ -38,7 +38,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-if="name==='Weight' && unit!==''"
+                v-if="name === 'Weight' && unit !== ''"
                 v-model="targetValue"
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Target"
@@ -88,16 +88,17 @@ export default defineComponent({
       });
       this.name = "";
       this.value = "";
+      this.unit = "";
       this.targetValue = "";
       this.addMeasurement = false;
     },
 
     getItems() {
-      if(this.name === 'Weight') {
-        this.unit = 'kg';
-        return ['kg'];
+      if (this.name === "Weight") {
+        this.unit = "kg";
+        return ["kg"];
       } else {
-        return ['%', 'kg'];
+        return ["%", "kg"];
       }
     },
 
