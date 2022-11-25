@@ -42,6 +42,7 @@
                 v-model="targetValue"
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Target"
+                suffix="kg"
                 type="number"
                 required
               ></v-text-field>

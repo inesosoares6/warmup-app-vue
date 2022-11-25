@@ -86,6 +86,11 @@
               >
                 {{ record.value[record.value.length - 1] }}
                 {{ record.unit }}</v-progress-circular
+              >
+              <EditPersonalRecord
+                v-bind:personalRecord="record"
+                v-bind:input="'measurment'"
+              ></EditPersonalRecord
               ><br />
               <v-divider thickness="0px"></v-divider>
               {{ record.name }}

@@ -8,14 +8,40 @@
       </template>
       <v-card-text>
         <v-form ref="form">
-          <v-text-field
-            v-model="newValue"
-            :rules="[(v) => !!v || 'Field is required']"
-            label="Add new value"
-            type="number"
-            suffix="kg"
-            required
-          ></v-text-field>
+          <v-row
+            v-if="input === 'measurment' && personalRecord.name === 'Weight'"
+          >
+            <v-col>
+              <v-text-field
+                v-model="newValue"
+                :rules="[(v) => !!v || 'Field is required']"
+                label="Add new value"
+                type="number"
+                suffix="kg"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                v-model="newTargetValue"
+                :rules="[(v) => !!v || 'Field is required']"
+                label="New target"
+                suffix="kg"
+                type="number"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row v-else>
+            <v-col>
+              <v-text-field
+                v-model="newValue"
+                :rules="[(v) => !!v || 'Field is required']"
+                label="Add new value"
+                type="number"
+                :suffix="input === 'measurment' ? personalRecord.unit : 'kg'"
+                required
+              ></v-text-field>
+            </v-col>
+          </v-row>
         </v-form>
       </v-card-text>
       <v-card
@@ -46,7 +72,7 @@ import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "EditPersonalRecord",
-  props: ["personalRecord"],
+  props: ["personalRecord", "input"],
 
   components: {
     apexchart: VueApexCharts,
@@ -61,6 +87,7 @@ export default defineComponent({
       editPersonalRecord: false,
       personalRecordEdited: {},
       newValue: null,
+      newTargetValue: null,
       chartOptions: {
         chart: {
           id: "personal-records-evolution",
