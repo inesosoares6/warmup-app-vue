@@ -175,6 +175,8 @@ export default {
       this.lastWorkout = {};
       this.workoutSummary = this.clearWorkoutSummary();
       this.timeline = this.clearTimeline();
+      this.personalRecords = [];
+      this.measurements = [];
     },
 
     deleteMeasurements(measurementsList) {
