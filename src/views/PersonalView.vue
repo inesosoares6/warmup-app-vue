@@ -2,7 +2,9 @@
   <v-container>
     <v-card title="Personal Records">
       <template v-slot:prepend>
-        <v-icon class="dumbbell-icon" color="secondary">mdi-clipboard-text</v-icon>
+        <v-icon class="dumbbell-icon" color="secondary"
+          >mdi-clipboard-text</v-icon
+        >
       </template>
       <template v-slot:append>
         <v-btn icon color="#424242" size="35">
@@ -51,6 +53,48 @@
       </v-card-text>
     </v-card>
     <v-divider thickness="0px"></v-divider>
+    <v-card title="Measurements">
+      <template v-slot:prepend>
+        <v-icon class="dumbbell-icon" color="secondary"
+          >mdi-scale-bathroom</v-icon
+        >
+      </template>
+      <template v-slot:append>
+        <v-btn v-if="measurements.length < 3" icon color="#424242" size="35">
+          <v-icon size="small">mdi-plus</v-icon>
+          <AddMeasurement
+            v-bind:measurements="measurements"
+            v-on:add-measurement="addMeasurement"
+          ></AddMeasurement>
+        </v-btn>
+      </template>
+      <v-divider></v-divider>
+      <v-card-text>
+        <div class="text-center">
+          <v-row class="center-btns">
+            <v-col
+              class="measurements"
+              v-for="(record, index) in measurements"
+              :key="index"
+            >
+              <v-progress-circular
+                :rotate="360"
+                :size="80"
+                :width="10"
+                :model-value="calculatePercentage(record)"
+                :color="getMeasurementColor(record)"
+              >
+                {{ record.value[record.value.length - 1] }}
+                {{ record.unit }}</v-progress-circular
+              ><br />
+              <v-divider thickness="0px"></v-divider>
+              {{ record.name }}
+            </v-col>
+          </v-row>
+        </div>
+      </v-card-text>
+    </v-card>
+    <v-divider thickness="0px"></v-divider>
     <v-card title="Last Workout">
       <template v-slot:prepend>
         <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
@@ -75,16 +119,18 @@
 import { defineComponent } from "vue";
 import AddPersonalRecord from "@/components/pop-ups/AddPersonalRecord.vue";
 import EditPersonalRecord from "@/components/pop-ups/EditPersonalRecord.vue";
+import AddMeasurement from "@/components/pop-ups/AddMeasurement.vue";
 import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "PersonalView",
-  props: ["personalRecords", "lastWorkout", "averagePR"],
+  props: ["personalRecords", "lastWorkout", "averagePR", "measurements"],
 
   components: {
     AddPersonalRecord,
     EditPersonalRecord,
     apexchart: VueApexCharts,
+    AddMeasurement,
   },
 
   data() {
@@ -126,8 +172,47 @@ export default defineComponent({
     };
   },
   methods: {
+    addMeasurement(measurement) {
+      this.$emit("add-measurement", measurement);
+    },
+
     addPR(personalRecord) {
       this.$emit("add-personal-record", personalRecord);
+    },
+
+    calculatePercentage(measurement) {
+      if (measurement.unit === "%")
+        return measurement.value[measurement.value.length - 1];
+
+      if (measurement.name === "Weight") {
+        if (
+          measurement.target > measurement.value[measurement.value.length - 1]
+        ) {
+          return (
+            (measurement.value[measurement.value.length - 1] /
+              measurement.target) *
+            100
+          );
+        } else {
+          return (
+            (measurement.target /
+              measurement.value[measurement.value.length - 1]) *
+            100
+          );
+        }
+      } else {
+        let value = 0;
+        this.measurements.forEach((record) => {
+          if (record.name === "Weight") {
+            value = Math.round(
+              (measurement.value[measurement.value.length - 1] /
+                record.value[record.value.length - 1]) *
+                100
+            );
+          }
+        });
+        return value;
+      }
     },
 
     getColor() {
@@ -135,6 +220,17 @@ export default defineComponent({
         this.averagePR[this.averagePR.length - 2]
         ? ["#03dac5"]
         : ["#cf6679"];
+    },
+
+    getMeasurementColor(measurement) {
+      if (measurement.value.length < 2) return "secondary";
+      const delta1 = Math.abs(
+        measurement.value[measurement.value.length - 1] - measurement.target
+      );
+      const delta2 = Math.abs(
+        measurement.value[measurement.value.length - 2] - measurement.target
+      );
+      return delta1 >= delta2 ? "secondary" : "error";
     },
 
     updatePR(personalRecord) {
@@ -154,3 +250,13 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.measurements {
+  font-size: 16px;
+}
+
+.center-btns {
+  text-align: center;
+}
+</style>

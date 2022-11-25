@@ -7,7 +7,7 @@
           <v-text-field
             v-model="name"
             :rules="[(v) => !!v || 'Field is required']"
-            label="Exercise Name"
+            label="Name"
             required
           ></v-text-field>
           <v-text-field
@@ -22,7 +22,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="addPR"> Add PR </v-btn>
+        <v-btn color="secondary" @click="addRecord"> Add </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -44,13 +44,13 @@ export default defineComponent({
   },
 
   methods: {
-    addPR() {
-      let date = new Date().toString().split(' ');
+    addRecord() {
+      let date = new Date().toString().split(" ");
       this.$emit("add-personal-record", {
         id: uuidv4(),
         name: this.name,
         value: [this.value],
-        date: [date[2] + ' ' + date[1] + ' ' + date[3]]
+        date: [date[2] + " " + date[1] + " " + date[3]],
       });
       this.name = "";
       this.value = "";

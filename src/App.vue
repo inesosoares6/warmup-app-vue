@@ -28,6 +28,7 @@
           :groupByType="groupByType"
           :personalRecords="personalRecords"
           :averagePR="averagePR"
+          :measurements="measurements"
           v-on:update-workout="updateWorkout"
           v-on:edit-workout="editWorkout"
           v-on:select-workout="selectWorkout"
@@ -35,6 +36,7 @@
           v-on:add-details="addDetails"
           v-on:add-personal-record="addPR"
           v-on:edit-personal-record="updatePR"
+          v-on:add-measurement="addMeasurement"
         />
       </router-view>
     </v-main>
@@ -69,6 +71,7 @@ export default {
       averagePR: [],
       theme: useTheme(),
       themeString: "",
+      measurements: [],
     };
   },
 
@@ -96,6 +99,8 @@ export default {
       this.themeString = localStorage.getItem("themeString");
       this.theme.global.name = this.themeString;
     }
+    if (localStorage.getItem("measurements"))
+      this.measurements = JSON.parse(localStorage.getItem("measurements"));
 
     this.averagePR = this.getAveragePR();
     this.updateWeek();
@@ -110,6 +115,10 @@ export default {
     addPR(personalRecord) {
       this.personalRecords.push(personalRecord);
       this.averagePR = this.getAveragePR();
+    },
+
+    addMeasurement(measurement) {
+      this.measurements.push(measurement);
     },
 
     addWorkout(newWorkout) {
@@ -375,6 +384,13 @@ export default {
           "personalRecords",
           JSON.stringify(this.personalRecords)
         );
+      },
+      deep: true,
+    },
+
+    measurements: {
+      handler() {
+        localStorage.setItem("measurements", JSON.stringify(this.measurements));
       },
       deep: true,
     },
