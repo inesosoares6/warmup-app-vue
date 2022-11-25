@@ -104,6 +104,7 @@ export default defineComponent({
             show: false,
           },
         },
+        colors: this.getColor(),
         tooltip: {
           theme: "dark",
         },
@@ -114,7 +115,7 @@ export default defineComponent({
           padding: {
             top: 10,
             bottom: 10,
-            left: 60,
+            left: 10,
             right: 10,
           },
         },
@@ -129,8 +130,26 @@ export default defineComponent({
       this.$emit("add-personal-record", personalRecord);
     },
 
+    getColor() {
+      return this.averagePR[this.averagePR.length - 1] >
+        this.averagePR[this.averagePR.length - 2]
+        ? ["#03dac5"]
+        : ["#cf6679"];
+    },
+
     updatePR(personalRecord) {
       this.$emit("edit-personal-record", personalRecord);
+    },
+  },
+
+  watch: {
+    averagePR: {
+      handler() {
+        this.$refs.averageGraph.updateOptions({
+          colors: this.getColor(),
+        });
+      },
+      deep: true,
     },
   },
 });

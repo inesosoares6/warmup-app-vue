@@ -76,6 +76,7 @@ export default defineComponent({
             show: false,
           },
         },
+        colors: this.getColor(),
         tooltip: {
           theme: "dark",
         },
@@ -114,12 +115,30 @@ export default defineComponent({
   },
 
   methods: {
+    getColor() {
+      return this.personalRecord.value[this.personalRecord.value.length - 1] >
+        this.personalRecord.value[this.personalRecord.value.length - 2]
+        ? ["#03dac5"]
+        : ["#cf6679"];
+    },
     updatePR() {
       this.personalRecordEdited.value.push(this.newValue);
-      let date = new Date().toString().split(' ');
-      this.personalRecordEdited.date.push(date[2] + ' ' + date[1] + ' ' + date[3]);
+      let date = new Date().toString().split(" ");
+      this.personalRecordEdited.date.push(
+        date[2] + " " + date[1] + " " + date[3]
+      );
       this.$emit("edit-personal-record", this.personalRecordEdited);
+      this.newValue = null;
       this.editPersonalRecord = false;
+    },
+  },
+
+  watch: {
+    personalRecord: {
+      handler() {
+        this.chartOptions.colors = this.getColor();
+      },
+      deep: true,
     },
   },
 });
