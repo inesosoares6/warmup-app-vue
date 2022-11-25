@@ -41,7 +41,19 @@
               <PreviewRecords
                 v-if="personalRecords.length > 0"
                 v-bind:personalRecords="personalRecords"
+                v-bind:action="'records'"
                 v-on:delete-personal-records="deletePRs"
+              ></PreviewRecords>
+            </v-btn>
+          </v-col>
+          <v-col class="d-flex justify-center">
+            <v-btn variant="outlined" color="error">
+              Measurements
+              <PreviewRecords
+                v-if="measurements.length > 0"
+                v-bind:personalRecords="measurements"
+                v-bind:action="'measurements'"
+                v-on:delete-measurements="deleteMeasurements"
               ></PreviewRecords>
             </v-btn>
           </v-col>
@@ -64,7 +76,7 @@ import PreviewRecords from "@/components/pop-ups/PreviewRecords.vue";
 
 export default defineComponent({
   name: "SettingsMenu",
-  props: ["allWorkouts", "groupByType", "personalRecords", "theme"],
+  props: ["allWorkouts", "groupByType", "personalRecords", "theme", "measurements"],
 
   components: {
     PreviewList,
@@ -95,6 +107,11 @@ export default defineComponent({
 
     deletePRs(records) {
       this.$emit("delete-personal-records", records);
+      this.settingsMenu = false;
+    },
+
+    deleteMeasurements(records) {
+      this.$emit("delete-measurements", records);
       this.settingsMenu = false;
     },
 

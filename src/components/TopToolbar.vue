@@ -13,11 +13,13 @@
           :groupByType="groupByType"
           :personalRecords="personalRecords"
           :theme="theme"
+          :measurements="measurements"
           v-on:delete-cache="deleteCache"
           v-on:delete-workouts="deleteWorkouts"
           v-on:group-by-types="groupByTypeFunction"
           v-on:delete-personal-records="deletePRs"
           v-on:toggle-theme="toggleTheme"
+          v-on:delete-measurements="deleteMeasurements"
         ></SettingsMenu>
       </v-btn>
     </v-app-bar>
@@ -31,7 +33,14 @@ import AddWorkout from "./pop-ups/AddWorkout.vue";
 
 export default defineComponent({
   name: "TopToolbar",
-  props: ["allWorkouts", "groupByType", "types", "personalRecords", "theme"],
+  props: [
+    "allWorkouts",
+    "groupByType",
+    "types",
+    "personalRecords",
+    "theme",
+    "measurements",
+  ],
 
   components: {
     SettingsMenu,
@@ -45,6 +54,10 @@ export default defineComponent({
 
     deleteCache() {
       this.$emit("delete-cache");
+    },
+
+    deleteMeasurements(records) {
+      this.$emit("delete-measurements", records);
     },
 
     deletePRs(records) {

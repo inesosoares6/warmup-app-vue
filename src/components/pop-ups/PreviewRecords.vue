@@ -35,7 +35,7 @@
         <v-btn
           color="error"
           :disabled="personalRecordsList.length < 1"
-          @click="deletePRs"
+          @click="deleteList"
         >
           Delete</v-btn
         >
@@ -49,7 +49,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "PreviewRecords",
-  props: ["personalRecords"],
+  props: ["personalRecords", "action"],
 
   created() {
     this.updateCheckboxes(false);
@@ -65,8 +65,12 @@ export default defineComponent({
   },
 
   methods: {
-    deletePRs() {
-      this.$emit("delete-personal-records", this.personalRecordsList);
+    deleteList() {
+      if (this.action === "records") {
+        this.$emit("delete-personal-records", this.personalRecordsList);
+      } else {
+        this.$emit("delete-measurements", this.personalRecordsList);
+      }
       this.previewList = false;
     },
 

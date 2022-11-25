@@ -7,12 +7,14 @@
       :types="getTypes()"
       :personalRecords="personalRecords"
       :theme="themeString"
+      :measurements="measurements"
       v-on:add-workout="addWorkout"
       v-on:delete-cache="deleteCache"
       v-on:delete-workouts="deleteWorkouts"
       v-on:group-by-types="groupByTypeFunction"
       v-on:delete-personal-records="deletePRs"
       v-on:toggle-theme="toggleTheme"
+      v-on:delete-measurements="deleteMeasurements"
     ></TopToolbar>
     <v-main>
       <router-view v-slot="{ Component, route }">
@@ -173,6 +175,19 @@ export default {
       this.lastWorkout = {};
       this.workoutSummary = this.clearWorkoutSummary();
       this.timeline = this.clearTimeline();
+    },
+
+    deleteMeasurements(measurementsList) {
+      if (measurementsList.length === this.measurements.length) {
+        this.measurements = [];
+      } else {
+        for (const record of measurementsList) {
+          var index = this.measurements.findIndex(
+            (obj) => obj.id === record.id
+          );
+          this.measurements.splice(index, 1);
+        }
+      }
     },
 
     deletePRs(personalRecordsList) {
