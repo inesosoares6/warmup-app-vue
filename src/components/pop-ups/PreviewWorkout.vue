@@ -4,6 +4,9 @@
       :title="workout.name"
       :subtitle="workout.type + ' - ' + workout.time + ' min'"
     >
+      <template v-slot:prepend>
+        <v-icon size="small" color="secondary">mdi-weight-lifter</v-icon>
+      </template>
       <template v-slot:append>
         <v-btn icon color="#424242">
           <v-icon>mdi-pencil</v-icon>
