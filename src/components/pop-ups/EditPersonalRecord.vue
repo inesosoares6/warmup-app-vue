@@ -54,6 +54,15 @@
         style="margin: auto"
       >
         <apexchart
+          v-if="personalRecord.name === 'Weight'"
+          type="line"
+          :options="chartOptionsWeight"
+          :series="series"
+          width="100%"
+          height="70px"
+        ></apexchart>
+        <apexchart
+          v-else
           type="line"
           :options="chartOptions"
           :series="series"
@@ -91,6 +100,62 @@ export default defineComponent({
       personalRecordEdited: {},
       newValue: null,
       newTargetValue: null,
+      chartOptionsWeight: {
+        annotations: {
+          yaxis: [
+            {
+              y: this.personalRecord.target,
+              borderColor: "#AFADAD",
+            },
+          ],
+        },
+        yaxis: {
+          min: this.getMinMax()[0],
+          max: this.getMinMax()[1],
+        },
+        chart: {
+          id: "personal-records-evolution",
+          group: "sparks",
+          type: "line",
+          sparkline: {
+            enabled: true,
+          },
+          zoom: {
+            enabled: false,
+          },
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: this.color,
+        tooltip: {
+          theme: "dark",
+        },
+        stroke: {
+          curve: "smooth",
+        },
+        grid: {
+          padding: {
+            top: 10,
+            bottom: 10,
+            left: 10,
+            right: 10,
+          },
+        },
+        xaxis: {
+          categories: this.personalRecord.date,
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        markers: {
+          size: 6,
+          strokeWidth: 0,
+          hover: {
+            size: 9,
+          },
+        },
+      },
       chartOptions: {
         chart: {
           id: "personal-records-evolution",
@@ -145,6 +210,24 @@ export default defineComponent({
   },
 
   methods: {
+    getMinMax() {
+      const max = Math.max(
+        ...[
+          Math.max(
+            ...[...this.personalRecord.value, this.personalRecord.target]
+          ),
+        ]
+      );
+      const min = Math.min(
+        ...[
+          Math.min(
+            ...[...this.personalRecord.value, this.personalRecord.target]
+          ),
+        ]
+      );
+      return [min, max];
+    },
+
     updateRecord() {
       if (this.newValue !== null) {
         this.personalRecordEdited.value.push(this.newValue);
