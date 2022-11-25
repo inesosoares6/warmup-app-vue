@@ -2,14 +2,17 @@
   <v-dialog v-model="editPersonalRecord" activator="parent">
     <v-card :title="personalRecord.name">
       <template v-slot:prepend>
-        <v-avatar size="25" color="secondary">
-          <v-icon size="small">mdi-trophy</v-icon>
-        </v-avatar>
+        <v-icon v-if="input === 'measurement'" size="small" color="secondary"
+          >mdi-scale-bathroom</v-icon
+        >
+        <v-icon v-else size="small" color="secondary"
+          >mdi-clipboard-text</v-icon
+        >
       </template>
       <v-card-text>
         <v-form ref="form">
           <v-row
-            v-if="input[0] === 'measurment' && personalRecord.name === 'Weight'"
+            v-if="input === 'measurment' && personalRecord.name === 'Weight'"
           >
             <v-col>
               <v-text-field
@@ -37,7 +40,7 @@
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Add new value"
                 type="number"
-                :suffix="input[0] === 'measurment' ? personalRecord.unit : 'kg'"
+                :suffix="input === 'measurment' ? personalRecord.unit : 'kg'"
                 required
               ></v-text-field>
             </v-col>
@@ -143,8 +146,8 @@ export default defineComponent({
 
   methods: {
     getColor() {
-      if (this.input !== undefined && this.input[0] === "measurement") {
-        return this.input[1] === 'secondary' ? ["#03dac5"] : ["#cf6679"];
+      if (this.input !== undefined && this.input === "measurement") {
+        return this.color === "secondary" ? ["#03dac5"] : ["#cf6679"];
       } else {
         return this.personalRecord.value[this.personalRecord.value.length - 1] >
           this.personalRecord.value[this.personalRecord.value.length - 2]
@@ -158,7 +161,7 @@ export default defineComponent({
       this.personalRecordEdited.date.push(
         date[2] + " " + date[1] + " " + date[3]
       );
-      if (this.input[0] === "measurement") {
+      if (this.input === "measurement") {
         this.$emit("edit-measurement", this.personalRecordEdited);
       } else {
         this.$emit("edit-personal-record", this.personalRecordEdited);

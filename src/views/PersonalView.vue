@@ -24,12 +24,14 @@
               record.name + ': ' + record.value[record.value.length - 1] + ' kg'
             "
             ><template v-slot:prepend>
-              <v-avatar size="25" color="secondary">
-                <v-icon size="small">mdi-check</v-icon>
+              <v-avatar size="25" :color="getColor(record.value, true)">
+                <v-icon size="small">mdi-dumbbell</v-icon>
               </v-avatar>
             </template>
             <EditPersonalRecord
               v-bind:personalRecord="record"
+              v-bind:input="'record'"
+              v-bind:color="''"
               v-on:edit-personal-record="updatePR"
             ></EditPersonalRecord>
           </v-list-item>
@@ -89,7 +91,7 @@
               >
               <EditPersonalRecord
                 v-bind:personalRecord="record"
-                v-bind:input="['measurement', getMeasurementColor(record)]"
+                v-bind:input="'measurement'"
                 v-bind:color="getMeasurementColor(record)"
                 v-on:edit-measurement="updateMeasurement"
               ></EditPersonalRecord
@@ -157,7 +159,7 @@ export default defineComponent({
             show: false,
           },
         },
-        colors: this.getColor(),
+        colors: this.getColor(this.averagePR, false),
         tooltip: {
           theme: "dark",
         },
@@ -222,11 +224,10 @@ export default defineComponent({
       }
     },
 
-    getColor() {
-      return this.averagePR[this.averagePR.length - 1] >
-        this.averagePR[this.averagePR.length - 2]
-        ? ["#03dac5"]
-        : ["#cf6679"];
+    getColor(array, avatar) {
+      return array[array.length - 1] > array[array.length - 2]
+        ? (avatar ? 'secondary' : ["#03dac5"])
+        : (avatar ? 'error' : ["#cf6679"]);
     },
 
     getMeasurementColor(measurement) {
@@ -268,7 +269,7 @@ export default defineComponent({
     averagePR: {
       handler() {
         this.$refs.averageGraph.updateOptions({
-          colors: this.getColor(),
+          colors: this.getColor(this.averagePR, false),
         });
       },
       deep: true,
