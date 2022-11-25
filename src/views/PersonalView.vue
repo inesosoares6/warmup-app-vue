@@ -224,13 +224,28 @@ export default defineComponent({
 
     getMeasurementColor(measurement) {
       if (measurement.value.length < 2) return "secondary";
-      const delta1 = Math.abs(
-        measurement.value[measurement.value.length - 1] - measurement.target
-      );
-      const delta2 = Math.abs(
-        measurement.value[measurement.value.length - 2] - measurement.target
-      );
-      return delta1 >= delta2 ? "secondary" : "error";
+      switch (measurement.name) {
+        case "Weight":
+          return Math.abs(
+            measurement.value[measurement.value.length - 1] - measurement.target
+          ) >=
+            Math.abs(
+              measurement.value[measurement.value.length - 2] -
+                measurement.target
+            )
+            ? "secondary"
+            : "error";
+        case "Body Fat":
+          return measurement.value[measurement.value.length - 1] <
+            measurement.value[measurement.value.length - 2]
+            ? "secondary"
+            : "error";
+        case "Muscle Mass":
+          return measurement.value[measurement.value.length - 1] >
+            measurement.value[measurement.value.length - 2]
+            ? "secondary"
+            : "error";
+      }
     },
 
     updatePR(personalRecord) {
