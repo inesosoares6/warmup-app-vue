@@ -89,7 +89,9 @@
               >
               <EditPersonalRecord
                 v-bind:personalRecord="record"
-                v-bind:input="'measurment'"
+                v-bind:input="['measurement', getMeasurementColor(record)]"
+                v-bind:color="getMeasurementColor(record)"
+                v-on:edit-measurement="updateMeasurement"
               ></EditPersonalRecord
               ><br />
               <v-divider thickness="0px"></v-divider>
@@ -233,7 +235,7 @@ export default defineComponent({
         case "Weight":
           return Math.abs(
             measurement.value[measurement.value.length - 1] - measurement.target
-          ) >=
+          ) <=
             Math.abs(
               measurement.value[measurement.value.length - 2] -
                 measurement.target
@@ -241,7 +243,7 @@ export default defineComponent({
             ? "secondary"
             : "error";
         case "Body Fat":
-          return measurement.value[measurement.value.length - 1] <
+          return measurement.value[measurement.value.length - 1] <=
             measurement.value[measurement.value.length - 2]
             ? "secondary"
             : "error";
@@ -251,6 +253,10 @@ export default defineComponent({
             ? "secondary"
             : "error";
       }
+    },
+
+    updateMeasurement(measurement) {
+      this.$emit("edit-measurement", measurement);
     },
 
     updatePR(personalRecord) {

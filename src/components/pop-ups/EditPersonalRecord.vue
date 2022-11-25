@@ -9,7 +9,7 @@
       <v-card-text>
         <v-form ref="form">
           <v-row
-            v-if="input === 'measurment' && personalRecord.name === 'Weight'"
+            v-if="input[0] === 'measurment' && personalRecord.name === 'Weight'"
           >
             <v-col>
               <v-text-field
@@ -37,7 +37,7 @@
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Add new value"
                 type="number"
-                :suffix="input === 'measurment' ? personalRecord.unit : 'kg'"
+                :suffix="input[0] === 'measurment' ? personalRecord.unit : 'kg'"
                 required
               ></v-text-field>
             </v-col>
@@ -72,7 +72,7 @@ import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "EditPersonalRecord",
-  props: ["personalRecord", "input"],
+  props: ["personalRecord", "input", "color"],
 
   components: {
     apexchart: VueApexCharts,
@@ -143,10 +143,14 @@ export default defineComponent({
 
   methods: {
     getColor() {
-      return this.personalRecord.value[this.personalRecord.value.length - 1] >
-        this.personalRecord.value[this.personalRecord.value.length - 2]
-        ? ["#03dac5"]
-        : ["#cf6679"];
+      if (this.input !== undefined && this.input[0] === "measurement") {
+        return this.input[1] === 'secondary' ? ["#03dac5"] : ["#cf6679"];
+      } else {
+        return this.personalRecord.value[this.personalRecord.value.length - 1] >
+          this.personalRecord.value[this.personalRecord.value.length - 2]
+          ? ["#03dac5"]
+          : ["#cf6679"];
+      }
     },
     updatePR() {
       this.personalRecordEdited.value.push(this.newValue);
@@ -154,13 +158,24 @@ export default defineComponent({
       this.personalRecordEdited.date.push(
         date[2] + " " + date[1] + " " + date[3]
       );
-      this.$emit("edit-personal-record", this.personalRecordEdited);
+      if (this.input[0] === "measurement") {
+        this.$emit("edit-measurement", this.personalRecordEdited);
+      } else {
+        this.$emit("edit-personal-record", this.personalRecordEdited);
+      }
       this.newValue = null;
       this.editPersonalRecord = false;
     },
   },
 
   watch: {
+    color: {
+      handler() {
+        console.log(this.color);
+        this.chartOptions.colors = this.getColor();
+      },
+      deep: true,
+    },
     personalRecord: {
       handler() {
         this.chartOptions.colors = this.getColor();

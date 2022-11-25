@@ -39,6 +39,7 @@
           v-on:add-personal-record="addPR"
           v-on:edit-personal-record="updatePR"
           v-on:add-measurement="addMeasurement"
+          v-on:edit-measurement="updateMeasurement"
         />
       </router-view>
     </v-main>
@@ -298,6 +299,13 @@ export default {
           item.color = "secondary";
         }
       });
+    },
+
+    updateMeasurement(measurement) {
+      var objIndex = this.measurements.findIndex(
+        (obj) => obj.id === measurement.id
+      );
+      this.measurements[objIndex] = measurement;
     },
 
     updatePR(personalRecord) {
