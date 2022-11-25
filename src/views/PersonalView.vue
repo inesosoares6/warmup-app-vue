@@ -31,7 +31,7 @@
             <EditPersonalRecord
               v-bind:personalRecord="record"
               v-bind:input="'record'"
-              v-bind:color="''"
+              v-bind:color="getColor(record.value, false)"
               v-on:edit-personal-record="updatePR"
             ></EditPersonalRecord>
           </v-list-item>
@@ -92,7 +92,7 @@
               <EditPersonalRecord
                 v-bind:personalRecord="record"
                 v-bind:input="'measurement'"
-                v-bind:color="getMeasurementColor(record)"
+                v-bind:color="convertColor(getMeasurementColor(record))"
                 v-on:edit-measurement="updateMeasurement"
               ></EditPersonalRecord
               ><br />
@@ -224,7 +224,12 @@ export default defineComponent({
       }
     },
 
+    convertColor(color) {
+      return color === 'secondary' ? ["#03dac5"] : ["#cf6679"];
+    },
+
     getColor(array, avatar) {
+      if(array.length === 1) return (avatar ? 'secondary' : ["#03dac5"]);
       return array[array.length - 1] > array[array.length - 2]
         ? (avatar ? 'secondary' : ["#03dac5"])
         : (avatar ? 'error' : ["#cf6679"]);

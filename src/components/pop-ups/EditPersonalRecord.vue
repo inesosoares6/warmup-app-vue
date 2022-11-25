@@ -12,7 +12,7 @@
       <v-card-text>
         <v-form ref="form">
           <v-row
-            v-if="input === 'measurment' && personalRecord.name === 'Weight'"
+            v-if="input === 'measurement' && personalRecord.name === 'Weight'"
           >
             <v-col>
               <v-text-field
@@ -40,7 +40,7 @@
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Add new value"
                 type="number"
-                :suffix="input === 'measurment' ? personalRecord.unit : 'kg'"
+                :suffix="input === 'measurement' ? personalRecord.unit : 'kg'"
                 required
               ></v-text-field>
             </v-col>
@@ -63,7 +63,7 @@
       </v-card>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="updatePR"> Update </v-btn>
+        <v-btn color="secondary" @click="updateRecord"> Update </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -106,7 +106,7 @@ export default defineComponent({
             show: false,
           },
         },
-        colors: this.getColor(),
+        colors: this.color,
         tooltip: {
           theme: "dark",
         },
@@ -116,9 +116,9 @@ export default defineComponent({
         grid: {
           padding: {
             top: 10,
-            bottom: 20,
-            left: 20,
-            right: 20,
+            bottom: 10,
+            left: 10,
+            right: 10,
           },
         },
         xaxis: {
@@ -145,18 +145,15 @@ export default defineComponent({
   },
 
   methods: {
-    getColor() {
-      if (this.input !== undefined && this.input === "measurement") {
-        return this.color === "secondary" ? ["#03dac5"] : ["#cf6679"];
-      } else {
-        return this.personalRecord.value[this.personalRecord.value.length - 1] >
-          this.personalRecord.value[this.personalRecord.value.length - 2]
-          ? ["#03dac5"]
-          : ["#cf6679"];
+    updateRecord() {
+      if (this.newValue !== null) {
+        this.personalRecordEdited.value.push(this.newValue);
       }
-    },
-    updatePR() {
-      this.personalRecordEdited.value.push(this.newValue);
+      if (
+        this.personalRecordEdited.name === "Weight" &&
+        this.newTargetValue !== null
+      )
+        this.personalRecordEdited.target = this.newTargetValue;
       let date = new Date().toString().split(" ");
       this.personalRecordEdited.date.push(
         date[2] + " " + date[1] + " " + date[3]
@@ -167,6 +164,7 @@ export default defineComponent({
         this.$emit("edit-personal-record", this.personalRecordEdited);
       }
       this.newValue = null;
+      this.newTargetValue = null;
       this.editPersonalRecord = false;
     },
   },
@@ -174,14 +172,13 @@ export default defineComponent({
   watch: {
     color: {
       handler() {
-        console.log(this.color);
-        this.chartOptions.colors = this.getColor();
+        this.chartOptions.colors = this.color;
       },
       deep: true,
     },
     personalRecord: {
       handler() {
-        this.chartOptions.colors = this.getColor();
+        this.chartOptions.colors = this.color;
       },
       deep: true,
     },
