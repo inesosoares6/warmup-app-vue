@@ -62,7 +62,7 @@
         >
       </template>
       <template v-slot:append>
-        <v-btn v-if="measurements.length < 3" icon color="#424242" size="35">
+        <v-btn v-show="measurements.length < 3" icon color="#424242" size="35">
           <v-icon size="small">mdi-plus</v-icon>
           <AddMeasurement
             v-bind:measurements="measurements"
