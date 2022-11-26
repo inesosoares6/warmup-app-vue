@@ -115,7 +115,7 @@ import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent({
   name: "PersonalView",
-  props: ["personalRecords", "lastWorkout", "averagePR", "measurements"],
+  props: ["personalRecords", "averagePR", "measurements"],
 
   components: {
     AddPersonalRecord,

@@ -24,7 +24,6 @@
           :allWorkouts="allWorkouts"
           :workoutSummary="workoutSummary"
           :currentWorkout="currentWorkout"
-          :lastWorkout="lastWorkout"
           :timeline="timeline"
           :types="getTypes()"
           :groupByType="groupByType"
@@ -65,7 +64,6 @@ export default {
       allWorkouts: [],
       types: [],
       currentWorkout: {},
-      lastWorkout: {},
       workoutSummary: this.clearWorkoutSummary(),
       timeline: this.clearTimeline(),
       weekNumber: 0,
@@ -85,8 +83,6 @@ export default {
       this.workoutSummary = JSON.parse(localStorage.getItem("workoutSummary"));
     if (localStorage.getItem("currentWorkout"))
       this.currentWorkout = JSON.parse(localStorage.getItem("currentWorkout"));
-    if (localStorage.getItem("lastWorkout"))
-      this.lastWorkout = JSON.parse(localStorage.getItem("lastWorkout"));
     if (localStorage.getItem("timeline"))
       this.timeline = JSON.parse(localStorage.getItem("timeline"));
     if (localStorage.getItem("weekNumber"))
@@ -180,7 +176,6 @@ export default {
     deleteCache() {
       this.allWorkouts = [];
       this.currentWorkout = {};
-      this.lastWorkout = {};
       this.workoutSummary = this.clearWorkoutSummary();
       this.timeline = this.clearTimeline();
       this.personalRecords = [];
@@ -341,7 +336,6 @@ export default {
     },
 
     updateWorkout(workout) {
-      this.lastWorkout = { ...workout };
       this.allWorkouts.forEach((item, index) => {
         if (item.id === workout.id) {
           if (this.allWorkouts[index].completions === 0) {
@@ -402,13 +396,6 @@ export default {
       handler() {
         localStorage.setItem("groupByType", this.groupByType);
       },
-    },
-
-    lastWorkout: {
-      handler() {
-        localStorage.setItem("lastWorkout", JSON.stringify(this.lastWorkout));
-      },
-      deep: true,
     },
 
     personalRecords: {
