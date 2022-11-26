@@ -134,30 +134,37 @@ export default {
         {
           day: "Mon",
           color: "error",
+          workoutsId: [],
         },
         {
           day: "Tue",
           color: "error",
+          workoutsId: [],
         },
         {
           day: "Wed",
           color: "error",
+          workoutsId: [],
         },
         {
           day: "Thu",
           color: "error",
+          workoutsId: [],
         },
         {
           day: "Fri",
           color: "error",
+          workoutsId: [],
         },
         {
           day: "Sat",
           color: "error",
+          workoutsId: [],
         },
         {
           day: "Sun",
           color: "error",
+          workoutsId: [],
         },
       ];
     },
@@ -293,10 +300,11 @@ export default {
       this.themeString = this.theme.global.name;
     },
 
-    updateTimeline(day) {
+    updateTimeline(day, workoutId) {
       this.timeline.forEach((item) => {
         if (item.day === day) {
           item.color = "secondary";
+          item.workoutsId.push(workoutId);
         }
       });
     },
@@ -342,7 +350,7 @@ export default {
           this.allWorkouts[index].completions =
             this.allWorkouts[index].completions + 1;
           this.updateSummary(workout, 1, 1);
-          this.updateTimeline(new Date().toDateString().substring(0, 3));
+          this.updateTimeline(new Date().toDateString().substring(0, 3), workout.id);
         }
       });
     },

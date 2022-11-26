@@ -103,24 +103,6 @@
         </div>
       </v-card-text>
     </v-card>
-    <v-divider thickness="0px"></v-divider>
-    <v-card title="Last Workout">
-      <template v-slot:prepend>
-        <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
-      </template>
-      <v-card-subtitle>
-        <div>{{ lastWorkout.name }}</div>
-        <div>
-          {{ lastWorkout.type + " - " + lastWorkout.time + " min" }}
-        </div>
-      </v-card-subtitle>
-      <v-divider></v-divider>
-      <v-card-text
-        class="exercises"
-        v-html="lastWorkout.exercises.replaceAll('\n', '<br/>')"
-      >
-      </v-card-text>
-    </v-card>
   </v-container>
 </template>
 

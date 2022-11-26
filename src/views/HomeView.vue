@@ -82,6 +82,10 @@
             size="x-small"
             :key="index"
             :dot-color="timeline[index].color"
+            @click="
+              showWorkoutDone = true;
+              selectedDay = item;
+            "
           >
             <template v-if="index % 2 !== 0"> {{ item.day }} </template>
             <template v-if="index % 2 === 0" v-slot:opposite>
@@ -122,6 +126,39 @@
       </v-card-text>
     </v-card>
 
+    <v-dialog v-model="showWorkoutDone">
+      <v-card
+        class="workouts-done-card"
+        :title="getDay(selectedDay.day) + ' Workouts'"
+        style="overflow-y: auto"
+      >
+        <template v-slot:prepend>
+          <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
+        </template>
+        <v-divider thickness="0px"></v-divider>
+        <div
+          v-for="(workout, index) in getWorkoutsDone()"
+          :key="index"
+          width="95%"
+        >
+          <v-divider></v-divider>
+          <v-card
+            :title="workout.name"
+            :subtitle="workout.type + ' - ' + workout.time + ' min'"
+          >
+            <template v-slot:prepend>
+              <v-icon size="small" color="secondary">mdi-weight-lifter</v-icon>
+            </template>
+            <v-card-text
+              style="text-align: center"
+              v-html="workout.exercises.replaceAll('\n', '<br/>')"
+            >
+            </v-card-text>
+          </v-card>
+        </div>
+      </v-card>
+    </v-dialog>
+
     <PreviewList
       v-model="imported"
       v-if="imported && importedWorkouts.length > 0"
@@ -148,12 +185,7 @@ import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 
 export default defineComponent({
   name: "AddWorkout",
-  props: [
-    "workoutSummary",
-    "allWorkouts",
-    "currentWorkout",
-    "timeline",
-  ],
+  props: ["workoutSummary", "allWorkouts", "currentWorkout", "timeline"],
 
   components: {
     PreviewList,
@@ -169,6 +201,8 @@ export default defineComponent({
       color: "",
       text: "",
       timeout: 2000,
+      showWorkoutDone: false,
+      selectedDay: "",
     };
   },
 
@@ -210,6 +244,30 @@ export default defineComponent({
         if (workout.time <= this.time) validList = [...validList, workout];
       }
       return validList;
+    },
+
+    getDay(day) {
+      switch (day) {
+        case "Wed":
+          return "Wednesday";
+        case "Thu":
+          return "Thrusday";
+        case "Sat":
+          return "Saturday";
+        case "Mon":
+        case "Tue":
+        case "Fri":
+        case "Sun":
+          return day + "day";
+      }
+    },
+
+    getWorkoutsDone() {
+      let workoutsList = [];
+      this.selectedDay.workoutsId.forEach((id) => {
+        workoutsList.push(this.allWorkouts.find((e) => e.id === id));
+      });
+      return workoutsList;
     },
 
     importWorkouts(workouts) {
@@ -262,7 +320,8 @@ export default defineComponent({
   justify-content: center;
 }
 
-.exercises {
-  text-align: center;
+.workouts-done-card {
+  max-height: 600px;
+  overflow-y: auto;
 }
 </style>
