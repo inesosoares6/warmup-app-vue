@@ -5,6 +5,9 @@
       :title="currentWorkout.name"
       :subtitle="currentWorkout.type + ' - ' + currentWorkout.time + ' min'"
     >
+      <template v-slot:prepend>
+        <v-icon size="small" color="secondary">mdi-weight-lifter</v-icon>
+      </template>
       <template v-slot:append>
         <v-checkbox
           v-model="checkbox"
