@@ -28,10 +28,9 @@
             <v-btn variant="outlined" color="error">
               WODs
               <PreviewList
-                v-if="allWorkouts.length > 0"
-                v-bind:allWorkouts="allWorkouts"
+                v-if="store.allWorkouts.length > 0"
+                v-bind:workouts="store.allWorkouts"
                 v-bind:action="'delete'"
-                v-on:delete-workouts="deleteWorkouts"
               ></PreviewList>
             </v-btn>
           </v-col>
@@ -39,10 +38,9 @@
             <v-btn variant="outlined" color="error">
               PR
               <PreviewRecords
-                v-if="personalRecords.length > 0"
-                v-bind:personalRecords="personalRecords"
+                v-if="store.personalRecords.length > 0"
+                v-bind:personalRecords="store.personalRecords"
                 v-bind:action="'records'"
-                v-on:delete-personal-records="deletePRs"
               ></PreviewRecords>
             </v-btn>
           </v-col>
@@ -50,10 +48,9 @@
             <v-btn variant="outlined" color="error">
               Measurements
               <PreviewRecords
-                v-if="measurements.length > 0"
-                v-bind:personalRecords="measurements"
+                v-if="store.measurements.length > 0"
+                v-bind:personalRecords="store.measurements"
                 v-bind:action="'measurements'"
-                v-on:delete-measurements="deleteMeasurements"
               ></PreviewRecords>
             </v-btn>
           </v-col>
@@ -73,18 +70,25 @@
 import { defineComponent } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import PreviewRecords from "@/components/pop-ups/PreviewRecords.vue";
+import { useStoreWorkouts } from '@/stores/storeWorkouts';
 
 export default defineComponent({
   name: "SettingsMenu",
-  props: ["allWorkouts", "groupByType", "personalRecords", "theme", "measurements"],
 
   components: {
     PreviewList,
     PreviewRecords,
   },
 
+  setup() {
+    const store = useStoreWorkouts()
+    return {
+      store,
+    }
+  },
+
   updated() {
-    this.groupByTypeEnabled = this.groupByType;
+    this.groupByTypeEnabled = this.store.groupByType;
   },
 
   mounted() {
@@ -101,31 +105,31 @@ export default defineComponent({
 
   methods: {
     deleteCache() {
-      this.$emit("delete-cache");
+      this.store.deleteCache();
       this.settingsMenu = false;
     },
 
     deletePRs(records) {
-      this.$emit("delete-personal-records", records);
+      this.store.deletePRs(records);
       this.settingsMenu = false;
     },
 
     deleteMeasurements(records) {
-      this.$emit("delete-measurements", records);
+      this.store.deleteMeasurements(records);
       this.settingsMenu = false;
     },
 
     deleteWorkouts(workoutList) {
-      this.$emit("delete-workouts", workoutList);
+      this.store.deleteWorkouts(workoutList);
       this.settingsMenu = false;
     },
 
     groupByTypeFunction() {
-      this.$emit("group-by-types", this.groupByTypeEnabled);
+      this.store.groupByTypeFunction(this.groupByTypeEnabled);
     },
 
     toggleTheme() {
-      this.$emit("toggle-theme");
+      this.store.toggleTheme();
     },
   },
 });

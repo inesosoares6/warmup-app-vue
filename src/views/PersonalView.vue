@@ -9,16 +9,14 @@
       <template v-slot:append>
         <v-btn icon color="#424242" size="35">
           <v-icon size="small">mdi-plus</v-icon>
-          <AddPersonalRecord
-            v-on:add-personal-record="addPR"
-          ></AddPersonalRecord>
+          <AddPersonalRecord></AddPersonalRecord>
         </v-btn>
       </template>
       <v-divider></v-divider>
       <v-card-text>
         <v-list>
           <v-list-item
-            v-for="(record, index) in personalRecords"
+            v-for="(record, index) in store.personalRecords"
             :key="index"
             :title="
               record.name + ': ' + record.value[record.value.length - 1] + ' kg'
@@ -32,11 +30,14 @@
               v-bind:personalRecord="record"
               v-bind:input="'record'"
               v-bind:color="getColor(record.value, false)"
-              v-on:edit-personal-record="updatePR"
             ></EditPersonalRecord>
           </v-list-item>
         </v-list>
-        <v-card title="Average" color="#424242" v-if="averagePR.length > 0">
+        <v-card
+          title="Average"
+          color="#424242"
+          v-if="store.averagePR.length > 0"
+        >
           <apexchart
             id="averageGraph"
             ref="averageGraph"
@@ -45,7 +46,7 @@
             :series="[
               {
                 name: 'Average',
-                data: this.averagePR,
+                data: this.store.averagePR,
               },
             ]"
             width="100%"
@@ -62,12 +63,14 @@
         >
       </template>
       <template v-slot:append>
-        <v-btn v-show="measurements.length < 3" icon color="#424242" size="35">
+        <v-btn
+          v-show="store.measurements.length < 3"
+          icon
+          color="#424242"
+          size="35"
+        >
           <v-icon size="small">mdi-plus</v-icon>
-          <AddMeasurement
-            v-bind:measurements="measurements"
-            v-on:add-measurement="addMeasurement"
-          ></AddMeasurement>
+          <AddMeasurement></AddMeasurement>
         </v-btn>
       </template>
       <v-divider></v-divider>
@@ -76,7 +79,7 @@
           <v-row class="center-btns">
             <v-col
               class="measurements"
-              v-for="(record, index) in measurements"
+              v-for="(record, index) in store.measurements"
               :key="index"
             >
               <v-progress-circular
@@ -93,7 +96,6 @@
                 v-bind:personalRecord="record"
                 v-bind:input="'measurement'"
                 v-bind:color="convertColor(getMeasurementColor(record))"
-                v-on:edit-measurement="updateMeasurement"
               ></EditPersonalRecord
               ><br />
               <v-divider thickness="0px"></v-divider>
@@ -112,10 +114,17 @@ import AddPersonalRecord from "@/components/pop-ups/AddPersonalRecord.vue";
 import EditPersonalRecord from "@/components/pop-ups/EditPersonalRecord.vue";
 import AddMeasurement from "@/components/pop-ups/AddMeasurement.vue";
 import VueApexCharts from "vue3-apexcharts";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 export default defineComponent({
   name: "PersonalView",
-  props: ["personalRecords", "averagePR", "measurements"],
+
+  setup() {
+    const store = useStoreWorkouts();
+    return {
+      store,
+    };
+  },
 
   components: {
     AddPersonalRecord,
@@ -141,7 +150,7 @@ export default defineComponent({
             show: false,
           },
         },
-        colors: this.getColor(this.averagePR, false),
+        colors: this.getColor(this.store.averagePR, false),
         tooltip: {
           theme: "dark",
         },
@@ -163,14 +172,6 @@ export default defineComponent({
     };
   },
   methods: {
-    addMeasurement(measurement) {
-      this.$emit("add-measurement", measurement);
-    },
-
-    addPR(personalRecord) {
-      this.$emit("add-personal-record", personalRecord);
-    },
-
     calculatePercentage(measurement) {
       if (measurement.unit === "%")
         return measurement.value[measurement.value.length - 1];
@@ -193,7 +194,7 @@ export default defineComponent({
         }
       } else {
         let value = 0;
-        this.measurements.forEach((record) => {
+        this.store.measurements.forEach((record) => {
           if (record.name === "Weight") {
             value = Math.round(
               (measurement.value[measurement.value.length - 1] /
@@ -207,14 +208,18 @@ export default defineComponent({
     },
 
     convertColor(color) {
-      return color === 'secondary' ? ["#03dac5"] : ["#cf6679"];
+      return color === "secondary" ? ["#03dac5"] : ["#cf6679"];
     },
 
     getColor(array, avatar) {
-      if(array.length === 1) return (avatar ? 'secondary' : ["#03dac5"]);
+      if (array.length === 1) return avatar ? "secondary" : ["#03dac5"];
       return array[array.length - 1] > array[array.length - 2]
-        ? (avatar ? 'secondary' : ["#03dac5"])
-        : (avatar ? 'error' : ["#cf6679"]);
+        ? avatar
+          ? "secondary"
+          : ["#03dac5"]
+        : avatar
+        ? "error"
+        : ["#cf6679"];
     },
 
     getMeasurementColor(measurement) {
@@ -242,21 +247,13 @@ export default defineComponent({
             : "error";
       }
     },
-
-    updateMeasurement(measurement) {
-      this.$emit("edit-measurement", measurement);
-    },
-
-    updatePR(personalRecord) {
-      this.$emit("edit-personal-record", personalRecord);
-    },
   },
 
   watch: {
     averagePR: {
       handler() {
         this.$refs.averageGraph.updateOptions({
-          colors: this.getColor(this.averagePR, false),
+          colors: this.getColor(this.store.averagePR, false),
         });
       },
       deep: true,

@@ -11,7 +11,7 @@
             required
           ></v-text-field>
           <v-text-field
-            v-model="value"
+            v-model="valuePR"
             :rules="[(v) => !!v || 'Field is required']"
             label="Value"
             type="number"
@@ -28,36 +28,28 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "AddPersonalRecord",
+const storeWorkouts = useStoreWorkouts();
+const addPersonalRecord = ref(false);
+const name = ref("");
+const valuePR = ref("");
 
-  data() {
-    return {
-      addPersonalRecord: false,
-      name: "",
-      value: "",
-    };
-  },
-
-  methods: {
-    addRecord() {
-      let date = new Date().toString().split(" ");
-      this.$emit("add-personal-record", {
-        id: uuidv4(),
-        name: this.name,
-        value: [this.value],
-        date: [date[2] + " " + date[1] + " " + date[3]],
-      });
-      this.name = "";
-      this.value = "";
-      this.addPersonalRecord = false;
-    },
-  },
-});
+const addRecord = () => {
+  let date = new Date().toString().split(" ");
+  storeWorkouts.addPR({
+    id: uuidv4(),
+    name: name.value,
+    value: [valuePR.value],
+    date: [date[2] + " " + date[1] + " " + date[3]],
+  });
+  name.value = "";
+  valuePR.value = "";
+  addPersonalRecord.value = false;
+};
 </script>
 
 <style scoped>

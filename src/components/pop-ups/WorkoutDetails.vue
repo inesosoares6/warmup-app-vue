@@ -7,7 +7,12 @@
       "
     >
       <template v-slot:append>
-        <v-btn v-if="!addDetails" icon color="#424242" @click="addDetails = true">
+        <v-btn
+          v-if="!addDetails"
+          icon
+          color="#424242"
+          @click="addDetails = true"
+        >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-btn v-else icon color="#424242" @click="addDetails = false">
@@ -40,33 +45,32 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "WorkoutDetails",
-  props: ["workout"],
+const storeWorkouts = useStoreWorkouts();
 
-  data() {
-    return {
-      workoutDetails: false,
-      addDetails: false,
-      details: "",
-      currentWorkout: null,
-    };
-  },
-
-  mounted() {
-    this.currentWorkout = this.workout;
-  },
-
-  methods: {
-    saveDetails() {
-      this.currentWorkout.details = this.details;
-      this.$emit("edited-workout", this.currentWorkout);
-      this.addDetails = false;
-      this.workoutDetails = false;
-    },
+const props = defineProps({
+  workout: {
+    type: Object,
+    required: true,
   },
 });
+
+const workoutDetails = ref(false);
+const addDetails = ref(false);
+const details = ref("");
+const currentWorkout = ref(null);
+
+onMounted(() => {
+  currentWorkout.value = props.workout;
+});
+
+const saveDetails = () => {
+  currentWorkout.value.details = details.value;
+  storeWorkouts.addDetails(currentWorkout.value);
+  addDetails.value = false;
+  workoutDetails.value = false;
+};
 </script>

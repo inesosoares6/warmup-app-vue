@@ -10,14 +10,14 @@
         <v-row class="center-btns">
           <v-col class="done-todo">
             <v-avatar size="60" :color="'secondary'">
-              {{ workoutSummary.done }} </v-avatar
+              {{ store.workoutSummary.done }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             Done
           </v-col>
           <v-col class="done-todo">
             <v-avatar size="60" :color="'error'">
-              {{ workoutSummary.todo }} </v-avatar
+              {{ store.workoutSummary.todo }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             To Do
@@ -26,7 +26,7 @@
         <v-divider class="divider" thickness="1px"></v-divider>
         <v-slide-group>
           <v-slide-group-item
-            v-for="(item, index) in workoutSummary.types"
+            v-for="(item, index) in store.workoutSummary.types"
             :key="index"
           >
             <div class="types-avatar">
@@ -78,10 +78,10 @@
       <v-card-text>
         <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
           <v-timeline-item
-            v-for="(item, index) in timeline"
+            v-for="(item, index) in store.timeline"
             size="x-small"
             :key="index"
-            :dot-color="timeline[index].color"
+            :dot-color="store.timeline[index].color"
             @click="
               showWorkoutDone = true;
               selectedDay = item;
@@ -107,8 +107,8 @@
             <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
               Send
               <PreviewList
-                v-if="allWorkouts.length > 0"
-                v-bind:allWorkouts="allWorkouts"
+                v-if="store.allWorkouts.length > 0"
+                v-bind:workouts="store.allWorkouts"
                 v-bind:action="'export'"
                 v-on:downloaded-workouts="downloadedWorkouts"
               ></PreviewList>
@@ -162,9 +162,8 @@
     <PreviewList
       v-model="imported"
       v-if="imported && importedWorkouts.length > 0"
-      v-bind:allWorkouts="importedWorkouts"
+      v-bind:workouts="importedWorkouts"
       v-bind:action="'import'"
-      v-on:import-workouts="importWorkouts"
     ></PreviewList>
 
     <v-snackbar v-model="snackbar" :timeout="timeout">
@@ -182,14 +181,21 @@
 import { defineComponent } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
+import { useStoreWorkouts } from '@/stores/storeWorkouts';
 
 export default defineComponent({
   name: "AddWorkout",
-  props: ["workoutSummary", "allWorkouts", "currentWorkout", "timeline"],
 
   components: {
     PreviewList,
     QrcodeReader,
+  },
+
+  setup() {
+    const store = useStoreWorkouts()
+    return {
+      store,
+    }
   },
 
   data() {
@@ -219,16 +225,16 @@ export default defineComponent({
       const validList =
         this.time !== null
           ? this.generateValidWorkoutsList()
-          : [...this.allWorkouts];
+          : [...this.store.allWorkouts];
       if (validList.length > 1) {
         let workout = {};
         do {
           workout = validList[Math.floor(Math.random() * validList.length)];
-        } while (workout.id === this.currentWorkout.id);
-        this.$emit("select-workout", workout);
+        } while (workout.id === this.store.currentWorkout.id);
+        this.store.selectWorkout(workout);
         this.$router.push({ name: "workout-view" });
       } else if (validList.length === 1) {
-        this.$emit("select-workout", validList[0]);
+        this.store.selectWorkout(validList[0]);
         this.$router.push({ name: "workout-view" });
       } else {
         this.snackbar = true;
@@ -240,7 +246,7 @@ export default defineComponent({
 
     generateValidWorkoutsList() {
       let validList = [];
-      for (const workout of this.allWorkouts) {
+      for (const workout of this.store.allWorkouts) {
         if (workout.time <= this.time) validList = [...validList, workout];
       }
       return validList;
@@ -265,14 +271,14 @@ export default defineComponent({
     getWorkoutsDone() {
       let workoutsList = [];
       this.selectedDay.workoutsId.forEach((id) => {
-        workoutsList.push(this.allWorkouts.find((e) => e.id === id));
+        workoutsList.push(this.store.allWorkouts.find((e) => e.id === id));
       });
       return workoutsList;
     },
 
     importWorkouts(workouts) {
       this.imported = false;
-      this.$emit("import-workouts", workouts);
+      this.store.importWorkouts(workouts);
     },
 
     previewImportedWorkouts(workouts) {

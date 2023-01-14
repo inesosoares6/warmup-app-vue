@@ -17,7 +17,7 @@
             </v-col>
             <v-col cols="4">
               <v-select
-                v-model="unit"
+                v-model="unitRecord"
                 :items="getItems()"
                 :rules="[(v) => !!v || 'Item is required']"
                 label="Unit"
@@ -28,8 +28,8 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-if="unit !== ''"
-                v-model="value"
+                v-if="unitRecord !== ''"
+                v-model="valueRecord"
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Value"
                 type="number"
@@ -38,7 +38,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-if="name === 'Weight' && unit !== ''"
+                v-if="name === 'Weight' && unitRecord !== ''"
                 v-model="targetValue"
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Target"
@@ -58,64 +58,56 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "AddMeasurement",
-  props: ["measurements"],
+const storeWorkouts = useStoreWorkouts();
 
-  data() {
-    return {
-      addMeasurement: false,
-      name: "",
-      value: "",
-      unit: "",
-      targetValue: "",
-    };
-  },
+const addMeasurement = ref(false);
+const name = ref("");
+const valueRecord = ref("");
+const unitRecord = ref("");
+const targetValue = ref("");
 
-  methods: {
-    addRecord() {
-      let date = new Date().toString().split(" ");
-      this.$emit("add-measurement", {
-        id: uuidv4(),
-        name: this.name,
-        value: [this.value],
-        unit: this.unit,
-        target: this.targetValue,
-        date: [date[2] + " " + date[1] + " " + date[3]],
-      });
-      this.name = "";
-      this.value = "";
-      this.unit = "";
-      this.targetValue = "";
-      this.addMeasurement = false;
-    },
+const addRecord = () => {
+  let date = new Date().toString().split(" ");
+  storeWorkouts.addMeasurement({
+    id: uuidv4(),
+    name: name.value,
+    value: [valueRecord.value],
+    unit: unitRecord.value,
+    target: targetValue.value,
+    date: [date[2] + " " + date[1] + " " + date[3]],
+  });
+  name.value = "";
+  valueRecord.value = "";
+  unitRecord.value = "";
+  targetValue.value = "";
+  addMeasurement.value = false;
+};
 
-    getItems() {
-      if (this.name === "Weight") {
-        this.unit = "kg";
-        return ["kg"];
-      } else {
-        return ["%", "kg"];
-      }
-    },
+const getItems = () => {
+  if (name.value === "Weight") {
+    unitRecord.value = "kg";
+    return ["kg"];
+  } else {
+    return ["%", "kg"];
+  }
+};
 
-    getTypes() {
-      let types = ["Weight", "Body Fat", "Muscle Mass"];
-      if (this.measurements.length === 0) return types;
-      this.measurements.forEach((record) => {
-        const index = types.indexOf(record.name);
-        if (index > -1) {
-          types.splice(index, 1);
-        }
-      });
-      return types;
-    },
-  },
-});
+const getTypes = () => {
+  let types = ["Weight", "Body Fat", "Muscle Mass"];
+  if (storeWorkouts.measurements.length === 0) return types;
+  storeWorkouts.measurements.forEach((record) => {
+    const index = types.indexOf(record.name);
+    if (index > -1) {
+      types.splice(index, 1);
+    }
+  });
+  return types;
+};
 </script>
 
 <style scoped>

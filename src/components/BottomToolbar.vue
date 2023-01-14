@@ -22,18 +22,9 @@
   </v-bottom-navigation>
 </template>
 
-<script>
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "BottomToolbar",
-
-  data() {
-    return {
-      activeItem: "home",
-    };
-  },
-});
+<script setup>
+import { ref } from "vue";
+const activeItem = ref("home");
 </script>
 
 <style scoped>

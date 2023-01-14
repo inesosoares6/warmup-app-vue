@@ -1,18 +1,16 @@
 <template>
   <v-container>
-    <v-list v-if="!groupByType && allWorkouts.length > 0" lines="two">
+    <v-list
+      v-if="!storeWorkouts.groupByType && storeWorkouts.allWorkouts.length > 0"
+      lines="two"
+    >
       <v-list-item
-        v-for="workout in allWorkouts"
+        v-for="workout in storeWorkouts.allWorkouts"
         :key="workout.id"
         :title="workout.name"
         :subtitle="workout.type + ' - ' + workout.time + ' min'"
       >
-        <PreviewWorkout
-          :workout="workout"
-          :types="types"
-          v-on:edit-workout="editWorkout"
-          v-on:select-workout="selectWorkout"
-        ></PreviewWorkout>
+        <PreviewWorkout :workout="workout"></PreviewWorkout>
 
         <template v-slot:prepend>
           <v-avatar :color="workout.completions > 0 ? 'secondary' : 'error'">
@@ -27,7 +25,7 @@
       </v-list-item>
     </v-list>
 
-    <v-expansion-panels v-if="groupByType">
+    <v-expansion-panels v-if="storeWorkouts.groupByType">
       <v-expansion-panel
         v-for="(list, index) in groupWorkoutsByType()"
         :key="index"
@@ -41,12 +39,7 @@
               :title="workout.name"
               :subtitle="workout.type + ' - ' + workout.time + ' min'"
             >
-              <PreviewWorkout
-                :workout="workout"
-                :types="types"
-                v-on:edit-workout="editWorkout"
-                v-on:select-workout="selectWorkout"
-              ></PreviewWorkout>
+              <PreviewWorkout :workout="workout"></PreviewWorkout>
 
               <template v-slot:prepend>
                 <v-avatar
@@ -77,55 +70,34 @@
   </v-container>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
 import PreviewWorkout from "@/components/pop-ups/PreviewWorkout.vue";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "AllView",
-  props: ["allWorkouts", "groupByType", "types"],
+const storeWorkouts = useStoreWorkouts();
+const snackbar = ref(false);
+const text = ref("");
+const timeout = ref(2000);
 
-  components: {
-    PreviewWorkout,
-  },
+onMounted(() => {
+  snackbar.value = storeWorkouts.allWorkouts.length < 1;
+  text.value = "Add workouts";
+});
 
-  data() {
-    return {
-      snackbar: false,
-      text: "",
-      timeout: 2000,
-    };
-  },
-
-  created() {
-    this.snackbar = this.allWorkouts.length < 1;
-    this.text = "Add workouts";
-  },
-
-  methods: {
-    editWorkout(workout) {
-      this.$emit("edit-workout", workout);
-    },
-
-    groupWorkoutsByType() {
-      let returnList = [];
-      this.allWorkouts.forEach((item) => {
-        if (returnList.some((e) => e.type === item.type)) {
-          returnList.forEach((typeList, index) => {
-            if (typeList.type === item.type) {
-              returnList[index].details.push(item);
-            }
-          });
-        } else {
-          returnList.push({ type: item.type, details: [item] });
+const groupWorkoutsByType = () => {
+  let returnList = [];
+  storeWorkouts.allWorkouts.forEach((item) => {
+    if (returnList.some((e) => e.type === item.type)) {
+      returnList.forEach((typeList, index) => {
+        if (typeList.type === item.type) {
+          returnList[index].details.push(item);
         }
       });
-      return returnList;
-    },
-
-    selectWorkout(workout) {
-      this.$emit("select-workout", workout);
-    },
-  },
-});
+    } else {
+      returnList.push({ type: item.type, details: [item] });
+    }
+  });
+  return returnList;
+};
 </script>

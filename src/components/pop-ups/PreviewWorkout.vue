@@ -12,8 +12,6 @@
           <v-icon>mdi-pencil</v-icon>
           <EditWorkout
             v-bind:workout="workout"
-            v-bind:types="types"
-            v-on:edit-workout="editWorkout"
           />
         </v-btn>
       </template>
@@ -33,33 +31,23 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref } from "vue";
 import EditWorkout from "@/components/pop-ups/EditWorkout.vue";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "PreviewWorkout",
-  props: ["workout", "types"],
-
-  components: {
-    EditWorkout,
-  },
-
-  data() {
-    return {
-      previewWorkout: false,
-    };
-  },
-
-  methods: {
-    editWorkout(workout) {
-      this.$emit("edit-workout", workout);
-    },
-
-    selectWorkout() {
-      this.$emit("select-workout", this.workout);
-      this.previewWorkout = false;
-    },
-  },
+const props = defineProps({
+  workout: {
+    type: Object,
+    required: true,
+  }
 });
+
+const storeWorkouts = useStoreWorkouts();
+const previewWorkout = ref(false);
+
+const selectWorkout = () => {
+  storeWorkouts.selectWorkout(props.workout);
+  previewWorkout.value = false;
+};
 </script>

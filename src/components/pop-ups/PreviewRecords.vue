@@ -46,10 +46,18 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 export default defineComponent({
   name: "PreviewRecords",
   props: ["personalRecords", "action"],
+
+  setup() {
+    const store = useStoreWorkouts();
+    return {
+      store,
+    };
+  },
 
   created() {
     this.updateCheckboxes(false);
@@ -67,9 +75,9 @@ export default defineComponent({
   methods: {
     deleteList() {
       if (this.action === "records") {
-        this.$emit("delete-personal-records", this.personalRecordsList);
+        this.store.deletePRs(this.personalRecordsList);
       } else {
-        this.$emit("delete-measurements", this.personalRecordsList);
+        this.store.deleteMeasurements(this.personalRecordsList);
       }
       this.previewList = false;
     },

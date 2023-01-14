@@ -12,12 +12,13 @@
           ></v-text-field>
           <v-select
             v-model="type"
-            :items="types"
+            :items="store.types"
             :rules="[(v) => !!v || 'Item is required']"
             label="Type"
             required
           ></v-select>
-          <v-text-field v-if="type === '--> Add new type'"
+          <v-text-field
+            v-if="type === '--> Add new type'"
             v-model="newType"
             :rules="nameRules"
             label="New type"
@@ -56,10 +57,17 @@
 <script>
 import { defineComponent } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 export default defineComponent({
   name: "AddWorkout",
-  props: ["types"],
+
+  setup() {
+    const store = useStoreWorkouts();
+    return {
+      store,
+    };
+  },
 
   data() {
     return {
@@ -84,10 +92,10 @@ export default defineComponent({
       this.$refs.form.validate();
       if (this.valid) {
         this.addWorkout = false;
-        this.$emit("add-workout", {
+        this.store.addWorkout({
           id: uuidv4(),
           name: this.name,
-          type: this.type === '--> Add new type' ? this.newType : this.type,
+          type: this.type === "--> Add new type" ? this.newType : this.type,
           time: this.time,
           exercises: this.exercises,
           completions: this.alreadyDone ? 1 : 0,

@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title> Edit Workout </v-card-title>
       <v-card-text>
-        <v-form ref="formEdit">
+        <v-form ref="formEditRef">
           <v-text-field
             v-model="workoutEdited.name"
             :rules="[(v) => !!v || 'Name is required']"
@@ -12,13 +12,14 @@
           ></v-text-field>
           <v-select
             v-model="workoutEdited.type"
-            :items="types"
+            :items="storeWorkouts.types"
             :rules="[(v) => !!v || 'Type is required']"
             label="Type"
             required
             hide-details
           ></v-select>
-          <v-text-field v-if="workoutEdited.type === '--> Add new type'"
+          <v-text-field
+            v-if="workoutEdited.type === '--> Add new type'"
             v-model="newType"
             :rules="nameRules"
             label="New type"
@@ -59,42 +60,44 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref } from "vue";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { onMounted } from "vue";
 
-export default defineComponent({
-  name: "EditWorkout",
-  props: ["workout", "types"],
-
-  mounted() {
-    this.workoutEdited = { ...this.workout };
-  },
-
-  data() {
-    return {
-      editWorkout: false,
-      timeRules: [
-        (v) => !!v || "Field is required",
-        (v) => v >= 0 || "Time must be greater than 0",
-      ],
-      workoutEdited: {},
-      newType: "",
-    };
-  },
-
-  methods: {
-    updateWorkout() {
-      this.editWorkout = false;
-      if(this.workoutEdited.type === '--> Add new type') {
-        this.workoutEdited.type = this.newType;
-      }
-      this.$emit("edit-workout", this.workoutEdited);
-    },
-    resetForm() {
-      this.$refs.formEdit.reset();
-    },
-  },
+const props = defineProps({
+  workout: {
+    type: Object,
+    required: true,
+  }
 });
+
+const storeWorkouts = useStoreWorkouts();
+
+const editWorkout = ref(false);
+const timeRules = ref([
+  (v) => !!v || "Field is required",
+  (v) => v >= 0 || "Time must be greater than 0",
+]);
+const workoutEdited = ref({});
+const newType = ref("");
+
+onMounted(() => {
+  workoutEdited.value = { ...props.workout };
+});
+
+const updateWorkout = () => {
+  editWorkout.value = false;
+  if (workoutEdited.value.type === "--> Add new type") {
+    workoutEdited.value.type = newType.value;
+  }
+  storeWorkouts.editWorkout(workoutEdited.value);
+};
+
+const formEditRef = ref(null);
+const resetForm = () => {
+  formEditRef.value.reset();
+};
 </script>
 
 <style>

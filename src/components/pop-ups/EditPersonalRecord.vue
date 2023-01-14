@@ -81,10 +81,18 @@
 <script>
 import { defineComponent } from "vue";
 import VueApexCharts from "vue3-apexcharts";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 export default defineComponent({
   name: "EditPersonalRecord",
   props: ["personalRecord", "input", "color"],
+
+  setup() {
+    const store = useStoreWorkouts();
+    return {
+      store,
+    };
+  },
 
   components: {
     apexchart: VueApexCharts,
@@ -242,9 +250,9 @@ export default defineComponent({
         date[2] + " " + date[1] + " " + date[3]
       );
       if (this.input === "measurement") {
-        this.$emit("edit-measurement", this.personalRecordEdited);
+        this.store.updateMeasurement(this.personalRecordEdited);
       } else {
-        this.$emit("edit-personal-record", this.personalRecordEdited);
+        this.store.updatePR(this.personalRecordEdited);
       }
       this.newValue = null;
       this.newTargetValue = null;

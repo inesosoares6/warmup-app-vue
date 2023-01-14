@@ -9,9 +9,9 @@
         ></v-checkbox>
       </template>
       <v-card-text>
-        <v-list class="preview-wod-list" lines="two" v-if="allWorkouts.length > 0">
+        <v-list class="preview-wod-list" lines="two" v-if="workouts.length > 0">
           <v-list-item
-            v-for="(workout, index) in allWorkouts"
+            v-for="(workout, index) in workouts"
             :key="workout.id"
             :title="workout.name"
             :subtitle="workout.type + ' - ' + workout.time + ' min'"
@@ -71,10 +71,18 @@
 <script>
 import { defineComponent } from "vue";
 import QrcodeGenerator from "@/components/pop-ups/QrcodeGenerator.vue";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 export default defineComponent({
   name: "PreviewList",
-  props: ["allWorkouts", "action"],
+  props: ["workouts", "action"],
+
+  setup() {
+    const store = useStoreWorkouts();
+    return {
+      store,
+    };
+  },
 
   components: {
     QrcodeGenerator,
@@ -94,8 +102,8 @@ export default defineComponent({
   },
 
   methods: {
-    deleteWorkouts(){
-      this.$emit("delete-workouts", this.workoutList);
+    deleteWorkouts() {
+      this.store.deleteWorkouts(this.workoutList);
       this.previewList = false;
     },
 
@@ -105,12 +113,12 @@ export default defineComponent({
     },
 
     importWorkouts() {
-      this.$emit("import-workouts", this.workoutList);
+      this.store.importWorkouts(this.workoutList);
       this.$router.push({ name: "all-view" });
     },
 
     updateCheckboxes(value) {
-      this.selected = new Array(this.allWorkouts.length).fill(value);
+      this.selected = new Array(this.workouts.length).fill(value);
     },
 
     updateList(insert, newWorkout) {
@@ -129,7 +137,7 @@ export default defineComponent({
 
     updateListAll() {
       this.updateCheckboxes(this.selectedAll);
-      this.workoutList = this.selectedAll ? [...this.allWorkouts] : [];
+      this.workoutList = this.selectedAll ? [...this.workouts] : [];
     },
   },
 });
