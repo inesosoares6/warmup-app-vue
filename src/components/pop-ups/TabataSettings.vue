@@ -7,7 +7,7 @@
           <v-text-field
             v-model="prepareTime"
             type="number"
-            :rules="timeRules"
+            :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
             label="Prepare (sec)"
             required
             hide-details
@@ -17,7 +17,7 @@
               <v-text-field
                 v-model="workTime"
                 type="number"
-                :rules="timeRules"
+                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Work (sec)"
                 required
                 hide-details
@@ -27,7 +27,7 @@
               <v-text-field
                 v-model="rest"
                 type="number"
-                :rules="timeRules"
+                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Rest (sec)"
                 required
                 hide-details
@@ -39,7 +39,7 @@
               <v-text-field
                 v-model="cycles"
                 type="number"
-                :rules="timeRules"
+                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Cycles"
                 required
                 hide-details
@@ -49,7 +49,7 @@
               <v-text-field
                 v-model="sets"
                 type="number"
-                :rules="timeRules"
+                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Sets"
                 required
               ></v-text-field>
@@ -58,7 +58,7 @@
           <v-text-field
             v-model="restBetweenSets"
             type="number"
-            :rules="timeRules"
+            :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
             label="Rest between sets (sec)"
             required
             hide-details
@@ -73,40 +73,30 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref } from "vue";
 
-export default defineComponent({
-  name: "TabataSettings",
+const emit = defineEmits(["created-tabata"]);
 
-  data() {
-    return {
-      tabataSettings: false,
-      valid: true,
-      timeRules: [(v) => v >= 0 || "Time must be greater than 0"],
-      prepareTime: 5,
-      workTime: 10,
-      rest: 0,
-      cycles: 1,
-      sets: 1,
-      restBetweenSets: 0,
-    };
-  },
+const tabataSettings = ref(false);
+const prepareTime = ref(5);
+const workTime = ref(10);
+const rest = ref(0);
+const cycles = ref(1);
+const sets = ref(1);
+const restBetweenSets = ref(0);
 
-  methods: {
-    returnTabata() {
-      this.$emit("created-tabata", {
-        prepareTime: this.prepareTime,
-        workTime: this.workTime,
-        rest: this.rest,
-        cycles: this.cycles,
-        sets: this.sets,
-        restBetweenSets: this.restBetweenSets,
-      });
-      this.tabataSettings = false;
-    },
-  },
-});
+const returnTabata = () => {
+  emit("created-tabata", {
+    prepareTime: prepareTime.value,
+    workTime: workTime.value,
+    rest: rest.value,
+    cycles: cycles.value,
+    sets: sets.value,
+    restBetweenSets: restBetweenSets.value,
+  });
+  tabataSettings.value = false;
+};
 </script>
 
 <style scoped>
