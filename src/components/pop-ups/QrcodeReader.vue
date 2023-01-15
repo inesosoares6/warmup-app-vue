@@ -13,16 +13,15 @@
         </v-btn-toggle>
       </v-card-title>
       <div v-if="!showCamera">
-        <v-card-subtitle
-          >Select the workouts file</v-card-subtitle
-        >
+        <v-card-subtitle>Select the workouts file</v-card-subtitle>
         <v-card-text>
           <v-file-input
-          type="file"
-          label="Import workouts"
-          accept=".json"
-          @change="importFile"
-          hide-details />
+            type="file"
+            label="Import workouts"
+            accept=".json"
+            @change="importFile"
+            hide-details
+          />
         </v-card-text>
       </div>
       <div v-else>
@@ -30,7 +29,7 @@
           >Point your camera to the workouts' QR Code</v-card-subtitle
         >
         <v-card-text class="center stream">
-          <qr-stream @decode="onDecode" class="mb">
+          <qr-stream @decode="openPreviewList" class="mb">
             <div style="color: red" class="frame"></div>
           </qr-stream>
         </v-card-text>
@@ -39,44 +38,28 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent} from "vue";
+<script setup>
+import { ref } from "vue";
 import { QrStream } from "vue3-qr-reader";
 
-export default defineComponent({
-  name: "QrcodeReader",
+const emit = defineEmits(["preview-imported-workouts"]);
 
-  components: {
-    QrStream,
-  },
+const qrcodeReader = ref(false);
+const showCamera = ref(false);
 
-  data() {
-    return {
-      qrcodeReader: false,
-      showCamera: false,
-    };
-  },
+const openPreviewList = (list) => {
+  emit("preview-imported-workouts", list);
+  qrcodeReader.value = false;
+};
 
-  methods: {
-    onDecode(data) {
-      this.openPreviewList(data);
-    },
-
-    openPreviewList(list) {
-      this.$emit("preview-imported-workouts", list);
-      this.qrcodeReader = false;
-    },
-
-    importFile(event) {
-      const file = event.target.files[0];
-      var reader = new FileReader();
-      reader.addEventListener("load", () => {
-        this.openPreviewList(reader.result);
-      });
-      reader.readAsText(file);
-    },
-  },
-});
+const importFile = (event) => {
+  const file = event.target.files[0];
+  var reader = new FileReader();
+  reader.addEventListener("load", () => {
+    openPreviewList(reader.result);
+  });
+  reader.readAsText(file);
+};
 </script>
 
 <style scoped>
