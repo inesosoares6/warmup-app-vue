@@ -58,25 +58,27 @@
         width="85%"
         style="margin: auto"
       >
-        <apexchart
+        <VueApexCharts
           v-if="personalRecord.name === 'Weight'"
           type="line"
           :options="chartOptionsWeight"
           :series="series"
           width="100%"
           height="70px"
-        ></apexchart>
-        <apexchart
+        ></VueApexCharts>
+        <VueApexCharts
           v-else
           type="line"
           :options="chartOptions"
           :series="series"
           width="100%"
           height="70px"
-        ></apexchart>
+        ></VueApexCharts>
       </v-card>
       <v-card-actions>
-        <v-btn color="error" @click="deleteRecord(true)"> Delete Last Entry </v-btn>
+        <v-btn color="error" @click="deleteRecord(true)">
+          Delete Last Entry
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="secondary" @click="updateRecord"> Update </v-btn>
       </v-card-actions>
@@ -84,210 +86,197 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, onMounted, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "EditPersonalRecord",
-  props: ["personalRecord", "input", "color"],
+const storeWorkouts = useStoreWorkouts();
 
-  setup() {
-    const store = useStoreWorkouts();
-    return {
-      store,
-    };
+const props = defineProps({
+  personalRecord: {
+    type: Object,
+    required: true,
   },
-
-  components: {
-    apexchart: VueApexCharts,
+  input: {
+    type: String,
+    required: true,
   },
-
-  mounted() {
-    this.personalRecordEdited = { ...this.personalRecord };
+  color: {
+    type: Array,
+    required: true,
   },
+});
 
-  data() {
-    return {
-      editPersonalRecord: false,
-      personalRecordEdited: {},
-      newValue: null,
-      newTargetValue: null,
-      chartOptionsWeight: {
-        annotations: {
-          yaxis: [
-            {
-              y: this.personalRecord.target,
-              borderColor: "#AFADAD",
-            },
-          ],
-        },
-        yaxis: {
-          min: this.getMinMax()[0],
-          max: this.getMinMax()[1],
-        },
-        chart: {
-          id: "personal-records-evolution",
-          group: "sparks",
-          type: "line",
-          sparkline: {
-            enabled: true,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: this.color,
-        tooltip: {
-          theme: "dark",
-        },
-        stroke: {
-          curve: "smooth",
-        },
-        grid: {
-          padding: {
-            top: 10,
-            bottom: 10,
-            left: 10,
-            right: 10,
-          },
-        },
-        xaxis: {
-          categories: this.personalRecord.date,
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        markers: {
-          size: 6,
-          strokeWidth: 0,
-          hover: {
-            size: 9,
-          },
-        },
+onMounted(() => {
+  personalRecordEdited.value = { ...props.personalRecord };
+});
+
+const editPersonalRecord = ref(false);
+const personalRecordEdited = ref({});
+const newValue = ref(null);
+const newTargetValue = ref(null);
+
+const getMinMax = () => {
+  const max = Math.max(
+    ...[
+      Math.max(...[...props.personalRecord.value, props.personalRecord.target]),
+    ]
+  );
+  const min = Math.min(
+    ...[
+      Math.min(...[...props.personalRecord.value, props.personalRecord.target]),
+    ]
+  );
+  return [min, max];
+};
+
+const chartOptionsWeight = ref({
+  annotations: {
+    yaxis: [
+      {
+        y: props.personalRecord.target,
+        borderColor: "#AFADAD",
       },
-      chartOptions: {
-        chart: {
-          id: "personal-records-evolution",
-          group: "sparks",
-          type: "line",
-          sparkline: {
-            enabled: true,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: this.color,
-        tooltip: {
-          theme: "dark",
-        },
-        stroke: {
-          curve: "smooth",
-        },
-        grid: {
-          padding: {
-            top: 10,
-            bottom: 10,
-            left: 10,
-            right: 10,
-          },
-        },
-        xaxis: {
-          categories: this.personalRecord.date,
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        markers: {
-          size: 6,
-          strokeWidth: 0,
-          hover: {
-            size: 9,
-          },
-        },
-      },
-      series: [
-        {
-          name: this.personalRecord.name,
-          data: this.personalRecord.value,
-        },
-      ],
-    };
+    ],
   },
-
-  methods: {
-    deleteRecord(lastEntry) {
-      if (this.input === "measurement") {
-        this.store.deleteMeasurement(this.personalRecord, lastEntry);
-      } else {
-        this.store.deletePR(this.personalRecord, lastEntry);
-      }
+  yaxis: {
+    min: getMinMax()[0],
+    max: getMinMax()[1],
+  },
+  chart: {
+    id: "personal-records-evolution",
+    group: "sparks",
+    type: "line",
+    sparkline: {
+      enabled: true,
     },
-    getMinMax() {
-      const max = Math.max(
-        ...[
-          Math.max(
-            ...[...this.personalRecord.value, this.personalRecord.target]
-          ),
-        ]
-      );
-      const min = Math.min(
-        ...[
-          Math.min(
-            ...[...this.personalRecord.value, this.personalRecord.target]
-          ),
-        ]
-      );
-      return [min, max];
+    zoom: {
+      enabled: false,
     },
-
-    updateRecord() {
-      if (this.newValue !== null) {
-        this.personalRecordEdited.value.push(this.newValue);
-      }
-      if (
-        this.personalRecordEdited.name === "Weight" &&
-        this.newTargetValue !== null
-      )
-        this.personalRecordEdited.target = this.newTargetValue;
-      let date = new Date().toString().split(" ");
-      this.personalRecordEdited.date.push(
-        date[2] + " " + date[1] + " " + date[3]
-      );
-      if (this.input === "measurement") {
-        this.store.updateMeasurement(this.personalRecordEdited);
-      } else {
-        this.store.updatePR(this.personalRecordEdited);
-      }
-      this.newValue = null;
-      this.newTargetValue = null;
-      this.editPersonalRecord = false;
+    toolbar: {
+      show: false,
     },
   },
-
-  watch: {
-    color: {
-      handler() {
-        this.chartOptions.colors = this.color;
-      },
-      deep: true,
+  colors: props.color,
+  tooltip: {
+    theme: "dark",
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  grid: {
+    padding: {
+      top: 10,
+      bottom: 10,
+      left: 10,
+      right: 10,
     },
-    personalRecord: {
-      handler() {
-        this.chartOptions.colors = this.color;
-      },
-      deep: true,
+  },
+  xaxis: {
+    categories: props.personalRecord.date,
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  markers: {
+    size: 6,
+    strokeWidth: 0,
+    hover: {
+      size: 9,
     },
   },
 });
+const chartOptions = ref({
+  chart: {
+    id: "personal-records-evolution",
+    group: "sparks",
+    type: "line",
+    sparkline: {
+      enabled: true,
+    },
+    zoom: {
+      enabled: false,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: props.color,
+  tooltip: {
+    theme: "dark",
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  grid: {
+    padding: {
+      top: 10,
+      bottom: 10,
+      left: 10,
+      right: 10,
+    },
+  },
+  xaxis: {
+    categories: props.personalRecord.date,
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  markers: {
+    size: 6,
+    strokeWidth: 0,
+    hover: {
+      size: 9,
+    },
+  },
+});
+const series = ref([
+  {
+    name: props.personalRecord.name,
+    data: props.personalRecord.value,
+  },
+]);
+
+const deleteRecord = (lastEntry) => {
+  if (props.input === "measurement") {
+    storeWorkouts.deleteMeasurement(props.personalRecord, lastEntry);
+  } else {
+    storeWorkouts.deletePR(props.personalRecord, lastEntry);
+  }
+};
+
+const updateRecord = () => {
+  if (newValue.value !== null) {
+    personalRecordEdited.value.value.push(newValue.value);
+  }
+  if (
+    personalRecordEdited.value.name === "Weight" &&
+    newTargetValue.value !== null
+  )
+    personalRecordEdited.value.target = newTargetValue.value;
+  let date = new Date().toString().split(" ");
+  personalRecordEdited.value.date.push(date[2] + " " + date[1] + " " + date[3]);
+  if (props.input === "measurement") {
+    storeWorkouts.updateMeasurement(personalRecordEdited.value);
+  } else {
+    storeWorkouts.updatePR(personalRecordEdited.value);
+  }
+  newValue.value = null;
+  newTargetValue.value = null;
+  editPersonalRecord.value = false;
+};
+
+watch(
+  () => [props.color, props.personalRecord],
+  () => {
+    if (props.personalRecord.name === "Weight") {
+      chartOptionsWeight.value.colors = props.color;
+    } else {
+      chartOptions.value.colors = props.color;
+    }
+  }
+);
 </script>
 
 <style scoped>
