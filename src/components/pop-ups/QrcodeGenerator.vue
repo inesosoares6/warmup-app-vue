@@ -23,12 +23,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer
-          ><v-btn
-            color="secondary"
-            @click="closeMenu('')"
-          >
-            Done
-          </v-btn>
+          ><v-btn color="secondary" @click="closeMenu('')"> Done </v-btn>
         </v-card-actions>
       </div>
       <div v-else>
@@ -43,66 +38,53 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer
-          ><v-btn
-            color="secondary"
-            @click="downloadFile"
-          >
-            Download
-          </v-btn>
+          ><v-btn color="secondary" @click="downloadFile"> Download </v-btn>
         </v-card-actions>
       </div>
     </v-card>
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, onUpdated } from "vue";
 import VueQRCodeComponent from "vue-qrcode-component";
 import { Filesystem, Directory, Encoding  } from '@capacitor/filesystem';
 
-export default defineComponent({
-  name: "QrcodeGenerator",
-  props: ["workoutList"],
-
-  components: {
-    VueQRCodeComponent,
+const emit = defineEmits(["close-menu"]);
+const props = defineProps({
+  workoutList: {
+    type: Array,
+    required: true,
   },
+});
 
-  data() {
-    return {
-      qrcodeGenerator: false,
-      size: 200,
-      file: false,
-      name: "",
-    };
-  },
+const qrcodeGenerator = ref(false);
+const file = ref(false);
+const name = ref("");
 
-  updated() {
-    this.file = this.workoutList.length > 1;
-  },
+onUpdated(() => {
+  file.value = props.workoutList.length > 1;
+});
 
-  methods: {
-    closeMenu(fileName) {
-      this.qrcodeGenerator = false;
-      this.$emit("close-menu", fileName);
-    },
+const closeMenu = (fileName) => {
+  qrcodeGenerator.value = false;
+  emit("close-menu", fileName);
+};
 
-    async downloadFile() {
+const downloadFile = async () => {
       try {
-        const fileName = (this.name.length === 0 ? 'Workout' : this.name ) + ".json";
+        const fileName = (name.value.length === 0 ? 'Workout' : name.value ) + ".json";
         await Filesystem.writeFile({
           path: fileName,
-          data: JSON.stringify(this.workoutList, null, 4),
+          data: JSON.stringify(props.workoutList, null, 4),
           directory: Directory.Documents,
           encoding: Encoding.UTF8
         })
-        this.closeMenu(fileName);
+        closeMenu(fileName);
       } catch(e) {
         alert('Unable to write file', e);
       }
-    },
-  },
-});
+    };
 </script>
 
 <style>
