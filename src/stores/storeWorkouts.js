@@ -60,7 +60,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
 
     addPR(personalRecord) {
       this.personalRecords.push(personalRecord);
-      localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
+      localStorage.setItem(
+        "personalRecords",
+        JSON.stringify(this.personalRecords)
+      );
     },
 
     addMeasurement(measurement) {
@@ -72,7 +75,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       this.allWorkouts.push(newWorkout);
       localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
       this.updateSummary(newWorkout, newWorkout.completions, 1);
-      localStorage.setItem("workoutSummary", JSON.stringify(this.workoutSummary));
+      localStorage.setItem(
+        "workoutSummary",
+        JSON.stringify(this.workoutSummary)
+      );
     },
 
     clearTimeline() {
@@ -127,43 +133,49 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       this.allWorkouts = [];
       localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
       this.currentWorkout = {};
-      localStorage.setItem("currentWorkout", JSON.stringify(this.currentWorkout));
+      localStorage.setItem(
+        "currentWorkout",
+        JSON.stringify(this.currentWorkout)
+      );
       this.workoutSummary = this.clearWorkoutSummary();
-      localStorage.setItem("workoutSummary", JSON.stringify(this.workoutSummary));
+      localStorage.setItem(
+        "workoutSummary",
+        JSON.stringify(this.workoutSummary)
+      );
       this.timeline = this.clearTimeline();
       localStorage.setItem("timeline", JSON.stringify(this.timeline));
       this.personalRecords = [];
-      localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
+      localStorage.setItem(
+        "personalRecords",
+        JSON.stringify(this.personalRecords)
+      );
       this.measurements = [];
       localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 
-    deleteMeasurements(measurementsList) {
-      if (measurementsList.length === this.measurements.length) {
-        this.measurements = [];
+    deleteMeasurement(measurement, lastEntry) {
+      var index = this.measurements.findIndex(
+        (obj) => obj.id === measurement.id
+      );
+      if(lastEntry) {
+        this.measurements[index].value.pop();
       } else {
-        for (const record of measurementsList) {
-          var index = this.measurements.findIndex(
-            (obj) => obj.id === record.id
-          );
-          this.measurements.splice(index, 1);
-        }
+        this.measurements.splice(index, 1);
       }
       localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 
-    deletePRs(personalRecordsList) {
-      if (personalRecordsList.length === this.personalRecords.length) {
-        this.personalRecords = [];
+    deletePR(record, lastEntry) {
+      var index = this.personalRecords.findIndex((obj) => obj.id === record.id);
+      if(lastEntry) {
+        this.personalRecords[index].value.pop();
       } else {
-        for (const record of personalRecordsList) {
-          var index = this.personalRecords.findIndex(
-            (obj) => obj.id === record.id
-          );
-          this.personalRecords.splice(index, 1);
-        }
+        this.personalRecords.splice(index, 1);
       }
-      localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
+      localStorage.setItem(
+        "personalRecords",
+        JSON.stringify(this.personalRecords)
+      );
     },
 
     deleteWorkouts(workoutList) {
@@ -184,13 +196,14 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         }
       }
       localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
-      localStorage.setItem("workoutSummary", JSON.stringify(this.workoutSummary));
+      localStorage.setItem(
+        "workoutSummary",
+        JSON.stringify(this.workoutSummary)
+      );
     },
 
     editWorkout(workout) {
-      var objIndex = this.allWorkouts.findIndex(
-        (obj) => obj.id === workout.id
-      );
+      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
       this.updateSummary(
         this.allWorkouts[objIndex],
         this.allWorkouts[objIndex].completions,
@@ -199,7 +212,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       this.allWorkouts[objIndex] = { ...workout };
       this.updateSummary(workout, workout.completions, 1);
       localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
-      localStorage.setItem("workoutSummary", JSON.stringify(this.workoutSummary));
+      localStorage.setItem(
+        "workoutSummary",
+        JSON.stringify(this.workoutSummary)
+      );
     },
 
     importWorkouts(workouts) {
@@ -227,7 +243,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
 
     selectWorkout(workout) {
       this.currentWorkout = workout;
-      localStorage.setItem("currentWorkout", JSON.stringify(this.currentWorkout));
+      localStorage.setItem(
+        "currentWorkout",
+        JSON.stringify(this.currentWorkout)
+      );
     },
 
     toggleTheme(theme) {
@@ -250,7 +269,7 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         (obj) => obj.id === measurement.id
       );
       this.measurements[objIndex] = measurement;
-      
+
       localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 
@@ -259,7 +278,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         (obj) => obj.id === personalRecord.id
       );
       this.personalRecords[objIndex] = personalRecord;
-      localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
+      localStorage.setItem(
+        "personalRecords",
+        JSON.stringify(this.personalRecords)
+      );
     },
 
     updateWeek() {
@@ -296,7 +318,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         }
       });
       localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
-      localStorage.setItem("workoutSummary", JSON.stringify(this.workoutSummary));
+      localStorage.setItem(
+        "workoutSummary",
+        JSON.stringify(this.workoutSummary)
+      );
     },
 
     updateSummary(workout, numTimes, addRemove) {

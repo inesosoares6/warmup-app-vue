@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-dialog v-model="previewRecords" activator="parent">
     <v-card title="Select Personal Record">
       <template v-slot:append>
@@ -115,4 +115,4 @@ export default defineComponent({
   max-height: 500px;
   overflow-y: auto;
 }
-</style>
+</style> -->

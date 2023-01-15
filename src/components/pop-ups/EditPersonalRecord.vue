@@ -9,6 +9,11 @@
           >mdi-clipboard-text</v-icon
         >
       </template>
+      <template v-slot:append>
+        <v-icon @click="deleteRecord(false)" size="small" color="error"
+          >mdi-delete</v-icon
+        >
+      </template>
       <v-card-text>
         <v-form ref="form">
           <v-row
@@ -71,6 +76,7 @@
         ></apexchart>
       </v-card>
       <v-card-actions>
+        <v-btn color="error" @click="deleteRecord(true)"> Delete Last Entry </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="secondary" @click="updateRecord"> Update </v-btn>
       </v-card-actions>
@@ -218,6 +224,13 @@ export default defineComponent({
   },
 
   methods: {
+    deleteRecord(lastEntry) {
+      if (this.input === "measurement") {
+        this.store.deleteMeasurement(this.personalRecord, lastEntry);
+      } else {
+        this.store.deletePR(this.personalRecord, lastEntry);
+      }
+    },
     getMinMax() {
       const max = Math.max(
         ...[
