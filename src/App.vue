@@ -14,17 +14,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import TopToolbar from "./components/TopToolbar.vue";
 import BottomToolbar from "./components/BottomToolbar.vue";
-import { useTheme } from "vuetify";
+// import { useTheme } from "vuetify";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 const storeWorkouts = useStoreWorkouts();
-const theme = ref(useTheme());
+// const theme = ref(useTheme());
 
 onMounted(() => {
   storeWorkouts.init();
-  theme.value.global.name = storeWorkouts.themeString;
+  // theme.value.global.name = storeWorkouts.themeString;
 });
 </script>

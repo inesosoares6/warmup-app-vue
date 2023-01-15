@@ -10,14 +10,14 @@
         <v-row class="center-btns">
           <v-col class="done-todo">
             <v-avatar size="60" :color="'secondary'">
-              {{ store.workoutSummary.done }} </v-avatar
+              {{ storeWorkouts.workoutSummary.done }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             Done
           </v-col>
           <v-col class="done-todo">
             <v-avatar size="60" :color="'error'">
-              {{ store.workoutSummary.todo }} </v-avatar
+              {{ storeWorkouts.workoutSummary.todo }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             To Do
@@ -26,7 +26,7 @@
         <v-divider class="divider" thickness="1px"></v-divider>
         <v-slide-group>
           <v-slide-group-item
-            v-for="(item, index) in store.workoutSummary.types"
+            v-for="(item, index) in storeWorkouts.workoutSummary.types"
             :key="index"
           >
             <div class="types-avatar">
@@ -78,10 +78,10 @@
       <v-card-text>
         <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
           <v-timeline-item
-            v-for="(item, index) in store.timeline"
+            v-for="(item, index) in storeWorkouts.timeline"
             size="x-small"
             :key="index"
-            :dot-color="store.timeline[index].color"
+            :dot-color="storeWorkouts.timeline[index].color"
             @click="
               showWorkoutDone = true;
               selectedDay = item;
@@ -107,8 +107,8 @@
             <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
               Send
               <PreviewList
-                v-if="store.allWorkouts.length > 0"
-                v-bind:workouts="store.allWorkouts"
+                v-if="storeWorkouts.allWorkouts.length > 0"
+                v-bind:workouts="storeWorkouts.allWorkouts"
                 v-bind:action="'export'"
                 v-on:downloaded-workouts="downloadedWorkouts"
               ></PreviewList>
@@ -169,7 +169,7 @@
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
       <template v-slot:actions>
-        <v-btn :color="this.color" variant="text" @click="snackbar = false">
+        <v-btn :color="color" variant="text" @click="snackbar = false">
           Close
         </v-btn>
       </template>
@@ -177,116 +177,93 @@
   </v-container>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
-import { useStoreWorkouts } from '@/stores/storeWorkouts';
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  name: "AddWorkout",
+const storeWorkouts = useStoreWorkouts();
+const router = useRouter();
 
-  components: {
-    PreviewList,
-    QrcodeReader,
-  },
+const time = ref(null);
+const importedWorkouts = ref([]);
+const imported = ref(false);
+const snackbar = ref(false);
+const color = ref("");
+const text = ref("");
+const timeout = ref(2000);
+const showWorkoutDone = ref(false);
+const selectedDay = ref("");
 
-  setup() {
-    const store = useStoreWorkouts()
-    return {
-      store,
-    }
-  },
+const downloadedWorkouts = (fileName) => {
+  if (fileName !== "") {
+    text.value = fileName + " exported to Documents folder.";
+    snackbar.value = true;
+    color.value = "secondary";
+  }
+};
 
-  data() {
-    return {
-      time: null,
-      importedWorkouts: [],
-      imported: false,
-      snackbar: false,
-      color: "",
-      text: "",
-      timeout: 2000,
-      showWorkoutDone: false,
-      selectedDay: "",
-    };
-  },
+const generateWorkout = () => {
+  const validList =
+    time.value !== null
+      ? generateValidWorkoutsList()
+      : [...storeWorkouts.allWorkouts];
+  if (validList.length > 1) {
+    let workout = {};
+    do {
+      workout = validList[Math.floor(Math.random() * validList.length)];
+    } while (workout.id === storeWorkouts.currentWorkout.id);
+    storeWorkouts.selectWorkout(workout);
+    router.push({ name: "workout-view" });
+  } else if (validList.length === 1) {
+    storeWorkouts.selectWorkout(validList[0]);
+    router.push({ name: "workout-view" });
+  } else {
+    snackbar.value = true;
+    color.value = "error";
+    text.value =
+      "There is no workout with less than " + time.value + " minutes.";
+  }
+};
 
-  methods: {
-    downloadedWorkouts(fileName) {
-      if (fileName !== "") {
-        this.text = fileName + " exported to Documents folder.";
-        this.snackbar = true;
-        this.color = "secondary";
-      }
-    },
+const generateValidWorkoutsList = () => {
+  let validList = [];
+  for (const workout of storeWorkouts.allWorkouts) {
+    if (workout.time <= time.value) validList = [...validList, workout];
+  }
+  return validList;
+};
 
-    generateWorkout() {
-      const validList =
-        this.time !== null
-          ? this.generateValidWorkoutsList()
-          : [...this.store.allWorkouts];
-      if (validList.length > 1) {
-        let workout = {};
-        do {
-          workout = validList[Math.floor(Math.random() * validList.length)];
-        } while (workout.id === this.store.currentWorkout.id);
-        this.store.selectWorkout(workout);
-        this.$router.push({ name: "workout-view" });
-      } else if (validList.length === 1) {
-        this.store.selectWorkout(validList[0]);
-        this.$router.push({ name: "workout-view" });
-      } else {
-        this.snackbar = true;
-        this.color = "error";
-        this.text =
-          "There is no workout with less than " + this.time + " minutes.";
-      }
-    },
+const getDay = (day) => {
+  switch (day) {
+    case "Wed":
+      return "Wednesday";
+    case "Thu":
+      return "Thrusday";
+    case "Sat":
+      return "Saturday";
+    case "Mon":
+    case "Tue":
+    case "Fri":
+    case "Sun":
+      return day + "day";
+  }
+};
 
-    generateValidWorkoutsList() {
-      let validList = [];
-      for (const workout of this.store.allWorkouts) {
-        if (workout.time <= this.time) validList = [...validList, workout];
-      }
-      return validList;
-    },
+const getWorkoutsDone = () => {
+  let workoutsList = [];
+  selectedDay.value.workoutsId.forEach((id) => {
+    workoutsList.push(storeWorkouts.allWorkouts.find((e) => e.id === id));
+  });
+  return workoutsList;
+};
 
-    getDay(day) {
-      switch (day) {
-        case "Wed":
-          return "Wednesday";
-        case "Thu":
-          return "Thrusday";
-        case "Sat":
-          return "Saturday";
-        case "Mon":
-        case "Tue":
-        case "Fri":
-        case "Sun":
-          return day + "day";
-      }
-    },
-
-    getWorkoutsDone() {
-      let workoutsList = [];
-      this.selectedDay.workoutsId.forEach((id) => {
-        workoutsList.push(this.store.allWorkouts.find((e) => e.id === id));
-      });
-      return workoutsList;
-    },
-
-    importWorkouts(workouts) {
-      this.imported = false;
-      this.store.importWorkouts(workouts);
-    },
-
-    previewImportedWorkouts(workouts) {
-      this.importedWorkouts = JSON.parse(workouts);
-      this.imported = true;
-    },
-  },
-});
+const previewImportedWorkouts = (workouts) => {
+  importedWorkouts.value = JSON.parse(workouts);
+  imported.value = true;
+};
 </script>
 
 <style>

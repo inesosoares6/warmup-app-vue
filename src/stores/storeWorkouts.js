@@ -12,7 +12,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       weekNumber: 0,
       groupByType: false,
       personalRecords: [],
-      averagePR: [],
       themeString: "",
       measurements: [],
     };
@@ -50,7 +49,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         this.measurements = JSON.parse(localStorage.getItem("measurements"));
 
       this.types = this.getTypes();
-      this.averagePR = this.getAveragePR();
       this.updateWeek();
     },
 
@@ -63,7 +61,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     addPR(personalRecord) {
       this.personalRecords.push(personalRecord);
       localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
-      this.averagePR = this.getAveragePR();
     },
 
     addMeasurement(measurement) {
@@ -158,7 +155,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     deletePRs(personalRecordsList) {
       if (personalRecordsList.length === this.personalRecords.length) {
         this.personalRecords = [];
-        this.averagePR = [];
       } else {
         for (const record of personalRecordsList) {
           var index = this.personalRecords.findIndex(
@@ -166,7 +162,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
           );
           this.personalRecords.splice(index, 1);
         }
-        this.averagePR = this.getAveragePR();
       }
       localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
     },
@@ -212,28 +207,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         workout.id = uuidv4();
         this.addWorkout(workout);
       }
-    },
-
-    getAveragePR() {
-      //Get max length array
-      let max = 0;
-      this.personalRecords.forEach((record) => {
-        max = record.value.length > max ? record.value.length : max;
-      });
-      //Calculate average
-      let average = [];
-      for (var k = 0; k < max; k++) {
-        let sum = 0;
-        this.personalRecords.forEach((record) => {
-          if (record.value[k] !== undefined) {
-            sum = sum + record.value[k];
-          } else {
-            sum = sum + record.value[record.value.length - 1];
-          }
-        });
-        average[k] = Math.round(sum / this.personalRecords.length);
-      }
-      return average;
     },
 
     getTypes() {
@@ -287,7 +260,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       );
       this.personalRecords[objIndex] = personalRecord;
       localStorage.setItem("personalRecords", JSON.stringify(this.personalRecords));
-      this.averagePR = this.getAveragePR();
     },
 
     updateWeek() {
