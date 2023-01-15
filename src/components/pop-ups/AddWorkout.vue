@@ -3,16 +3,16 @@
     <v-card>
       <v-card-title> Add Workout </v-card-title>
       <v-card-text>
-        <v-form ref="form" v-model="valid" lazy-validation>
+        <v-form ref="formRef" v-model="valid" lazy-validation>
           <v-text-field
             v-model="name"
-            :rules="nameRules"
+            :rules="[(v) => !!v || 'Name is required']"
             label="Name"
             required
           ></v-text-field>
           <v-select
             v-model="type"
-            :items="store.types"
+            :items="storeWorkouts.types"
             :rules="[(v) => !!v || 'Item is required']"
             label="Type"
             required
@@ -20,20 +20,23 @@
           <v-text-field
             v-if="type === '--> Add new type'"
             v-model="newType"
-            :rules="nameRules"
+            :rules="[(v) => !!v || 'Type is required']"
             label="New type"
             required
           ></v-text-field>
           <v-text-field
             v-model="time"
             type="number"
-            :rules="timeRules"
+            :rules="[
+              (v) => !!v || 'Field is required',
+              (v) => v >= 0 || 'Time must be greater than 0',
+            ]"
             label="Time (min)"
             required
           ></v-text-field>
           <v-textarea
             v-model="exercises"
-            :rules="nameRules"
+            :rules="[(v) => !!v || 'Exercises are required']"
             label="Exercises"
             required
             hide-details
@@ -54,60 +57,42 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "AddWorkout",
+const storeWorkouts = useStoreWorkouts();
 
-  setup() {
-    const store = useStoreWorkouts();
-    return {
-      store,
-    };
-  },
+const addWorkout = ref(false);
+const valid = ref(true);
+const name = ref("");
+const type = ref("");
+const time = ref(0);
+const alreadyDone = ref(false);
+const exercises = ref("");
+const newType = ref("");
+const formRef = ref(null);
 
-  data() {
-    return {
-      addWorkout: false,
-      valid: true,
-      name: "",
-      type: "",
-      time: 0,
-      alreadyDone: false,
-      exercises: "",
-      nameRules: [(v) => !!v || "Field is required"],
-      timeRules: [
-        (v) => !!v || "Field is required",
-        (v) => v >= 0 || "Time must be greater than 0",
-      ],
-      newType: "",
-    };
-  },
+const addWorkoutFunction = () => {
+  formRef.value.validate();
+  if (valid.value) {
+    addWorkout.value = false;
+    storeWorkouts.addWorkout({
+      id: uuidv4(),
+      name: name.value,
+      type: type.value === "--> Add new type" ? newType.value : type.value,
+      time: time.value,
+      exercises: exercises.value,
+      completions: alreadyDone.value ? 1 : 0,
+    });
+    resetForm();
+  }
+};
 
-  methods: {
-    addWorkoutFunction() {
-      this.$refs.form.validate();
-      if (this.valid) {
-        this.addWorkout = false;
-        this.store.addWorkout({
-          id: uuidv4(),
-          name: this.name,
-          type: this.type === "--> Add new type" ? this.newType : this.type,
-          time: this.time,
-          exercises: this.exercises,
-          completions: this.alreadyDone ? 1 : 0,
-        });
-        this.resetForm();
-      }
-    },
-    resetForm() {
-      this.$refs.form.reset();
-    },
-  },
-});
+const resetForm = () => {
+  formRef.value.reset();
+};
 </script>
 
 <style>
