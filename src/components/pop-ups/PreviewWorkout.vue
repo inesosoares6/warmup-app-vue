@@ -10,15 +10,14 @@
       <template v-slot:append>
         <v-btn icon color="#424242">
           <v-icon>mdi-pencil</v-icon>
-          <EditWorkout
-            v-bind:workout="workout"
-          />
+          <EditWorkout v-bind:workout="workout" />
         </v-btn>
       </template>
       <v-card-text v-html="workout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
+        <v-btn color="error" @click="deleteWorkout"> Delete </v-btn>
         <v-btn
           color="secondary"
           @click="selectWorkout"
@@ -40,11 +39,15 @@ const props = defineProps({
   workout: {
     type: Object,
     required: true,
-  }
+  },
 });
 
 const storeWorkouts = useStoreWorkouts();
 const previewWorkout = ref(false);
+
+const deleteWorkout = () => {
+  storeWorkouts.deleteWorkout(props.workout);
+};
 
 const selectWorkout = () => {
   storeWorkouts.selectWorkout(props.workout);

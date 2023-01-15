@@ -68,79 +68,67 @@
   </v-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import QrcodeGenerator from "@/components/pop-ups/QrcodeGenerator.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-export default defineComponent({
-  name: "PreviewList",
-  props: ["workouts", "action"],
-
-  setup() {
-    const store = useStoreWorkouts();
-    return {
-      store,
-    };
+const storeWorkouts = useStoreWorkouts();
+const router = useRouter();
+const emit = defineEmits(["downloaded-workouts"]);
+const props = defineProps({
+  workouts: {
+    type: Array,
+    required: true,
   },
-
-  components: {
-    QrcodeGenerator,
-  },
-
-  created() {
-    this.updateCheckboxes(false);
-  },
-
-  data() {
-    return {
-      previewList: false,
-      selected: [],
-      selectedAll: false,
-      workoutList: [],
-    };
-  },
-
-  methods: {
-    deleteWorkouts() {
-      this.store.deleteWorkouts(this.workoutList);
-      this.previewList = false;
-    },
-
-    downloadedWorkouts(fileName) {
-      this.$emit("downloaded-workouts", fileName);
-      this.previewList = false;
-    },
-
-    importWorkouts() {
-      this.store.importWorkouts(this.workoutList);
-      this.$router.push({ name: "all-view" });
-    },
-
-    updateCheckboxes(value) {
-      this.selected = new Array(this.workouts.length).fill(value);
-    },
-
-    updateList(insert, newWorkout) {
-      if (insert !== false) {
-        this.workoutList = [...this.workoutList, newWorkout];
-        if (this.selected.every((v) => v === true)) {
-          this.selectedAll = true;
-        }
-      } else {
-        this.workoutList = this.workoutList.filter(
-          (workout) => workout.id !== newWorkout.id
-        );
-        this.selectedAll = false;
-      }
-    },
-
-    updateListAll() {
-      this.updateCheckboxes(this.selectedAll);
-      this.workoutList = this.selectedAll ? [...this.workouts] : [];
-    },
+  action: {
+    type: String,
+    required: true,
   },
 });
+
+const previewList = ref(false);
+const selected = ref([]);
+const selectedAll = ref(false);
+const workoutList = ref([]);
+
+onMounted(() => {
+  updateCheckboxes(false);
+});
+
+const downloadedWorkouts = (fileName) => {
+  emit("downloaded-workouts", fileName);
+  previewList.value = false;
+};
+
+const importWorkouts = () => {
+  storeWorkouts.importWorkouts(workoutList.value);
+  router.push({ name: "all-view" });
+};
+
+const updateCheckboxes = (value) => {
+  selected.value = new Array(props.workouts.length).fill(value);
+};
+
+const updateList = (insert, newWorkout) => {
+  if (insert !== false) {
+    workoutList.value = [...workoutList.value, newWorkout];
+    if (selected.value.every((v) => v === true)) {
+      selectedAll.value = true;
+    }
+  } else {
+    workoutList.value = workoutList.value.filter(
+      (workout) => workout.id !== newWorkout.id
+    );
+    selectedAll.value = false;
+  }
+};
+
+const updateListAll = () => {
+  updateCheckboxes(selectedAll.value);
+  workoutList.value = selectedAll.value ? [...props.workouts] : [];
+};
 </script>
 
 <style scoped>

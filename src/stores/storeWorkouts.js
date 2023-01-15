@@ -178,23 +178,16 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       );
     },
 
-    deleteWorkouts(workoutList) {
-      if (workoutList.length === this.allWorkouts.length) {
-        this.allWorkouts = [];
-        this.workoutSummary = this.clearWorkoutSummary();
-      } else {
-        for (const workout of workoutList) {
-          var index = this.allWorkouts.findIndex(
-            (obj) => obj.id === workout.id
-          );
-          this.updateSummary(
-            this.allWorkouts[index],
-            this.allWorkouts[index].completions,
-            -1
-          );
-          this.allWorkouts.splice(index, 1);
-        }
-      }
+    deleteWorkout(workout) {
+      var index = this.allWorkouts.findIndex(
+        (obj) => obj.id === workout.id
+      );
+      this.updateSummary(
+        this.allWorkouts[index],
+        this.allWorkouts[index].completions,
+        -1
+      );
+      this.allWorkouts.splice(index, 1);
       localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
       localStorage.setItem(
         "workoutSummary",
