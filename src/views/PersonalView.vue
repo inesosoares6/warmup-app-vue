@@ -7,7 +7,7 @@
         >
       </template>
       <template v-slot:append>
-        <v-btn icon color="#424242" size="35">
+        <v-btn icon color="transparent" size="35">
           <v-icon size="small">mdi-plus</v-icon>
           <AddPersonalRecord></AddPersonalRecord>
         </v-btn>
@@ -46,7 +46,7 @@
         <v-btn
           v-show="storeUser.measurements.length < 3"
           icon
-          color="#424242"
+          color="transparent"
           size="35"
         >
           <v-icon size="small">mdi-plus</v-icon>
