@@ -16,7 +16,7 @@
       <v-card-text>
         <v-list>
           <v-list-item
-            v-for="(record, index) in storeWorkouts.personalRecords"
+            v-for="(record, index) in storeUser.personalRecords"
             :key="index"
             :title="
               record.name + ': ' + record.value[record.value.length - 1] + ' kg'
@@ -44,7 +44,7 @@
       </template>
       <template v-slot:append>
         <v-btn
-          v-show="storeWorkouts.measurements.length < 3"
+          v-show="storeUser.measurements.length < 3"
           icon
           color="#424242"
           size="35"
@@ -59,7 +59,7 @@
           <v-row class="center-btns">
             <v-col
               class="measurements"
-              v-for="(record, index) in storeWorkouts.measurements"
+              v-for="(record, index) in storeUser.measurements"
               :key="index"
             >
               <v-progress-circular
@@ -92,9 +92,9 @@
 import AddPersonalRecord from "@/components/pop-ups/AddPersonalRecord.vue";
 import EditPersonalRecord from "@/components/pop-ups/EditPersonalRecord.vue";
 import AddMeasurement from "@/components/pop-ups/AddMeasurement.vue";
-import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreUser } from "@/stores/storeUser";
 
-const storeWorkouts = useStoreWorkouts();
+const storeUser = useStoreUser();
 
 const calculatePercentage = (measurement) => {
   if (measurement.unit === "%")
@@ -114,7 +114,7 @@ const calculatePercentage = (measurement) => {
     }
   } else {
     let value = 0;
-    storeWorkouts.measurements.forEach((record) => {
+    storeUser.measurements.forEach((record) => {
       if (record.name === "Weight") {
         value = Math.round(
           (measurement.value[measurement.value.length - 1] /

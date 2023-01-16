@@ -89,9 +89,9 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
-import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreUser } from "@/stores/storeUser";
 
-const storeWorkouts = useStoreWorkouts();
+const storeUser = useStoreUser();
 
 const props = defineProps({
   personalRecord: {
@@ -240,9 +240,9 @@ const series = ref([
 
 const deleteRecord = (lastEntry) => {
   if (props.input === "measurement") {
-    storeWorkouts.deleteMeasurement(props.personalRecord, lastEntry);
+    storeUser.deleteMeasurement(props.personalRecord, lastEntry);
   } else {
-    storeWorkouts.deletePR(props.personalRecord, lastEntry);
+    storeUser.deletePR(props.personalRecord, lastEntry);
   }
 };
 
@@ -258,9 +258,9 @@ const updateRecord = () => {
   let date = new Date().toString().split(" ");
   personalRecordEdited.value.date.push(date[2] + " " + date[1] + " " + date[3]);
   if (props.input === "measurement") {
-    storeWorkouts.updateMeasurement(personalRecordEdited.value);
+    storeUser.updateMeasurement(personalRecordEdited.value);
   } else {
-    storeWorkouts.updatePR(personalRecordEdited.value);
+    storeUser.updatePR(personalRecordEdited.value);
   }
   newValue.value = null;
   newTargetValue.value = null;

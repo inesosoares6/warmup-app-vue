@@ -31,16 +31,16 @@
 <script setup>
 import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreUser } from "@/stores/storeUser";
 
-const storeWorkouts = useStoreWorkouts();
+const storeUser = useStoreUser();
 const addPersonalRecord = ref(false);
 const name = ref("");
 const valuePR = ref("");
 
 const addRecord = () => {
   let date = new Date().toString().split(" ");
-  storeWorkouts.addPR({
+  storeUser.addPR({
     id: uuidv4(),
     name: name.value,
     value: [valuePR.value],

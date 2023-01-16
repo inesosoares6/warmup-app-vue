@@ -61,9 +61,9 @@
 <script setup>
 import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreUser } from "@/stores/storeUser";
 
-const storeWorkouts = useStoreWorkouts();
+const storeUser = useStoreUser();
 
 const addMeasurement = ref(false);
 const name = ref("");
@@ -73,7 +73,7 @@ const targetValue = ref("");
 
 const addRecord = () => {
   let date = new Date().toString().split(" ");
-  storeWorkouts.addMeasurement({
+  storeUser.addMeasurement({
     id: uuidv4(),
     name: name.value,
     value: [valueRecord.value],
@@ -99,8 +99,8 @@ const getItems = () => {
 
 const getTypes = () => {
   let types = ["Weight", "Body Fat", "Muscle Mass"];
-  if (storeWorkouts.measurements.length === 0) return types;
-  storeWorkouts.measurements.forEach((record) => {
+  if (storeUser.measurements.length === 0) return types;
+  storeUser.measurements.forEach((record) => {
     const index = types.indexOf(record.name);
     if (index > -1) {
       types.splice(index, 1);

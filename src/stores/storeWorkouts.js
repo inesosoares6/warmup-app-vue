@@ -11,9 +11,7 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       timeline: [],
       weekNumber: 0,
       groupByType: false,
-      personalRecords: [],
       themeString: "",
-      measurements: [],
     };
   },
   getters: {},
@@ -38,15 +36,9 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       if (localStorage.getItem("groupByType"))
         this.groupByType =
           localStorage.getItem("groupByType") === "true" ? true : false;
-      if (localStorage.getItem("personalRecords"))
-        this.personalRecords = JSON.parse(
-          localStorage.getItem("personalRecords")
-        );
       if (localStorage.getItem("themeString")) {
         this.themeString = localStorage.getItem("themeString");
       }
-      if (localStorage.getItem("measurements"))
-        this.measurements = JSON.parse(localStorage.getItem("measurements"));
 
       this.types = this.getTypes();
       this.updateWeek();
@@ -56,19 +48,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
       this.allWorkouts[objIndex].details = workout.details;
       localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
-    },
-
-    addPR(personalRecord) {
-      this.personalRecords.push(personalRecord);
-      localStorage.setItem(
-        "personalRecords",
-        JSON.stringify(this.personalRecords)
-      );
-    },
-
-    addMeasurement(measurement) {
-      this.measurements.push(measurement);
-      localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 
     addWorkout(newWorkout) {
@@ -144,38 +123,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       );
       this.timeline = this.clearTimeline();
       localStorage.setItem("timeline", JSON.stringify(this.timeline));
-      this.personalRecords = [];
-      localStorage.setItem(
-        "personalRecords",
-        JSON.stringify(this.personalRecords)
-      );
-      this.measurements = [];
-      localStorage.setItem("measurements", JSON.stringify(this.measurements));
-    },
-
-    deleteMeasurement(measurement, lastEntry) {
-      var index = this.measurements.findIndex(
-        (obj) => obj.id === measurement.id
-      );
-      if(lastEntry) {
-        this.measurements[index].value.pop();
-      } else {
-        this.measurements.splice(index, 1);
-      }
-      localStorage.setItem("measurements", JSON.stringify(this.measurements));
-    },
-
-    deletePR(record, lastEntry) {
-      var index = this.personalRecords.findIndex((obj) => obj.id === record.id);
-      if(lastEntry) {
-        this.personalRecords[index].value.pop();
-      } else {
-        this.personalRecords.splice(index, 1);
-      }
-      localStorage.setItem(
-        "personalRecords",
-        JSON.stringify(this.personalRecords)
-      );
     },
 
     deleteWorkout(workout) {
@@ -255,26 +202,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         }
       });
       localStorage.setItem("timeline", JSON.stringify(this.timeline));
-    },
-
-    updateMeasurement(measurement) {
-      var objIndex = this.measurements.findIndex(
-        (obj) => obj.id === measurement.id
-      );
-      this.measurements[objIndex] = measurement;
-
-      localStorage.setItem("measurements", JSON.stringify(this.measurements));
-    },
-
-    updatePR(personalRecord) {
-      var objIndex = this.personalRecords.findIndex(
-        (obj) => obj.id === personalRecord.id
-      );
-      this.personalRecords[objIndex] = personalRecord;
-      localStorage.setItem(
-        "personalRecords",
-        JSON.stringify(this.personalRecords)
-      );
     },
 
     updateWeek() {
