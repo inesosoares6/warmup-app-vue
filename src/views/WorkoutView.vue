@@ -460,6 +460,7 @@ onMounted(() => {
 }
 
 .timer-title {
+  margin-top: 10px;
   height: 55px;
 }
 
