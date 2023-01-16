@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
+import { useStoreApp } from "@/stores/storeApp";
 
 export const useStoreWorkouts = defineStore("storeWorkouts", {
   state: () => {
@@ -8,10 +9,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       types: [],
       currentWorkout: {},
       workoutSummary: [],
-      timeline: [],
-      weekNumber: 0,
-      groupByType: false,
-      themeString: "",
     };
   },
   getters: {},
@@ -28,20 +25,8 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         this.currentWorkout = JSON.parse(
           localStorage.getItem("currentWorkout")
         );
-      if (localStorage.getItem("timeline"))
-        this.timeline = JSON.parse(localStorage.getItem("timeline"));
-      else this.timeline = this.clearTimeline();
-      if (localStorage.getItem("weekNumber"))
-        this.weekNumber = localStorage.getItem("weekNumber");
-      if (localStorage.getItem("groupByType"))
-        this.groupByType =
-          localStorage.getItem("groupByType") === "true" ? true : false;
-      if (localStorage.getItem("themeString")) {
-        this.themeString = localStorage.getItem("themeString");
-      }
 
       this.types = this.getTypes();
-      this.updateWeek();
     },
 
     addDetails(workout) {
@@ -60,46 +45,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       );
     },
 
-    clearTimeline() {
-      return [
-        {
-          day: "Mon",
-          color: "error",
-          workoutsId: [],
-        },
-        {
-          day: "Tue",
-          color: "error",
-          workoutsId: [],
-        },
-        {
-          day: "Wed",
-          color: "error",
-          workoutsId: [],
-        },
-        {
-          day: "Thu",
-          color: "error",
-          workoutsId: [],
-        },
-        {
-          day: "Fri",
-          color: "error",
-          workoutsId: [],
-        },
-        {
-          day: "Sat",
-          color: "error",
-          workoutsId: [],
-        },
-        {
-          day: "Sun",
-          color: "error",
-          workoutsId: [],
-        },
-      ];
-    },
-
     clearWorkoutSummary() {
       return {
         done: 0,
@@ -108,27 +53,8 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       };
     },
 
-    deleteCache() {
-      this.allWorkouts = [];
-      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
-      this.currentWorkout = {};
-      localStorage.setItem(
-        "currentWorkout",
-        JSON.stringify(this.currentWorkout)
-      );
-      this.workoutSummary = this.clearWorkoutSummary();
-      localStorage.setItem(
-        "workoutSummary",
-        JSON.stringify(this.workoutSummary)
-      );
-      this.timeline = this.clearTimeline();
-      localStorage.setItem("timeline", JSON.stringify(this.timeline));
-    },
-
     deleteWorkout(workout) {
-      var index = this.allWorkouts.findIndex(
-        (obj) => obj.id === workout.id
-      );
+      var index = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
       this.updateSummary(
         this.allWorkouts[index],
         this.allWorkouts[index].completions,
@@ -176,50 +102,12 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       return types;
     },
 
-    groupByTypeFunction(value) {
-      this.groupByType = value;
-      localStorage.setItem("groupByType", JSON.stringify(this.groupByType));
-    },
-
     selectWorkout(workout) {
       this.currentWorkout = workout;
       localStorage.setItem(
         "currentWorkout",
         JSON.stringify(this.currentWorkout)
       );
-    },
-
-    toggleTheme(theme) {
-      this.themeString = theme;
-      localStorage.setItem("themeString", JSON.stringify(this.themeString));
-    },
-
-    updateTimeline(day, workoutId) {
-      this.timeline.forEach((item) => {
-        if (item.day === day) {
-          item.color = "secondary";
-          item.workoutsId.push(workoutId);
-        }
-      });
-      localStorage.setItem("timeline", JSON.stringify(this.timeline));
-    },
-
-    updateWeek() {
-      const currentDate = new Date();
-      const startDate = new Date(currentDate.getFullYear(), 0, 1);
-      const days = Math.floor(
-        (currentDate - startDate) / (24 * 60 * 60 * 1000)
-      );
-      const nextWeekNumber = Math.ceil(days / 7);
-      if (
-        this.weekNumber != nextWeekNumber &&
-        currentDate.toString().split(" ")[0] !== "Sun"
-      ) {
-        this.timeline = this.clearTimeline();
-        this.weekNumber = nextWeekNumber;
-        localStorage.setItem("timeline", JSON.stringify(this.timeline));
-        localStorage.setItem("weekNumber", JSON.stringify(this.weekNumber));
-      }
     },
 
     updateWorkout() {
@@ -231,7 +119,8 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
           this.allWorkouts[index].completions =
             this.allWorkouts[index].completions + 1;
           this.updateSummary(this.currentWorkout, 1, 1);
-          this.updateTimeline(
+          const storeApp = useStoreApp();
+          storeApp.updateTimeline(
             new Date().toDateString().substring(0, 3),
             this.currentWorkout.id
           );

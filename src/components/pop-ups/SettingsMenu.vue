@@ -33,9 +33,9 @@
 
 <script setup>
 import { ref, onUpdated } from "vue";
-import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreApp } from "@/stores/storeApp";
 
-const storeWorkouts = useStoreWorkouts();
+const storeApp = useStoreApp();
 
 const settingsMenu = ref(false);
 const isDarkMode = ref(true);
@@ -46,20 +46,20 @@ const groupByTypeEnabled = ref(false);
 // });
 
 onUpdated(() => {
-  groupByTypeEnabled.value = storeWorkouts.groupByType;
+  groupByTypeEnabled.value = storeApp.groupByType;
 });
 
 const deleteCache = () => {
-  storeWorkouts.deleteCache();
+  console.log('TODO: delete all cache');
   settingsMenu.value = false;
 };
 
 const groupByTypeFunction = () => {
-  storeWorkouts.groupByTypeFunction(groupByTypeEnabled.value);
+  storeApp.groupByTypeFunction(groupByTypeEnabled.value);
 };
 
 const toggleTheme = () => {
-  storeWorkouts.toggleTheme();
+  storeApp.toggleTheme();
 };
 </script>
 

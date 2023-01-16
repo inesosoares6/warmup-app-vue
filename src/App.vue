@@ -20,12 +20,15 @@ import BottomToolbar from "./components/BottomToolbar.vue";
 // import { useTheme } from "vuetify";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreUser } from "@/stores/storeUser";
+import { useStoreApp } from "@/stores/storeApp";
 
+const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 const storeUser = useStoreUser();
 // const theme = ref(useTheme());
 
 onMounted(() => {
+  storeApp.init();
   storeWorkouts.init();
   storeUser.init();
   // theme.value.global.name = storeWorkouts.themeString;

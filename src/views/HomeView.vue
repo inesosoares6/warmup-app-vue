@@ -78,10 +78,10 @@
       <v-card-text>
         <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
           <v-timeline-item
-            v-for="(item, index) in storeWorkouts.timeline"
+            v-for="(item, index) in storeApp.timeline"
             size="x-small"
             :key="index"
-            :dot-color="storeWorkouts.timeline[index].color"
+            :dot-color="storeApp.timeline[index].color"
             @click="
               showWorkoutDone = true;
               selectedDay = item;
@@ -182,8 +182,10 @@ import { ref } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreApp } from "@/stores/storeApp";
 import { useRouter } from "vue-router";
 
+const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 const router = useRouter();
 

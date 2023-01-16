@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-list
-      v-if="!storeWorkouts.groupByType && storeWorkouts.allWorkouts.length > 0"
+      v-if="!storeApp.groupByType && storeWorkouts.allWorkouts.length > 0"
       lines="two"
     >
       <v-list-item
@@ -25,7 +25,7 @@
       </v-list-item>
     </v-list>
 
-    <v-expansion-panels v-if="storeWorkouts.groupByType">
+    <v-expansion-panels v-if="storeApp.groupByType">
       <v-expansion-panel
         v-for="(list, index) in groupWorkoutsByType()"
         :key="index"
@@ -74,7 +74,9 @@
 import { ref, onMounted } from "vue";
 import PreviewWorkout from "@/components/pop-ups/PreviewWorkout.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreApp } from "@/stores/storeApp";
 
+const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 const snackbar = ref(false);
 const text = ref("");
