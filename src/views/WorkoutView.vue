@@ -18,7 +18,7 @@
       </template>
       <v-divider></v-divider>
       <v-col>
-        <v-btn class="details-button" color="#424242" icon>
+        <v-btn class="details-button" color="transparent" icon>
           <v-icon>mdi-dots-vertical</v-icon>
           <WorkoutDetails
             v-bind:workout="storeWorkouts.currentWorkout"
