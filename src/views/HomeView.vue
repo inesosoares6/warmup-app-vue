@@ -10,14 +10,14 @@
         <v-row class="center-btns">
           <v-col class="done-todo">
             <v-avatar size="60" :color="'secondary'">
-              {{ storeWorkouts.getWorkoutSummary.done }} </v-avatar
+              {{ getWorkoutSummary.done }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             Done
           </v-col>
           <v-col class="done-todo">
             <v-avatar size="60" :color="'error'">
-              {{ storeWorkouts.getWorkoutSummary.todo }} </v-avatar
+              {{ getWorkoutSummary.todo }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             To Do
@@ -26,7 +26,7 @@
         <v-divider class="divider" thickness="1px"></v-divider>
         <v-slide-group>
           <v-slide-group-item
-            v-for="(item, index) in storeWorkouts.getWorkoutSummary.types"
+            v-for="(item, index) in getWorkoutSummary.types"
             :key="index"
           >
             <div class="types-avatar">
@@ -184,10 +184,12 @@ import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreApp } from "@/stores/storeApp";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 
 const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 const router = useRouter();
+const { getWorkoutSummary } = storeToRefs(storeWorkouts);
 
 const time = ref(null);
 const importedWorkouts = ref([]);

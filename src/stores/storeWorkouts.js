@@ -31,6 +31,7 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     getWorkoutSummary: (state) => {
+      console.log("getWorkoutSummary");
       let summary = {
         done: 0,
         todo: 0,
@@ -62,12 +63,8 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
   },
   actions: {
-    init() {
-      db.collection("workouts")
-        .get()
-        .then((tasks) => {
-          this.allWorkouts = tasks;
-        });
+    async init() {
+      await this.getAllWorkouts();
 
       if (localStorage.getItem("currentWorkoutId"))
         this.currentWorkoutId = JSON.parse(
@@ -83,6 +80,7 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
 
     addWorkout(newWorkout) {
       db.collection("workouts").add(newWorkout);
+      this.allWorkouts.push(newWorkout);
     },
 
     deleteWorkout(workout) {
@@ -90,7 +88,16 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     editWorkout(workout) {
+      console.log(workout)
       db.collection("workouts").doc({ id: workout.id }).set(workout);
+    },
+
+    getAllWorkouts() {
+      db.collection("workouts")
+        .get()
+        .then((tasks) => {
+          this.allWorkouts = tasks;
+        });
     },
 
     importWorkouts(workouts) {
@@ -108,7 +115,7 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       );
     },
 
-    updateWorkout() {
+    async updateWorkout() {
       db.collection("workouts")
         .doc({ id: this.currentWorkoutId })
         .update({

@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-list
-      v-if="!storeApp.groupByType && storeWorkouts.allWorkouts.length > 0"
+      v-if="!storeApp.groupByType && allWorkouts.length > 0"
       lines="two"
     >
       <v-list-item
-        v-for="workout in storeWorkouts.allWorkouts"
+        v-for="workout in allWorkouts"
         :key="workout.id"
         :title="workout.name"
         :subtitle="workout.type + ' - ' + workout.time + ' min'"
@@ -75,6 +75,7 @@ import { ref, onMounted } from "vue";
 import PreviewWorkout from "@/components/pop-ups/PreviewWorkout.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreApp } from "@/stores/storeApp";
+import { storeToRefs } from "pinia";
 
 const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
@@ -82,14 +83,17 @@ const snackbar = ref(false);
 const text = ref("");
 const timeout = ref(2000);
 
+const { allWorkouts } = storeToRefs(storeWorkouts);
+console.log(allWorkouts.value)
+
 onMounted(() => {
-  snackbar.value = storeWorkouts.allWorkouts.length < 1;
+  snackbar.value = allWorkouts.length < 1;
   text.value = "Add workouts";
 });
 
 const groupWorkoutsByType = () => {
   let returnList = [];
-  storeWorkouts.allWorkouts.forEach((item) => {
+  allWorkouts.value.forEach((item) => {
     if (returnList.some((e) => e.type === item.type)) {
       returnList.forEach((typeList, index) => {
         if (typeList.type === item.type) {
