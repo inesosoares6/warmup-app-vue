@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <v-card
-      v-if="storeWorkouts.currentWorkout.name !== undefined"
-      :title="storeWorkouts.currentWorkout.name"
-      :subtitle="storeWorkouts.currentWorkout.type + ' - ' + storeWorkouts.currentWorkout.time + ' min'"
+      v-if="storeWorkouts.getCurrentWorkout.name !== undefined"
+      :title="storeWorkouts.getCurrentWorkout.name"
+      :subtitle="storeWorkouts.getCurrentWorkout.type + ' - ' + storeWorkouts.getCurrentWorkout.time + ' min'"
     >
       <template v-slot:prepend>
         <v-icon size="small" color="secondary">mdi-weight-lifter</v-icon>
@@ -21,13 +21,13 @@
         <v-btn class="details-button" color="transparent" icon>
           <v-icon>mdi-dots-vertical</v-icon>
           <WorkoutDetails
-            v-bind:workout="storeWorkouts.currentWorkout"
+            v-bind:workout="storeWorkouts.getCurrentWorkout"
           ></WorkoutDetails>
         </v-btn>
       </v-col>
       <v-card-text
         class="exercises"
-        v-html="storeWorkouts.currentWorkout.exercises.replaceAll('\n', '<br/>')"
+        v-html="storeWorkouts.getCurrentWorkout.exercises.replaceAll('\n', '<br/>')"
       >
       </v-card-text>
       <v-col>
@@ -45,7 +45,7 @@
     <v-divider thickness="0px"></v-divider>
 
     <v-card
-      v-if="storeWorkouts.currentWorkout.name !== undefined"
+      v-if="storeWorkouts.getCurrentWorkout.name !== undefined"
       :color="getColor()"
       height="200px"
     >
@@ -258,14 +258,14 @@ const copyWorkout = () => {
 
 const createStringWorkout = () => {
   return (
-    storeWorkouts.currentWorkout.name +
+    storeWorkouts.getCurrentWorkout.name +
     "\n" +
-    storeWorkouts.currentWorkout.type +
+    storeWorkouts.getCurrentWorkout.type +
     " - " +
-    storeWorkouts.currentWorkout.time +
+    storeWorkouts.getCurrentWorkout.time +
     " min" +
     "\n-------------\n" +
-    storeWorkouts.currentWorkout.exercises
+    storeWorkouts.getCurrentWorkout.exercises
   );
 };
 
@@ -359,7 +359,7 @@ const getColor = () => {
 };
 
 onMounted(() => {
-  snackbar.value = storeWorkouts.currentWorkout.name === undefined;
+  snackbar.value = storeWorkouts.getCurrentWorkout.name === undefined;
   text.value = "No workout selected";
   watchEffect(async () => {
     var audioFinish = new Audio(require("../assets/finish.mp3"));
@@ -413,6 +413,7 @@ onMounted(() => {
     }
   });
 });
+
 </script>
 
 <style scoped>

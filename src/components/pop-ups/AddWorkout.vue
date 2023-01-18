@@ -12,7 +12,7 @@
           ></v-text-field>
           <v-select
             v-model="type"
-            :items="storeWorkouts.types"
+            :items="storeWorkouts.getTypes"
             :rules="[(v) => !!v || 'Item is required']"
             label="Type"
             required

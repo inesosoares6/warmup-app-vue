@@ -10,14 +10,14 @@
         <v-row class="center-btns">
           <v-col class="done-todo">
             <v-avatar size="60" :color="'secondary'">
-              {{ storeWorkouts.workoutSummary.done }} </v-avatar
+              {{ storeWorkouts.getWorkoutSummary.done }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             Done
           </v-col>
           <v-col class="done-todo">
             <v-avatar size="60" :color="'error'">
-              {{ storeWorkouts.workoutSummary.todo }} </v-avatar
+              {{ storeWorkouts.getWorkoutSummary.todo }} </v-avatar
             ><br />
             <v-divider thickness="0px"></v-divider>
             To Do
@@ -26,7 +26,7 @@
         <v-divider class="divider" thickness="1px"></v-divider>
         <v-slide-group>
           <v-slide-group-item
-            v-for="(item, index) in storeWorkouts.workoutSummary.types"
+            v-for="(item, index) in storeWorkouts.getWorkoutSummary.types"
             :key="index"
           >
             <div class="types-avatar">
@@ -216,7 +216,7 @@ const generateWorkout = () => {
     let workout = {};
     do {
       workout = validList[Math.floor(Math.random() * validList.length)];
-    } while (workout.id === storeWorkouts.currentWorkout.id);
+    } while (workout.id === storeWorkouts.getCurrentWorkout.id);
     storeWorkouts.selectWorkout(workout);
     router.push({ name: "workout-view" });
   } else if (validList.length === 1) {
