@@ -81,8 +81,7 @@
             v-model="seconds"
             @change="restartTimer()"
             type="number"
-            label="Timer (sec)"
-            hide-details
+            label="Timer (s)"
           ></v-text-field>
           <v-btn
             v-if="mode === 2"
@@ -174,14 +173,14 @@
           <span>{{ tabataTimer.minutes }}</span
           >&nbsp;:&nbsp;<span>{{ tabataTimer.seconds }}</span>
         </div>
-        <v-row align="center" justify="center">
-          <v-col cols="2">
+        <v-row align="center" justify="center" style="margin-top: 10px;">
+          <v-col cols="3">
             <p class="cycles-sets-numbers">
               {{ currentSet }}/{{ tabata.sets }}
             </p>
             <p class="cycles-sets-text">Sets</p>
           </v-col>
-          <v-col cols="8" class="d-flex justify-center">
+          <v-col cols="6" class="d-flex justify-center">
             <v-btn
               class="stopwatch-btns"
               size="x-small"
@@ -210,7 +209,7 @@
               <v-icon>mdi-reload</v-icon>
             </v-btn>
           </v-col>
-          <v-col cols="2">
+          <v-col cols="3">
             <p class="cycles-sets-numbers">
               {{ currentCycle }}/{{ tabata.cycles }}
             </p>
@@ -298,8 +297,8 @@ let tabata = ref({
   prepareTime: 2,
   workTime: 5,
   rest: 3,
-  cycles: 1,
-  sets: 2,
+  cycles: 11,
+  sets: 11,
   restBetweenSets: 0,
 });
 let tabataTime = new Date();
@@ -461,7 +460,7 @@ onMounted(() => {
 }
 
 .timer-title {
-  margin-top: 10px;
+  margin-top: 5px;
   height: 55px;
 }
 

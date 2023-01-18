@@ -10,7 +10,6 @@
             :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
             label="Prepare (sec)"
             required
-            hide-details
           ></v-text-field>
           <v-row>
             <v-col>
