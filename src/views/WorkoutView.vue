@@ -45,7 +45,6 @@
     <v-divider thickness="0px"></v-divider>
 
     <v-card
-      v-if="storeWorkouts.getCurrentWorkout.name !== undefined"
       :color="getColor()"
       height="200px"
     >
@@ -91,7 +90,7 @@
             style="margin-right: 5px"
           >
             <v-icon>mdi-dots-vertical</v-icon>
-            <TabataSettings v-on:created-tabata="updateTabata" />
+            <TabataSettings v-on:updateTimes="resetTabata()"/>
           </v-btn>
         </v-row>
       </v-card-title>
@@ -176,7 +175,7 @@
         <v-row align="center" justify="center" style="margin-top: 10px;">
           <v-col cols="3">
             <p class="cycles-sets-numbers">
-              {{ currentSet }}/{{ tabata.sets }}
+              {{ currentSet }}/{{ storeTimer.tabata.sets }}
             </p>
             <p class="cycles-sets-text">Sets</p>
           </v-col>
@@ -211,7 +210,7 @@
           </v-col>
           <v-col cols="3">
             <p class="cycles-sets-numbers">
-              {{ currentCycle }}/{{ tabata.cycles }}
+              {{ currentCycle }}/{{ storeTimer.tabata.cycles }}
             </p>
             <p class="cycles-sets-text">Cycles</p>
           </v-col>
@@ -237,8 +236,10 @@ import { useStopwatch, useTimer } from "vue-timer-hook";
 import TabataSettings from "@/components/pop-ups/TabataSettings.vue";
 import WorkoutDetails from "@/components/pop-ups/WorkoutDetails.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
+import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeWorkouts = useStoreWorkouts();
+const storeTimer = useStoreTimer();
 
 const checkbox = ref(false);
 const snackbar = ref(false);
@@ -279,7 +280,8 @@ stopwatch.pause();
 
 //TIMER
 let time = new Date();
-let seconds = ref(5);
+console.log(storeTimer.timer)
+let seconds = ref(storeTimer.timer);
 time.setSeconds(time.getSeconds() + seconds.value);
 let timer = useTimer(time);
 timer.pause();
@@ -288,28 +290,18 @@ const restartTimer = () => {
   time.setSeconds(time.getSeconds() + seconds.value);
   timer.restart(time);
   timer.pause();
+  storeTimer.updateTimer(seconds.value);
 };
 
 //TABATA
 let currentSet = ref(0);
 let currentCycle = ref(0);
-let tabata = ref({
-  prepareTime: 2,
-  workTime: 5,
-  rest: 3,
-  cycles: 11,
-  sets: 11,
-  restBetweenSets: 0,
-});
 let tabataTime = new Date();
-tabataTime.setSeconds(tabataTime.getSeconds() + tabata.value.prepareTime);
+tabataTime.setSeconds(tabataTime.getSeconds() + storeTimer.tabata.prepareTime);
 let tabataTimer = useTimer(tabataTime);
 tabataTimer.pause();
 let tabataMode = ref(0);
 
-const updateTabata = (data) => {
-  tabata.value = { ...data };
-};
 const restartTabata = (time) => {
   const tabataTime = new Date();
   tabataTime.setSeconds(tabataTime.getSeconds() + time);
@@ -317,7 +309,7 @@ const restartTabata = (time) => {
   tabataTimer.pause();
 };
 const resetTabata = () => {
-  restartTabata(tabata.value.prepareTime);
+  restartTabata(storeTimer.tabata.prepareTime);
   currentCycle.value = 0;
   currentSet.value = 0;
   tabataMode.value = 0;
@@ -361,8 +353,8 @@ onMounted(() => {
   snackbar.value = storeWorkouts.getCurrentWorkout.name === undefined;
   text.value = "No workout selected";
   watchEffect(async () => {
-    var audioFinish = new Audio(require("../assets/finish.mp3"));
-    var audioBuzzer = new Audio(require("../assets/buzzer.mp3"));
+    const audioFinish = new Audio(require("../assets/finish.mp3"));
+    const audioBuzzer = new Audio(require("../assets/buzzer.mp3"));
     if (timer.isExpired.value) {
       audioFinish.play();
     }
@@ -372,23 +364,23 @@ onMounted(() => {
         audioBuzzer.play();
         currentCycle.value = 1;
         currentSet.value = 1;
-        goToState(tabata.value.workTime, 1);
+        goToState(storeTimer.tabata.workTime, 1);
       } else if (tabataMode.value === 1) {
         // WORK
         if (
-          currentCycle.value === tabata.value.cycles &&
-          currentSet.value < tabata.value.sets
+          currentCycle.value === storeTimer.tabata.cycles &&
+          currentSet.value < storeTimer.tabata.sets
         ) {
           audioBuzzer.play();
           goToState(
-            tabata.value.restBetweenSets > 0
-              ? tabata.value.restBetweenSets
-              : tabata.value.rest,
+            storeTimer.tabata.restBetweenSets > 0
+              ? storeTimer.tabata.restBetweenSets
+              : storeTimer.tabata.rest,
             3
           );
-        } else if (currentCycle.value < tabata.value.cycles) {
+        } else if (currentCycle.value < storeTimer.tabata.cycles) {
           audioBuzzer.play();
-          goToState(tabata.value.rest, 2);
+          goToState(storeTimer.tabata.rest, 2);
         } else {
           audioFinish.play();
           tabataMode.value = 4;
@@ -396,17 +388,17 @@ onMounted(() => {
       } else if (tabataMode.value === 2) {
         // REST
         audioBuzzer.play();
-        if (currentCycle.value < tabata.value.cycles) {
-          goToState(tabata.value.workTime, 1);
+        if (currentCycle.value < storeTimer.tabata.cycles) {
+          goToState(storeTimer.tabata.workTime, 1);
           currentCycle.value = currentCycle.value + 1;
-        } else if (currentSet.value < tabata.value.sets) {
-          goToState(tabata.value.restBetweenSets, 3);
+        } else if (currentSet.value < storeTimer.tabata.sets) {
+          goToState(storeTimer.tabata.restBetweenSets, 3);
         }
       } else if (tabataMode.value === 3) {
         // REST BETWEEN SETS
         currentCycle.value = 1;
         currentSet.value = currentSet.value + 1;
-        goToState(tabata.value.workTime, 1);
+        goToState(storeTimer.tabata.workTime, 1);
         audioBuzzer.play();
       }
     }

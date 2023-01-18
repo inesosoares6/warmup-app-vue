@@ -5,7 +5,7 @@
       <v-card-text>
         <v-form ref="form">
           <v-text-field
-            v-model="prepareTime"
+            v-model="tabata.prepareTime"
             type="number"
             :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
             label="Prepare (sec)"
@@ -14,7 +14,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-model="workTime"
+                v-model="tabata.workTime"
                 type="number"
                 :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Work (sec)"
@@ -24,7 +24,7 @@
             </v-col>
             <v-col>
               <v-text-field
-                v-model="rest"
+                v-model="tabata.restTime"
                 type="number"
                 :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Rest (sec)"
@@ -36,7 +36,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-model="cycles"
+                v-model="tabata.cycles"
                 type="number"
                 :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Cycles"
@@ -46,7 +46,7 @@
             </v-col>
             <v-col>
               <v-text-field
-                v-model="sets"
+                v-model="tabata.sets"
                 type="number"
                 :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
                 label="Sets"
@@ -55,7 +55,7 @@
             </v-col>
           </v-row>
           <v-text-field
-            v-model="restBetweenSets"
+            v-model="tabata.restBetweenSets"
             type="number"
             :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
             label="Rest between sets (sec)"
@@ -74,26 +74,17 @@
 
 <script setup>
 import { ref } from "vue";
+import { useStoreTimer } from "@/stores/storeTimer";
 
+const storeTimer = useStoreTimer();
+const tabata = ref({...storeTimer.tabata});
 const emit = defineEmits(["created-tabata"]);
 
 const tabataSettings = ref(false);
-const prepareTime = ref(5);
-const workTime = ref(10);
-const rest = ref(0);
-const cycles = ref(1);
-const sets = ref(1);
-const restBetweenSets = ref(0);
 
 const returnTabata = () => {
-  emit("created-tabata", {
-    prepareTime: prepareTime.value,
-    workTime: workTime.value,
-    rest: rest.value,
-    cycles: cycles.value,
-    sets: sets.value,
-    restBetweenSets: restBetweenSets.value,
-  });
+  storeTimer.updateTabata(tabata.value);
+  emit("updateTimes");
   tabataSettings.value = false;
 };
 </script>

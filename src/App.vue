@@ -21,16 +21,19 @@ import BottomToolbar from "./components/BottomToolbar.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreUser } from "@/stores/storeUser";
 import { useStoreApp } from "@/stores/storeApp";
+import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 const storeUser = useStoreUser();
+const storeTimer = useStoreTimer();
 // const theme = ref(useTheme());
 
 onMounted(() => {
   storeApp.init();
   storeWorkouts.init();
   storeUser.init();
+  storeTimer.init();
   // theme.value.global.name = storeWorkouts.themeString;
 });
 </script>
