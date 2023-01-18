@@ -1,11 +1,14 @@
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
 import { useStoreApp } from "@/stores/storeApp";
+import Localbase from 'localbase'
+
+let db = new Localbase('db')
 
 export const useStoreWorkouts = defineStore("storeWorkouts", {
   state: () => {
     return {
-      allWorkouts: {},
+      allWorkouts: [],
       types: [],
       currentWorkout: {},
       workoutSummary: [],
@@ -14,8 +17,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
   getters: {},
   actions: {
     init() {
-      if (localStorage.getItem("allWorkouts"))
-        this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
+      db.collection('workouts').get().then(tasks => {
+        this.allWorkouts = tasks;
+      });
+
       if (localStorage.getItem("workoutSummary"))
         this.workoutSummary = JSON.parse(
           localStorage.getItem("workoutSummary")
@@ -30,14 +35,14 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     addDetails(workout) {
-      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
-      this.allWorkouts[objIndex].details = workout.details;
-      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
+      db.collection('workouts').doc({ id: workout.id }).update({
+        details: workout.details
+      });
     },
 
     addWorkout(newWorkout) {
-      this.allWorkouts.push(newWorkout);
-      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
+      db.collection('workouts').add(newWorkout);
+
       this.updateSummary(newWorkout, newWorkout.completions, 1);
       localStorage.setItem(
         "workoutSummary",
@@ -54,14 +59,14 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     deleteWorkout(workout) {
+      db.collection('workouts').doc({ id: workout.id }).delete();
+
       var index = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
       this.updateSummary(
         this.allWorkouts[index],
         this.allWorkouts[index].completions,
         -1
       );
-      this.allWorkouts.splice(index, 1);
-      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
       localStorage.setItem(
         "workoutSummary",
         JSON.stringify(this.workoutSummary)
@@ -69,15 +74,15 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     editWorkout(workout) {
+      db.collection('workouts').doc({ id: workout.id }).set(workout);
+
       var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
       this.updateSummary(
         this.allWorkouts[objIndex],
         this.allWorkouts[objIndex].completions,
         -1
       );
-      this.allWorkouts[objIndex] = { ...workout };
       this.updateSummary(workout, workout.completions, 1);
-      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
       localStorage.setItem(
         "workoutSummary",
         JSON.stringify(this.workoutSummary)
@@ -116,8 +121,11 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
           if (this.allWorkouts[index].completions === 0) {
             this.workoutSummary.todo = this.workoutSummary.todo - 1;
           }
-          this.allWorkouts[index].completions =
-            this.allWorkouts[index].completions + 1;
+        
+          db.collection('workouts').doc({ id: item.id }).update({
+            completions: +item.completions+1
+          });
+
           this.updateSummary(this.currentWorkout, 1, 1);
           const storeApp = useStoreApp();
           storeApp.updateTimeline(
@@ -126,7 +134,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
           );
         }
       });
-      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
       localStorage.setItem(
         "workoutSummary",
         JSON.stringify(this.workoutSummary)
