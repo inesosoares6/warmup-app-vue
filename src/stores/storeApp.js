@@ -6,7 +6,6 @@ export const useStoreApp = defineStore("storeApp", {
       timeline: [],
       weekNumber: 0,
       groupByType: false,
-      themeString: "",
     };
   },
   getters: {},
@@ -20,10 +19,6 @@ export const useStoreApp = defineStore("storeApp", {
       if (localStorage.getItem("groupByType"))
         this.groupByType =
           localStorage.getItem("groupByType") === "true" ? true : false;
-      if (localStorage.getItem("themeString")) {
-        this.themeString = localStorage.getItem("themeString");
-      }
-
       this.updateWeek();
     },
 
@@ -70,11 +65,6 @@ export const useStoreApp = defineStore("storeApp", {
     groupByTypeFunction(value) {
       this.groupByType = value;
       localStorage.setItem("groupByType", JSON.stringify(this.groupByType));
-    },
-
-    toggleTheme(theme) {
-      this.themeString = theme;
-      localStorage.setItem("themeString", JSON.stringify(this.themeString));
     },
 
     updateTimeline(day, workoutId) {

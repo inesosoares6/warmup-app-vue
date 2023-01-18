@@ -8,7 +8,7 @@
       </v-btn>
       <v-btn>
         <v-icon>mdi-cog</v-icon>
-        <SettingsMenu></SettingsMenu>
+        <SettingsMenu v-on:toggle-theme="toggleTheme"></SettingsMenu>
       </v-btn>
     </v-app-bar>
   </div>
@@ -17,6 +17,12 @@
 <script setup>
 import SettingsMenu from "./pop-ups/SettingsMenu.vue";
 import AddWorkout from "./pop-ups/AddWorkout.vue";
+
+const emit = defineEmits(["toggle-theme"]);
+
+const toggleTheme = (theme) => {
+  emit('toggle-theme', theme);
+}
 </script>
 
 <style scoped></style>

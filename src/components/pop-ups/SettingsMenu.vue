@@ -32,18 +32,22 @@
 </template>
 
 <script setup>
-import { ref, onUpdated } from "vue";
+import { ref, onMounted, onUpdated } from "vue";
 import { useStoreApp } from "@/stores/storeApp";
+import { useTheme } from "vuetify";
 
 const storeApp = useStoreApp();
 
 const settingsMenu = ref(false);
 const isDarkMode = ref(true);
 const groupByTypeEnabled = ref(false);
+const theme = ref(useTheme());
 
-// onMounted(() => {
-//   isDarkMode.value = this.theme === 'dark';
-// });
+const emit = defineEmits(["toggle-theme"]);
+
+onMounted(() => {
+  isDarkMode.value = theme.value.global.name === 'dark';
+});
 
 onUpdated(() => {
   groupByTypeEnabled.value = storeApp.groupByType;
@@ -59,7 +63,7 @@ const groupByTypeFunction = () => {
 };
 
 const toggleTheme = () => {
-  storeApp.toggleTheme();
+  emit('toggle-theme', isDarkMode.value ? 'dark' : 'light');
 };
 </script>
 

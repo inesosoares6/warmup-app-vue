@@ -1,39 +1,44 @@
 <template>
   <v-app>
     <BottomToolbar></BottomToolbar>
-    <TopToolbar></TopToolbar>
+    <TopToolbar v-on:toggle-theme="toggleTheme"></TopToolbar>
     <v-main>
       <router-view v-slot="{ Component, route }">
-        <component
-          :is="Component"
-          :key="route.path"
-        />
+        <component :is="Component" :key="route.path" />
       </router-view>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import TopToolbar from "./components/TopToolbar.vue";
 import BottomToolbar from "./components/BottomToolbar.vue";
-// import { useTheme } from "vuetify";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreUser } from "@/stores/storeUser";
 import { useStoreApp } from "@/stores/storeApp";
 import { useStoreTimer } from "@/stores/storeTimer";
+import { useTheme } from "vuetify";
 
 const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 const storeUser = useStoreUser();
 const storeTimer = useStoreTimer();
-// const theme = ref(useTheme());
+const theme = ref(useTheme());
 
 onMounted(() => {
   storeApp.init();
   storeWorkouts.init();
   storeUser.init();
   storeTimer.init();
-  // theme.value.global.name = storeWorkouts.themeString;
+
+  if (localStorage.getItem("themeString")) {
+    theme.value.global.name = localStorage.getItem("themeString");
+  }
 });
+
+const toggleTheme = (newTheme) => {
+  theme.value.global.name = newTheme.toString();
+  localStorage.setItem("themeString", newTheme);
+};
 </script>
