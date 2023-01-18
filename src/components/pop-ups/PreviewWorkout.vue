@@ -47,6 +47,7 @@ const previewWorkout = ref(false);
 
 const deleteWorkout = () => {
   storeWorkouts.deleteWorkout(props.workout);
+  previewWorkout.value = false;
 };
 
 const selectWorkout = () => {
