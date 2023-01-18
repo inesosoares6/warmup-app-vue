@@ -280,7 +280,6 @@ stopwatch.pause();
 
 //TIMER
 let time = new Date();
-console.log(storeTimer.timer)
 let seconds = ref(storeTimer.timer);
 time.setSeconds(time.getSeconds() + seconds.value);
 let timer = useTimer(time);
