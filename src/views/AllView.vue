@@ -84,7 +84,6 @@ const text = ref("");
 const timeout = ref(2000);
 
 const { allWorkouts } = storeToRefs(storeWorkouts);
-console.log(allWorkouts.value)
 
 onMounted(() => {
   snackbar.value = allWorkouts.length < 1;

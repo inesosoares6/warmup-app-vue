@@ -31,7 +31,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     getWorkoutSummary: (state) => {
-      console.log("getWorkoutSummary");
       let summary = {
         done: 0,
         todo: 0,
@@ -80,19 +79,46 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
 
     addWorkout(newWorkout) {
       db.collection("workouts").add(newWorkout);
+      // TODO: delete this when implement snapshot
       this.allWorkouts.push(newWorkout);
+    },
+
+    async addWorkoutCompletion() {
+      db.collection("workouts")
+        .doc({ id: this.currentWorkoutId })
+        .update({
+          completions: this.getCurrentWorkout.completions + 1,
+        });
+      // TODO: delete this when implement snapshot
+      let workout = this.getCurrentWorkout();
+      workout.completions += 1;
+      this.updateWorkout(workout);
+
+      const storeApp = useStoreApp();
+      storeApp.updateTimeline(
+        new Date().toDateString().substring(0, 3),
+        this.currentWorkoutId
+      );
     },
 
     deleteWorkout(workout) {
       db.collection("workouts").doc({ id: workout.id }).delete();
+      // TODO: fix app breaking after splice array
+      // TODO: delete this when implement snapshot
+      // var index = this.allWorkouts.findIndex(
+      //   (obj) => obj.id === workout.id
+      // );
+      // this.allWorkouts.splice(index, 1);
     },
 
     editWorkout(workout) {
-      console.log(workout)
-      db.collection("workouts").doc({ id: workout.id }).set(workout);
+      db.collection("workouts").doc({ id: workout.id }).update(workout);
+      // TODO: delete this when implement snapshot
+      this.updateWorkout(workout);
     },
 
     getAllWorkouts() {
+      this.allWorkouts = [];
       db.collection("workouts")
         .get()
         .then((tasks) => {
@@ -115,17 +141,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
       );
     },
 
-    async updateWorkout() {
-      db.collection("workouts")
-        .doc({ id: this.currentWorkoutId })
-        .update({
-          completions: this.getCurrentWorkout.completions + 1,
-        });
-      const storeApp = useStoreApp();
-      storeApp.updateTimeline(
-        new Date().toDateString().substring(0, 3),
-        this.currentWorkoutId
-      );
+    // TODO: delete this when implement snapshot
+    updateWorkout(workout) {
+      var index = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
+      this.allWorkouts[index] = workout;
     },
   },
 });

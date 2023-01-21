@@ -270,7 +270,7 @@ const createStringWorkout = () => {
 };
 
 const updateWorkout = () => {
-  if (checkbox.value) storeWorkouts.updateWorkout();
+  if (checkbox.value) storeWorkouts.addWorkoutCompletion();
 };
 
 //STOPWATCH
