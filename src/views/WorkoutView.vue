@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card
-      v-if="storeWorkouts.getCurrentWorkout.name !== undefined"
+      v-if="storeWorkouts.getCurrentWorkout !== undefined"
       :title="storeWorkouts.getCurrentWorkout.name"
       :subtitle="storeWorkouts.getCurrentWorkout.type + ' - ' + storeWorkouts.getCurrentWorkout.time + ' min'"
     >
@@ -349,7 +349,7 @@ const getColor = () => {
 };
 
 onMounted(() => {
-  snackbar.value = storeWorkouts.getCurrentWorkout.name === undefined;
+  snackbar.value = storeWorkouts.getCurrentWorkout === undefined;
   text.value = "No workout selected";
   watchEffect(async () => {
     const audioFinish = new Audio(require("../assets/finish.mp3"));
