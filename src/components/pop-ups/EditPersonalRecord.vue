@@ -54,7 +54,7 @@
       </v-card-text>
       <v-card
         title="Evolution"
-        color="#424242"
+        color="grey"
         width="85%"
         style="margin: auto"
       >

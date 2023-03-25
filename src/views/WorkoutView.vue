@@ -339,7 +339,7 @@ const getColor = () => {
       case 0:
       case 2:
       case 3:
-        return "yellow";
+        return "warning";
       case 1:
         return "error";
     }

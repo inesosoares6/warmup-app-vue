@@ -18,7 +18,7 @@
           </v-avatar>
         </template>
         <template v-slot:append>
-          <v-avatar outline color="#424242">
+          <v-avatar outline color="grey">
             {{ workout.completions }}
           </v-avatar>
         </template>
@@ -49,7 +49,7 @@
                 </v-avatar>
               </template>
               <template v-slot:append>
-                <v-avatar outline color="#424242">
+                <v-avatar outline color="grey">
                   {{ workout.completions }}
                 </v-avatar>
               </template>

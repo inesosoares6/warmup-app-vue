@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar app fixed dark color="primary">
-      <v-toolbar-title>WOD App</v-toolbar-title>
+      <v-toolbar-title>Workouts App</v-toolbar-title>
       <v-btn>
         <v-icon>mdi-plus</v-icon>
         <AddWorkout></AddWorkout>
