@@ -1,9 +1,5 @@
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
-import { useStoreApp } from "@/stores/storeApp";
-import Localbase from "localbase";
-
-let db = new Localbase("db");
 
 export const useStoreWorkouts = defineStore("storeWorkouts", {
   state: () => {
@@ -63,7 +59,9 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
   },
   actions: {
     async init() {
-      await this.getAllWorkouts();
+
+      if (localStorage.getItem("allWorkouts"))
+        this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
 
       if (localStorage.getItem("currentWorkoutId"))
         this.currentWorkoutId = JSON.parse(
@@ -72,58 +70,25 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     addDetails(workout) {
-      db.collection("workouts").doc({ id: workout.id }).update({
-        details: workout.details,
-      });
+      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
+      this.allWorkouts[objIndex].details = workout.details;
+      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
     },
 
     addWorkout(newWorkout) {
-      db.collection("workouts").add(newWorkout);
-      // TODO: delete this when implement snapshot
       this.allWorkouts.push(newWorkout);
-    },
-
-    async addWorkoutCompletion() {
-      db.collection("workouts")
-        .doc({ id: this.currentWorkoutId })
-        .update({
-          completions: this.getCurrentWorkout.completions + 1,
-        });
-      // TODO: delete this when implement snapshot
-      let workout = this.getCurrentWorkout();
-      workout.completions += 1;
-      this.updateWorkout(workout);
-
-      const storeApp = useStoreApp();
-      storeApp.updateTimeline(
-        new Date().toDateString().substring(0, 3),
-        this.currentWorkoutId
-      );
+      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
     },
 
     deleteWorkout(workout) {
-      db.collection("workouts").doc({ id: workout.id }).delete();
-      // TODO: fix app breaking after splice array
-      // TODO: delete this when implement snapshot
-      // var index = this.allWorkouts.findIndex(
-      //   (obj) => obj.id === workout.id
-      // );
-      // this.allWorkouts.splice(index, 1);
+      var index = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
+      this.allWorkouts.splice(index, 1);
+      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
     },
 
     editWorkout(workout) {
-      db.collection("workouts").doc({ id: workout.id }).update(workout);
-      // TODO: delete this when implement snapshot
-      this.updateWorkout(workout);
-    },
-
-    getAllWorkouts() {
-      this.allWorkouts = [];
-      db.collection("workouts")
-        .get()
-        .then((tasks) => {
-          this.allWorkouts = tasks;
-        });
+      var objIndex = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
+      this.allWorkouts[objIndex] = { ...workout };
     },
 
     importWorkouts(workouts) {
@@ -139,12 +104,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         "currentWorkoutId",
         JSON.stringify(this.currentWorkoutId)
       );
-    },
-
-    // TODO: delete this when implement snapshot
-    updateWorkout(workout) {
-      var index = this.allWorkouts.findIndex((obj) => obj.id === workout.id);
-      this.allWorkouts[index] = workout;
     },
   },
 });

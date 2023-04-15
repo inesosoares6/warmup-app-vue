@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <v-card
-      v-if="storeWorkouts.getCurrentWorkout !== undefined"
-      :title="storeWorkouts.getCurrentWorkout.name"
-      :subtitle="storeWorkouts.getCurrentWorkout.type + ' - ' + storeWorkouts.getCurrentWorkout.time + ' min'"
+      v-if="currentWorkout !== undefined"
+      :title="currentWorkout.name"
+      :subtitle="currentWorkout.type + ' - ' + currentWorkout.time + ' min'"
     >
       <template v-slot:prepend>
         <v-icon size="small" color="secondary">mdi-weight-lifter</v-icon>
@@ -21,13 +21,13 @@
         <v-btn class="details-button" color="transparent" icon>
           <v-icon>mdi-dots-vertical</v-icon>
           <WorkoutDetails
-            v-bind:workout="storeWorkouts.getCurrentWorkout"
+            v-bind:workout="currentWorkout"
           ></WorkoutDetails>
         </v-btn>
       </v-col>
       <v-card-text
         class="exercises"
-        v-html="storeWorkouts.getCurrentWorkout.exercises.replaceAll('\n', '<br/>')"
+        v-html="currentWorkout.exercises.replaceAll('\n', '<br/>')"
       >
       </v-card-text>
       <v-col>
@@ -230,13 +230,14 @@
 </template>
 
 <script setup>
-import { watchEffect, onMounted, ref } from "vue";
+import { watchEffect, onMounted, ref, computed} from "vue";
 import { Clipboard } from "@capacitor/clipboard";
 import { useStopwatch, useTimer } from "vue-timer-hook";
 import TabataSettings from "@/components/pop-ups/TabataSettings.vue";
 import WorkoutDetails from "@/components/pop-ups/WorkoutDetails.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreTimer } from "@/stores/storeTimer";
+import { useStoreApp } from "@/stores/storeApp";
 
 const storeWorkouts = useStoreWorkouts();
 const storeTimer = useStoreTimer();
@@ -248,6 +249,10 @@ const timeout = ref(2000);
 const mode = ref(0);
 const toggle_exclusive = ref(0);
 
+const currentWorkout = computed(() => {
+  return storeWorkouts.getCurrentWorkout;
+})
+
 const copyWorkout = () => {
   Clipboard.write({
     string: createStringWorkout(),
@@ -258,19 +263,28 @@ const copyWorkout = () => {
 
 const createStringWorkout = () => {
   return (
-    storeWorkouts.getCurrentWorkout.name +
+    currentWorkout.value.name +
     "\n" +
-    storeWorkouts.getCurrentWorkout.type +
+    currentWorkout.value.type +
     " - " +
-    storeWorkouts.getCurrentWorkout.time +
+    currentWorkout.value.time +
     " min" +
     "\n-------------\n" +
-    storeWorkouts.getCurrentWorkout.exercises
+    currentWorkout.value.exercises
   );
 };
 
 const updateWorkout = () => {
-  if (checkbox.value) storeWorkouts.addWorkoutCompletion();
+  if (checkbox.value){
+    const workout = {...currentWorkout.value};
+    workout.completions = workout.completions+1;
+    storeWorkouts.editWorkout(workout);
+    const storeApp = useStoreApp();
+    storeApp.updateTimeline(
+      new Date().toDateString().substring(0, 3),
+      currentWorkout.value.id
+    );
+  }
 };
 
 //STOPWATCH
@@ -349,7 +363,7 @@ const getColor = () => {
 };
 
 onMounted(() => {
-  snackbar.value = storeWorkouts.getCurrentWorkout === undefined;
+  snackbar.value = currentWorkout.value === undefined;
   text.value = "No workout selected";
   watchEffect(async () => {
     const audioFinish = new Audio(require("../assets/finish.mp3"));
