@@ -213,13 +213,11 @@ const generateWorkout = () => {
   const validList =
     time.value !== null
       ? generateValidWorkoutsList()
-      : [...storeWorkouts.allWorkouts];
+      : [...Object.keys(storeWorkouts.allWorkouts)];
   if (validList.length > 1) {
-    let workout = {};
-    do {
-      workout = validList[Math.floor(Math.random() * validList.length)];
-    } while (workout.id === storeWorkouts.getCurrentWorkout.id);
-    storeWorkouts.selectWorkout(workout);
+    storeWorkouts.selectWorkout(
+      validList[Math.floor(Math.random() * validList.length)]
+    );
     router.push({ name: "workout-view" });
   } else if (validList.length === 1) {
     storeWorkouts.selectWorkout(validList[0]);
@@ -234,9 +232,10 @@ const generateWorkout = () => {
 
 const generateValidWorkoutsList = () => {
   let validList = [];
-  for (const workout of storeWorkouts.allWorkouts) {
-    if (workout.time <= time.value) validList = [...validList, workout];
-  }
+  Object.keys(storeWorkouts.allWorkouts).forEach((key) => {
+    let workout = storeWorkouts.allWorkouts[key];
+    if (workout.time <= time.value) validList = [...validList, key];
+  });
   return validList;
 };
 
