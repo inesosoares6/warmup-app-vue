@@ -286,7 +286,7 @@ const updateWorkout = () => {
     const storeApp = useStoreApp();
     storeApp.updateTimeline(
       new Date().toDateString().substring(0, 3),
-      currentWorkout.value.id
+      storeWorkouts.currentWorkoutId
     );
   }
 };

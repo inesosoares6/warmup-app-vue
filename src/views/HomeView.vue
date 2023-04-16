@@ -108,7 +108,7 @@
               Send
               <PreviewList
                 v-if="Object.keys(storeWorkouts.allWorkouts).length > 0"
-                v-bind:workouts="storeWorkouts.allWorkouts"
+                v-bind:workouts="Object.values(storeWorkouts.allWorkouts)"
                 v-bind:action="'export'"
                 v-on:downloaded-workouts="downloadedWorkouts"
               ></PreviewList>
@@ -259,7 +259,7 @@ const getDay = (day) => {
 const getWorkoutsDone = () => {
   let workoutsList = [];
   selectedDay.value.workoutsId.forEach((id) => {
-    workoutsList.push(storeWorkouts.allWorkouts.find((e) => e.id === id));
+    workoutsList.push(storeWorkouts.allWorkouts[id]);
   });
   return workoutsList;
 };
