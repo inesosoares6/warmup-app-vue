@@ -2,11 +2,11 @@
   <div>
     <v-app-bar app fixed dark color="primary">
       <v-toolbar-title>Workouts App</v-toolbar-title>
-      <v-btn>
+      <v-btn icon>
         <v-icon>mdi-plus</v-icon>
         <AddWorkout></AddWorkout>
       </v-btn>
-      <v-btn>
+      <v-btn icon>
         <v-icon>mdi-cog</v-icon>
         <SettingsMenu v-on:toggle-theme="toggleTheme"></SettingsMenu>
       </v-btn>

@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-list v-if="!storeApp.groupByType && Object.keys(allWorkouts).length > 0" lines="two">
+    <v-list
+      v-if="!storeApp.groupByType && Object.keys(allWorkouts).length > 0"
+      lines="two"
+    >
       <v-list-item
         v-for="(workout, key) in allWorkouts"
         :key="key"
@@ -15,9 +18,13 @@
           </v-avatar>
         </template>
         <template v-slot:append>
-          <v-avatar outline color="grey">
-            {{ workout.completions }}
-          </v-avatar>
+          <v-btn
+            flat
+            round
+            dense
+            icon
+            @click="storeWorkouts.deleteWorkout(key)"
+          ><v-icon color="red">mdi-delete</v-icon></v-btn>
         </template>
       </v-list-item>
     </v-list>

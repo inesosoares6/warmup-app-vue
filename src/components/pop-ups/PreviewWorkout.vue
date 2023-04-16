@@ -16,8 +16,8 @@
       <v-card-text v-html="workout.exercises.replaceAll('\n', '<br/>')">
       </v-card-text>
       <v-card-actions>
+        <span class="doneText">Done {{ workout.completions }} times!</span>
         <v-spacer></v-spacer>
-        <v-btn color="error" @click="deleteWorkout"> Delete </v-btn>
         <v-btn
           color="secondary"
           @click="selectWorkout"
@@ -40,13 +40,16 @@ const props = defineProps(["workout", "id"]);
 const storeWorkouts = useStoreWorkouts();
 const previewWorkout = ref(false);
 
-const deleteWorkout = () => {
-  storeWorkouts.deleteWorkout(props.id);
-  previewWorkout.value = false;
-};
-
 const selectWorkout = () => {
   storeWorkouts.selectWorkout(props.id);
   previewWorkout.value = false;
 };
+
 </script>
+
+<style scoped>
+.doneText {
+  color: #FFCC80;
+  margin-left: 10px;
+}
+</style>
