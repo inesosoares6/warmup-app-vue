@@ -1,16 +1,13 @@
 <template>
   <v-container>
-    <v-list
-      v-if="!storeApp.groupByType && allWorkouts.length > 0"
-      lines="two"
-    >
+    <v-list v-if="!storeApp.groupByType && Object.keys(allWorkouts).length > 0" lines="two">
       <v-list-item
-        v-for="workout in allWorkouts"
-        :key="workout.id"
+        v-for="(workout, key) in allWorkouts"
+        :key="key"
         :title="workout.name"
         :subtitle="workout.type + ' - ' + workout.time + ' min'"
       >
-        <PreviewWorkout :workout="workout"></PreviewWorkout>
+        <PreviewWorkout :workout="workout" :id="key"></PreviewWorkout>
 
         <template v-slot:prepend>
           <v-avatar :color="workout.completions > 0 ? 'secondary' : 'error'">
@@ -34,12 +31,12 @@
         <v-expansion-panel-text>
           <v-list lines="two">
             <v-list-item
-              v-for="workout in list.details"
-              :key="workout.id"
+              v-for="(workout, key) in list.details"
+              :key="key"
               :title="workout.name"
               :subtitle="workout.type + ' - ' + workout.time + ' min'"
             >
-              <PreviewWorkout :workout="workout"></PreviewWorkout>
+              <PreviewWorkout :workout="workout" :id="key"></PreviewWorkout>
 
               <template v-slot:prepend>
                 <v-avatar
@@ -86,13 +83,14 @@ const timeout = ref(2000);
 const { allWorkouts } = storeToRefs(storeWorkouts);
 
 onMounted(() => {
-  snackbar.value = allWorkouts.length < 1;
+  snackbar.value = Object.keys(allWorkouts).length < 1;
   text.value = "Add workouts";
 });
 
 const groupWorkoutsByType = () => {
   let returnList = [];
-  allWorkouts.value.forEach((item) => {
+  Object.keys(allWorkouts.value).forEach((key) => {
+    let item = allWorkouts.value[key];
     if (returnList.some((e) => e.type === item.type)) {
       returnList.forEach((typeList, index) => {
         if (typeList.type === item.type) {

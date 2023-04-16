@@ -80,11 +80,13 @@ const addWorkoutFunction = () => {
     addWorkout.value = false;
     storeWorkouts.addWorkout({
       id: uuidv4(),
-      name: name.value,
-      type: type.value === "--> Add new type" ? newType.value : type.value,
-      time: time.value,
-      exercises: exercises.value,
-      completions: alreadyDone.value ? 1 : 0,
+      workout: {
+        name: name.value,
+        type: type.value === "--> Add new type" ? newType.value : type.value,
+        time: time.value,
+        exercises: exercises.value,
+        completions: alreadyDone.value ? 1 : 0,
+      },
     });
     resetForm();
   }

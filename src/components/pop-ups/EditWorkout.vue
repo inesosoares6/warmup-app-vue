@@ -65,12 +65,7 @@ import { ref } from "vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { onMounted } from "vue";
 
-const props = defineProps({
-  workout: {
-    type: Object,
-    required: true,
-  }
-});
+const props = defineProps(["workout", "id"]);
 
 const storeWorkouts = useStoreWorkouts();
 
@@ -91,7 +86,10 @@ const updateWorkout = () => {
   if (workoutEdited.value.type === "--> Add new type") {
     workoutEdited.value.type = newType.value;
   }
-  storeWorkouts.editWorkout(workoutEdited.value);
+  storeWorkouts.updateWorkout({
+      id: props.id,
+      updates: workoutEdited.value,
+    });
 };
 
 const formEditRef = ref(null);

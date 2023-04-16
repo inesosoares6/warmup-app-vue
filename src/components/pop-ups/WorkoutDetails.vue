@@ -7,12 +7,7 @@
       "
     >
       <template v-slot:append>
-        <v-btn
-          v-if="!addDetails"
-          icon
-          color="grey"
-          @click="addDetails = true"
-        >
+        <v-btn v-if="!addDetails" icon color="grey" @click="addDetails = true">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-btn v-else icon color="grey" @click="addDetails = false">
@@ -51,12 +46,7 @@ import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 const storeWorkouts = useStoreWorkouts();
 
-const props = defineProps({
-  workout: {
-    type: Object,
-    required: true,
-  },
-});
+const props = defineProps(["product", "id"]);
 
 const workoutDetails = ref(false);
 const addDetails = ref(false);
@@ -68,8 +58,12 @@ onMounted(() => {
 });
 
 const saveDetails = () => {
-  currentWorkout.value.details = details.value;
-  storeWorkouts.addDetails(currentWorkout.value);
+  storeWorkouts.updateWorkout({
+    id: props.id,
+    updates: {
+      details: details.value,
+    },
+  });
   addDetails.value = false;
   workoutDetails.value = false;
 };

@@ -22,6 +22,7 @@
           <v-icon>mdi-dots-vertical</v-icon>
           <WorkoutDetails
             v-bind:workout="currentWorkout"
+            v-bind:id="storeWorkouts.currentWorkoutId"
           ></WorkoutDetails>
         </v-btn>
       </v-col>
@@ -251,7 +252,7 @@ const toggle_exclusive = ref(0);
 
 const currentWorkout = computed(() => {
   return storeWorkouts.getCurrentWorkout;
-})
+});
 
 const copyWorkout = () => {
   Clipboard.write({
@@ -276,9 +277,12 @@ const createStringWorkout = () => {
 
 const updateWorkout = () => {
   if (checkbox.value){
-    const workout = {...currentWorkout.value};
-    workout.completions = workout.completions+1;
-    storeWorkouts.editWorkout(workout);
+    storeWorkouts.updateWorkout({
+    id: storeWorkouts.currentWorkoutId,
+    updates: {
+      completions: currentWorkout.value.completions+1,
+    },
+  });
     const storeApp = useStoreApp();
     storeApp.updateTimeline(
       new Date().toDateString().substring(0, 3),

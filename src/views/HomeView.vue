@@ -107,7 +107,7 @@
             <v-btn variant="outlined" append-icon="mdi-arrow-top-right">
               Send
               <PreviewList
-                v-if="storeWorkouts.allWorkouts.length > 0"
+                v-if="Object.keys(storeWorkouts.allWorkouts).length > 0"
                 v-bind:workouts="storeWorkouts.allWorkouts"
                 v-bind:action="'export'"
                 v-on:downloaded-workouts="downloadedWorkouts"
@@ -245,7 +245,7 @@ const getDay = (day) => {
     case "Wed":
       return "Wednesday";
     case "Thu":
-      return "Thrusday";
+      return "Thursday";
     case "Sat":
       return "Saturday";
     case "Mon":

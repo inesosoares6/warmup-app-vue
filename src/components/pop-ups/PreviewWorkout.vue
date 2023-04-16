@@ -10,7 +10,7 @@
       <template v-slot:append>
         <v-btn icon color="grey">
           <v-icon>mdi-pencil</v-icon>
-          <EditWorkout v-bind:workout="workout" />
+          <EditWorkout v-bind:workout="workout" v-bind:id="id" />
         </v-btn>
       </template>
       <v-card-text v-html="workout.exercises.replaceAll('\n', '<br/>')">
@@ -35,23 +35,18 @@ import { ref } from "vue";
 import EditWorkout from "@/components/pop-ups/EditWorkout.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
-const props = defineProps({
-  workout: {
-    type: Object,
-    required: true,
-  },
-});
+const props = defineProps(["workout", "id"]);
 
 const storeWorkouts = useStoreWorkouts();
 const previewWorkout = ref(false);
 
 const deleteWorkout = () => {
-  storeWorkouts.deleteWorkout(props.workout);
+  storeWorkouts.deleteWorkout(props.id);
   previewWorkout.value = false;
 };
 
 const selectWorkout = () => {
-  storeWorkouts.selectWorkout(props.workout);
+  storeWorkouts.selectWorkout(props.id);
   previewWorkout.value = false;
 };
 </script>
