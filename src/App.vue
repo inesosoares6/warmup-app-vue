@@ -43,7 +43,6 @@ const toggleTheme = (newTheme) => {
 };
 
 watch(
-  // pretend you have a getData getter in store
   () => Object.keys(storeWorkouts.allWorkouts),
   (val, oldVal) => {
     console.dir({ val, oldVal });
