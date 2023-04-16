@@ -68,16 +68,16 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         );
     },
 
-    updateWorkout(payload) {
-      Object.assign(this.allWorkouts[payload.id], payload.updates);
-    },
-
     addWorkout(payload) {
       this.allWorkouts[payload.id] = payload.workout;
     },
 
     deleteWorkout(id) {
       delete this.allWorkouts[id];
+    },
+
+    updateWorkout(payload) {
+      Object.assign(this.allWorkouts[payload.id], payload.updates);
     },
 
     importWorkouts(workouts) {

@@ -46,7 +46,7 @@ import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 const storeWorkouts = useStoreWorkouts();
 
-const props = defineProps(["product", "id"]);
+const props = defineProps(["workout", "id"]);
 
 const workoutDetails = ref(false);
 const addDetails = ref(false);
