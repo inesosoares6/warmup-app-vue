@@ -70,17 +70,14 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
 
     updateWorkout(payload) {
       Object.assign(this.allWorkouts[payload.id], payload.updates);
-      localStorage.setItem("allWorkouts2", JSON.stringify(this.allWorkouts));
     },
 
     addWorkout(payload) {
       this.allWorkouts[payload.id] = payload.workout;
-      localStorage.setItem("allWorkouts2", JSON.stringify(this.allWorkouts));
     },
 
     deleteWorkout(id) {
       delete this.allWorkouts[id];
-      localStorage.setItem("allWorkouts2", JSON.stringify(this.allWorkouts));
     },
 
     importWorkouts(workouts) {

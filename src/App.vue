@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import TopToolbar from "./components/TopToolbar.vue";
 import BottomToolbar from "./components/BottomToolbar.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
@@ -41,4 +41,16 @@ const toggleTheme = (newTheme) => {
   theme.value.global.name = newTheme.toString();
   localStorage.setItem("themeString", newTheme);
 };
+
+watch(
+  // pretend you have a getData getter in store
+  () => Object.keys(storeWorkouts.allWorkouts),
+  (val, oldVal) => {
+    console.dir({ val, oldVal });
+    localStorage.setItem(
+      "allWorkouts2",
+      JSON.stringify(storeWorkouts.allWorkouts)
+    );
+  }
+);
 </script>
