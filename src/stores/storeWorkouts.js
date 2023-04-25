@@ -59,8 +59,8 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
   },
   actions: {
     async init() {
-      if (localStorage.getItem("allWorkouts2"))
-        this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts2"));
+      if (localStorage.getItem("allWorkouts"))
+        this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
 
       if (localStorage.getItem("currentWorkoutId"))
         this.currentWorkoutId = JSON.parse(

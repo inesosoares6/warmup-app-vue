@@ -46,7 +46,7 @@ watch(
   () => Object.keys(storeWorkouts.allWorkouts),
   () => {
     localStorage.setItem(
-      "allWorkouts2",
+      "allWorkouts",
       JSON.stringify(storeWorkouts.allWorkouts)
     );
   }
