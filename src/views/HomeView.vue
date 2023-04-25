@@ -75,7 +75,13 @@
         <v-icon color="secondary">mdi-checkbox-marked-circle-outline</v-icon>
         Week Overview
       </v-card-title>
-      <v-card-text>
+
+      <v-btn class="print-button" icon flat size="small">
+        <v-icon color="secondary">mdi-printer</v-icon>
+        <WeeklyReport />
+      </v-btn>
+
+      <v-card-text class="pa-0 ml-3 mr-3 mb-3">
         <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
           <v-timeline-item
             v-for="(item, index) in storeApp.timeline"
@@ -87,9 +93,11 @@
               selectedDay = item;
             "
           >
-            <template v-if="index % 2 !== 0"> {{ item.day }} </template>
+            <template v-if="index % 2 !== 0">
+              {{ item.day.substring(0, 3) }}
+            </template>
             <template v-if="index % 2 === 0" v-slot:opposite>
-              {{ item.day }}
+              {{ item.day.substring(0, 3) }}
             </template>
           </v-timeline-item>
         </v-timeline>
@@ -129,7 +137,7 @@
     <v-dialog v-model="showWorkoutDone">
       <v-card
         class="workouts-done-card"
-        :title="getDay(selectedDay.day) + ' Workouts'"
+        :title="selectedDay.day + ' Workouts'"
         style="overflow-y: auto"
       >
         <template v-slot:prepend>
@@ -164,7 +172,7 @@
       v-if="imported && importedWorkouts.length > 0"
       v-bind:workouts="importedWorkouts"
       v-bind:action="'import'"
-    ></PreviewList>
+    />
 
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
@@ -180,6 +188,7 @@
 <script setup>
 import { ref } from "vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
+import WeeklyReport from "@/components/pop-ups/WeeklyReport.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreApp } from "@/stores/storeApp";
@@ -239,22 +248,6 @@ const generateValidWorkoutsList = () => {
   return validList;
 };
 
-const getDay = (day) => {
-  switch (day) {
-    case "Wed":
-      return "Wednesday";
-    case "Thu":
-      return "Thursday";
-    case "Sat":
-      return "Saturday";
-    case "Mon":
-    case "Tue":
-    case "Fri":
-    case "Sun":
-      return day + "day";
-  }
-};
-
 const getWorkoutsDone = () => {
   let workoutsList = [];
   selectedDay.value.workoutsId.forEach((id) => {
@@ -270,6 +263,12 @@ const previewImportedWorkouts = (workouts) => {
 </script>
 
 <style>
+.print-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 .v-divider {
   margin-top: 5px;
   margin-bottom: 5px;

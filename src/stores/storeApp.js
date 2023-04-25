@@ -25,37 +25,37 @@ export const useStoreApp = defineStore("storeApp", {
     clearTimeline() {
       return [
         {
-          day: "Mon",
+          day: "Monday",
           color: "error",
           workoutsId: [],
         },
         {
-          day: "Tue",
+          day: "Tuesday",
           color: "error",
           workoutsId: [],
         },
         {
-          day: "Wed",
+          day: "Wednesday",
           color: "error",
           workoutsId: [],
         },
         {
-          day: "Thu",
+          day: "Thursday",
           color: "error",
           workoutsId: [],
         },
         {
-          day: "Fri",
+          day: "Friday",
           color: "error",
           workoutsId: [],
         },
         {
-          day: "Sat",
+          day: "Saturday",
           color: "error",
           workoutsId: [],
         },
         {
-          day: "Sun",
+          day: "Sunday",
           color: "error",
           workoutsId: [],
         },
@@ -69,7 +69,7 @@ export const useStoreApp = defineStore("storeApp", {
 
     updateTimeline(day, workoutId) {
       this.timeline.forEach((item) => {
-        if (item.day === day) {
+        if (item.day.substring(0,3) === day) {
           item.color = "secondary";
           item.workoutsId.push(workoutId);
         }
