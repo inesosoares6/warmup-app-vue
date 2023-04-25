@@ -7,7 +7,7 @@
         >
       </template>
       <template v-slot:append>
-        <v-btn icon color="transparent" size="35">
+        <v-btn icon color="transparent" size="35" flat>
           <v-icon size="small">mdi-plus</v-icon>
           <AddPersonalRecord></AddPersonalRecord>
         </v-btn>
@@ -19,20 +19,15 @@
             v-for="(record, index) in storeUser.personalRecords"
             :key="index"
             :value="record"
+            :title="
+              record.name + ': ' + record.value[record.value.length - 1] + ' kg'
+            "
             rounded="xl"
             ><template v-slot:prepend>
               <v-avatar size="25" :color="getColor(record.value, true)">
                 <v-icon size="small">mdi-dumbbell</v-icon>
               </v-avatar>
             </template>
-            <v-list-item-title
-              v-text="
-                record.name +
-                ': ' +
-                record.value[record.value.length - 1] +
-                ' kg'
-              "
-            ></v-list-item-title>
             <template v-slot:append>
               <v-btn @click="deleteRecord(record)" size="small" icon flat>
                 <v-icon color="red">mdi-delete</v-icon>

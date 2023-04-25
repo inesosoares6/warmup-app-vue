@@ -7,8 +7,10 @@
       <v-list-item
         v-for="(workout, key) in allWorkouts"
         :key="key"
+        :value="workout"
         :title="workout.name"
         :subtitle="workout.type + ' - ' + workout.time + ' min'"
+        rounded="xl"
       >
         <PreviewWorkout :workout="workout" :id="key"></PreviewWorkout>
 
@@ -18,13 +20,9 @@
           </v-avatar>
         </template>
         <template v-slot:append>
-          <v-btn
-            flat
-            round
-            dense
-            icon
-            @click="storeWorkouts.deleteWorkout(key)"
-          ><v-icon color="red">mdi-delete</v-icon></v-btn>
+          <v-btn flat round icon @click="storeWorkouts.deleteWorkout(key)"
+            ><v-icon color="red">mdi-delete</v-icon></v-btn
+          >
         </template>
       </v-list-item>
     </v-list>
@@ -42,6 +40,7 @@
               :key="key"
               :title="workout.name"
               :subtitle="workout.type + ' - ' + workout.time + ' min'"
+              rounded="xl"
             >
               <PreviewWorkout :workout="workout" :id="key"></PreviewWorkout>
 
@@ -53,9 +52,9 @@
                 </v-avatar>
               </template>
               <template v-slot:append>
-                <v-avatar outline color="grey">
-                  {{ workout.completions }}
-                </v-avatar>
+                <v-btn flat round icon @click="storeWorkouts.deleteWorkout(key)"
+                  ><v-icon color="red">mdi-delete</v-icon></v-btn
+                >
               </template>
             </v-list-item>
           </v-list>
@@ -101,11 +100,13 @@ const groupWorkoutsByType = () => {
     if (returnList.some((e) => e.type === item.type)) {
       returnList.forEach((typeList, index) => {
         if (typeList.type === item.type) {
-          returnList[index].details.push(item);
+          returnList[index].details[key] = item;
         }
       });
     } else {
-      returnList.push({ type: item.type, details: [item] });
+      returnList.push({ type: item.type, details: {} });
+      returnList[returnList.length-1].details[key] = item;
+
     }
   });
   return returnList;
