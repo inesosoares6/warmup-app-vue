@@ -9,11 +9,6 @@
           >mdi-clipboard-text</v-icon
         >
       </template>
-      <template v-slot:append>
-        <v-icon @click="deleteRecord(false)" size="small" color="error"
-          >mdi-delete</v-icon
-        >
-      </template>
       <v-card-text>
         <v-form ref="form">
           <v-row
