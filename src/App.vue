@@ -44,8 +44,7 @@ const toggleTheme = (newTheme) => {
 
 watch(
   () => Object.keys(storeWorkouts.allWorkouts),
-  (val, oldVal) => {
-    console.dir({ val, oldVal });
+  () => {
     localStorage.setItem(
       "allWorkouts2",
       JSON.stringify(storeWorkouts.allWorkouts)

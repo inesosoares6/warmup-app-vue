@@ -19,12 +19,6 @@
           hide-details
           @change="groupByTypeFunction"
         ></v-switch>
-
-        <v-divider style="margin-bottom: 20px;"/>
-
-        <v-btn variant="outlined" color="error" @click="deleteCache">
-          Delete All Cache
-        </v-btn>
       </v-card-text>
       <v-card-actions> </v-card-actions>
     </v-card>
@@ -46,24 +40,19 @@ const theme = ref(useTheme());
 const emit = defineEmits(["toggle-theme"]);
 
 onMounted(() => {
-  isDarkMode.value = theme.value.global.name === 'dark';
+  isDarkMode.value = theme.value.global.name === "dark";
 });
 
 onUpdated(() => {
   groupByTypeEnabled.value = storeApp.groupByType;
 });
 
-const deleteCache = () => {
-  console.log('TODO: delete all cache');
-  settingsMenu.value = false;
-};
-
 const groupByTypeFunction = () => {
   storeApp.groupByTypeFunction(groupByTypeEnabled.value);
 };
 
 const toggleTheme = () => {
-  emit('toggle-theme', isDarkMode.value ? 'dark' : 'light');
+  emit("toggle-theme", isDarkMode.value ? "dark" : "light");
 };
 </script>
 
