@@ -18,6 +18,7 @@ export default createVuetify({
           error: colors.orange.lighten3,
           grey: colors.grey.lighten2,
           warning: colors.yellow.lighten2,
+          background: colors.grey.lighten5,
         }
       },
       dark: {
@@ -28,6 +29,7 @@ export default createVuetify({
           error: colors.orange.lighten3,
           grey: colors.grey.lighten2,
           warning: colors.yellow.lighten2,
+          background: colors.grey.darken4,
         }
       },
     },
