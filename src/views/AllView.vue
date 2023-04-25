@@ -38,6 +38,7 @@
             <v-list-item
               v-for="(workout, key) in list.details"
               :key="key"
+              :value="workout"
               :title="workout.name"
               :subtitle="workout.type + ' - ' + workout.time + ' min'"
               rounded="xl"
