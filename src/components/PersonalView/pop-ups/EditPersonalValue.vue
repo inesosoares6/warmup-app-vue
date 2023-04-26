@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="editPersonalRecord" activator="parent">
-    <v-card :title="personalRecord.name">
+    <v-card :title="personalValue.name">
       <template v-slot:prepend>
         <v-icon v-if="input === 'measurement'" size="small" color="secondary"
           >mdi-scale-bathroom</v-icon
@@ -12,23 +12,21 @@
       <v-card-text>
         <v-form ref="form">
           <v-row
-            v-if="input === 'measurement' && personalRecord.name === 'Weight'"
+            v-if="input === 'measurement'"
           >
             <v-col>
               <v-text-field
                 v-model="newValue"
-                :rules="[(v) => !!v || 'Field is required']"
                 label="Add new value"
                 type="number"
-                suffix="kg"
+                :suffix="personalValue.unit"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                 v-model="newTargetValue"
-                :rules="[(v) => !!v || 'Field is required']"
                 label="New target"
-                suffix="kg"
+                :suffix="personalValue.unit"
                 type="number"
               ></v-text-field>
             </v-col>
@@ -40,7 +38,7 @@
                 :rules="[(v) => !!v || 'Field is required']"
                 label="Add new value"
                 type="number"
-                :suffix="input === 'measurement' ? personalRecord.unit : 'kg'"
+                suffix="kg"
                 required
               ></v-text-field>
             </v-col>
@@ -53,7 +51,7 @@
         style="margin: auto"
       >
         <VueApexCharts
-          v-if="personalRecord.name === 'Weight'"
+          v-if="personalValue.name === 'Weight'"
           type="line"
           :options="chartOptionsWeight"
           :series="series"
@@ -88,7 +86,7 @@ import { useStoreUser } from "@/stores/storeUser";
 const storeUser = useStoreUser();
 
 const props = defineProps({
-  personalRecord: {
+  personalValue: {
     type: Object,
     required: true,
   },
@@ -103,7 +101,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  personalRecordEdited.value = { ...props.personalRecord };
+  personalRecordEdited.value = { ...props.personalValue };
 });
 
 const editPersonalRecord = ref(false);
@@ -114,12 +112,12 @@ const newTargetValue = ref(null);
 const getMinMax = () => {
   const max = Math.max(
     ...[
-      Math.max(...[...props.personalRecord.value, props.personalRecord.target]),
+      Math.max(...[...props.personalValue.value, props.personalValue.target]),
     ]
   );
   const min = Math.min(
     ...[
-      Math.min(...[...props.personalRecord.value, props.personalRecord.target]),
+      Math.min(...[...props.personalValue.value, props.personalValue.target]),
     ]
   );
   return [min, max];
@@ -129,7 +127,7 @@ const chartOptionsWeight = ref({
   annotations: {
     yaxis: [
       {
-        y: props.personalRecord.target,
+        y: props.personalValue.target,
         borderColor: "#AFADAD",
       },
     ],
@@ -168,7 +166,7 @@ const chartOptionsWeight = ref({
     },
   },
   xaxis: {
-    categories: props.personalRecord.date,
+    categories: props.personalValue.date,
   },
   dataLabels: {
     enabled: false,
@@ -212,7 +210,7 @@ const chartOptions = ref({
     },
   },
   xaxis: {
-    categories: props.personalRecord.date,
+    categories: props.personalValue.date,
   },
   dataLabels: {
     enabled: false,
@@ -227,16 +225,16 @@ const chartOptions = ref({
 });
 const series = ref([
   {
-    name: props.personalRecord.name,
-    data: props.personalRecord.value,
+    name: props.personalValue.name,
+    data: props.personalValue.value,
   },
 ]);
 
 const deleteRecord = (lastEntry) => {
   if (props.input === "measurement") {
-    storeUser.deleteMeasurement(props.personalRecord, lastEntry);
+    storeUser.deleteMeasurement(props.personalValue, lastEntry);
   } else {
-    storeUser.deletePR(props.personalRecord, lastEntry);
+    storeUser.deletePR(props.personalValue, lastEntry);
   }
 };
 
@@ -262,9 +260,9 @@ const updateRecord = () => {
 };
 
 watch(
-  () => [props.color, props.personalRecord],
+  () => [props.color, props.personalValue],
   () => {
-    if (props.personalRecord.name === "Weight") {
+    if (props.personalValue.name === "Weight") {
       chartOptionsWeight.value.colors = props.color;
     } else {
       chartOptions.value.colors = props.color;

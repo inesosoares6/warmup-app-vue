@@ -4,7 +4,7 @@ export const useStoreUser = defineStore("storeUser", {
   state: () => {
     return {
       personalRecords: [],
-      measurements: [],
+      measurements: {},
     };
   },
   getters: {},
@@ -26,8 +26,8 @@ export const useStoreUser = defineStore("storeUser", {
       );
     },
 
-    addMeasurement(measurement) {
-      this.measurements.push(measurement);
+    addMeasurement(payload) {
+      this.measurements[payload.id] = payload.measurement;
       localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 

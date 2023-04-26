@@ -7,16 +7,16 @@
     </template>
     <template v-slot:append>
       <v-btn
-        v-show="storeUser.measurements.length < 3"
+        v-show="Object.keys(storeUser.measurements).length < 3"
         icon
         color="transparent"
         size="35"
       >
         <v-icon size="small">mdi-plus</v-icon>
-        <AddMeasurement></AddMeasurement>
+        <AddMeasurement />
       </v-btn>
     </template>
-    <v-divider></v-divider>
+    <v-divider />
     <v-card-text>
       <div class="text-center">
         <v-row class="center-btns">
@@ -36,12 +36,12 @@
               {{ record.unit }}</v-progress-circular
             >
             <EditPersonalValue
-              v-bind:personalRecord="record"
-              v-bind:input="'measurement'"
-              v-bind:color="convertColor(getMeasurementColor(record))"
-            ></EditPersonalValue
-            ><br />
-            <v-divider thickness="0px"></v-divider>
+              :personalValue="record"
+              :input="'measurement'"
+              :color="convertColor(getMeasurementColor(record))"
+            />
+            <br />
+            <v-divider thickness="0px" />
             {{ record.name }}
           </v-col>
         </v-row>

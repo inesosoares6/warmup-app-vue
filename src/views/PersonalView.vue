@@ -10,13 +10,3 @@
 import PersonalRecords from "@/components/PersonalView/PersonalRecords.vue";
 import PersonalMeasurements from "@/components/PersonalView/PersonalMeasurements.vue";
 </script>
-
-<style scoped>
-.measurements {
-  font-size: 16px;
-}
-
-.center-btns {
-  text-align: center;
-}
-</style>

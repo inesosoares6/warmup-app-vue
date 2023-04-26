@@ -7,7 +7,7 @@
           <v-row>
             <v-col>
               <v-select
-                v-model="name"
+                v-model="measurement.name"
                 :items="getTypes()"
                 :rules="[(v) => !!v || 'Item is required']"
                 label="Type"
@@ -17,7 +17,7 @@
             </v-col>
             <v-col cols="4">
               <v-select
-                v-model="unitRecord"
+                v-model="measurement.unit"
                 :items="getItems()"
                 :rules="[(v) => !!v || 'Item is required']"
                 label="Unit"
@@ -25,12 +25,12 @@
               ></v-select>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row v-if="measurement.unit !== ''">
             <v-col>
               <v-text-field
-                v-if="unitRecord !== ''"
-                v-model="valueRecord"
+                v-model="measurement.value[0]"
                 :rules="[(v) => !!v || 'Field is required']"
+                :suffix="measurement.unit"
                 label="Value"
                 type="number"
                 required
@@ -38,11 +38,9 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-if="name === 'Weight' && unitRecord !== ''"
-                v-model="targetValue"
-                :rules="[(v) => !!v || 'Field is required']"
+                v-model="measurement.target"
                 label="Target"
-                suffix="kg"
+                :suffix="measurement.unit"
                 type="number"
                 required
               ></v-text-field>
@@ -64,33 +62,35 @@ import { v4 as uuidv4 } from "uuid";
 import { useStoreUser } from "@/stores/storeUser";
 
 const storeUser = useStoreUser();
-
 const addMeasurement = ref(false);
-const name = ref("");
-const valueRecord = ref("");
-const unitRecord = ref("");
-const targetValue = ref("");
+
+const clearMeasurement = () => {
+  return {
+    name: "",
+    value: [""],
+    unit: "",
+    target: "",
+    date: "",
+  };
+};
+
+const measurement = ref(clearMeasurement());
 
 const addRecord = () => {
   let date = new Date().toString().split(" ");
+  measurement.value.date = [date[2] + " " + date[1] + " " + date[3]];
+  if(!measurement.value.target) measurement.value.target = measurement.value.value;
   storeUser.addMeasurement({
     id: uuidv4(),
-    name: name.value,
-    value: [valueRecord.value],
-    unit: unitRecord.value,
-    target: targetValue.value,
-    date: [date[2] + " " + date[1] + " " + date[3]],
+    measurement: measurement.value,
   });
-  name.value = "";
-  valueRecord.value = "";
-  unitRecord.value = "";
-  targetValue.value = "";
+  measurement.value = clearMeasurement();
   addMeasurement.value = false;
 };
 
 const getItems = () => {
-  if (name.value === "Weight") {
-    unitRecord.value = "kg";
+  if (measurement.value.name === "Weight") {
+    measurement.value.unit = "kg";
     return ["kg"];
   } else {
     return ["%", "kg"];
@@ -99,8 +99,8 @@ const getItems = () => {
 
 const getTypes = () => {
   let types = ["Weight", "Body Fat", "Muscle Mass"];
-  if (storeUser.measurements.length === 0) return types;
-  storeUser.measurements.forEach((record) => {
+  if (Object.keys(storeUser.measurements).length === 0) return types;
+  Object.values(storeUser.measurements).forEach((record) => {
     const index = types.indexOf(record.name);
     if (index > -1) {
       types.splice(index, 1);
