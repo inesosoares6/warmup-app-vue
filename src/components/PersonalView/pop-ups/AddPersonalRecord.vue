@@ -5,13 +5,13 @@
       <v-card-text>
         <v-form ref="form">
           <v-text-field
-            v-model="name"
+            v-model="record.name"
             :rules="[(v) => !!v || 'Field is required']"
             label="Name"
             required
           ></v-text-field>
           <v-text-field
-            v-model="valuePR"
+            v-model="record.value[0]"
             :rules="[(v) => !!v || 'Field is required']"
             label="Value"
             type="number"
@@ -22,7 +22,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="addRecord"> Add </v-btn>
+        <v-btn color="secondary" @click="addRecord" :disabled="!(record.name && record.value[0])"> Add </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,19 +35,24 @@ import { useStoreUser } from "@/stores/storeUser";
 
 const storeUser = useStoreUser();
 const addPersonalRecord = ref(false);
-const name = ref("");
-const valuePR = ref("");
+const clearRecord = () => {
+  return {
+    name: "",
+    value: [""],
+    date: [""],
+  };
+};
+
+const record = ref(clearRecord());
 
 const addRecord = () => {
   let date = new Date().toString().split(" ");
+  record.value.date = [date[2] + " " + date[1] + " " + date[3]];
   storeUser.addPR({
     id: uuidv4(),
-    name: name.value,
-    value: [valuePR.value],
-    date: [date[2] + " " + date[1] + " " + date[3]],
+    record: record.value,
   });
-  name.value = "";
-  valuePR.value = "";
+  record.value = clearRecord();
   addPersonalRecord.value = false;
 };
 </script>

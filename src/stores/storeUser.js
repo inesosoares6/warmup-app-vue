@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useStoreUser = defineStore("storeUser", {
   state: () => {
     return {
-      personalRecords: [],
+      personalRecords: {},
       measurements: {},
     };
   },
@@ -18,8 +18,8 @@ export const useStoreUser = defineStore("storeUser", {
         this.measurements = JSON.parse(localStorage.getItem("measurements"));
     },
 
-    addPR(personalRecord) {
-      this.personalRecords.push(personalRecord);
+    addPR(payload) {
+      this.personalRecords[payload.id] = payload.record;
       localStorage.setItem(
         "personalRecords",
         JSON.stringify(this.personalRecords)
@@ -31,24 +31,20 @@ export const useStoreUser = defineStore("storeUser", {
       localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 
-    deleteMeasurement(measurement, lastEntry) {
-      var index = this.measurements.findIndex(
-        (obj) => obj.id === measurement.id
-      );
-      if(lastEntry) {
-        this.measurements[index].value.pop();
+    deleteMeasurement(id, lastEntry) {
+      if (lastEntry) {
+        this.measurements[id].value.pop();
       } else {
-        this.measurements.splice(index, 1);
+        delete this.measurements[id];
       }
       localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 
-    deletePR(record, lastEntry) {
-      var index = this.personalRecords.findIndex((obj) => obj.id === record.id);
-      if(lastEntry) {
-        this.personalRecords[index].value.pop();
+    deletePR(id, lastEntry) {
+      if (lastEntry) {
+        this.personalRecords[id].value.pop();
       } else {
-        this.personalRecords.splice(index, 1);
+        delete this.personalRecords[id];
       }
       localStorage.setItem(
         "personalRecords",
@@ -56,20 +52,18 @@ export const useStoreUser = defineStore("storeUser", {
       );
     },
 
-    updateMeasurement(measurement) {
-      var objIndex = this.measurements.findIndex(
-        (obj) => obj.id === measurement.id
-      );
-      this.measurements[objIndex] = measurement;
+    updateValue(variableName, payload) {
+      if (variableName === "measurement") this.updateMeasurement(payload);
+      else this.updatePR(payload);
+    },
 
+    updateMeasurement(payload) {
+      Object.assign(this.measurements[payload.id], payload.updates);
       localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
 
-    updatePR(personalRecord) {
-      var objIndex = this.personalRecords.findIndex(
-        (obj) => obj.id === personalRecord.id
-      );
-      this.personalRecords[objIndex] = personalRecord;
+    updatePR(payload) {
+      Object.assign(this.personalRecords[payload.id], payload.updates);
       localStorage.setItem(
         "personalRecords",
         JSON.stringify(this.personalRecords)

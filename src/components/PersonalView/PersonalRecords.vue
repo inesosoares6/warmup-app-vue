@@ -29,7 +29,7 @@
           </template>
           <template v-slot:append>
             <v-btn
-              @click="storeUser.deletePR(record, false)"
+              @click="storeUser.deletePR(index, false)"
               size="small"
               icon
               flat
@@ -39,6 +39,7 @@
           </template>
           <EditPersonalValue
             :personalValue="record"
+            :id="index"
             :input="'record'"
             :color="getColor(record.value, false)"
           />

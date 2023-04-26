@@ -70,7 +70,7 @@ const clearMeasurement = () => {
     value: [""],
     unit: "",
     target: "",
-    date: "",
+    date: [""],
   };
 };
 

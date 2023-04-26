@@ -37,6 +37,7 @@
             >
             <EditPersonalValue
               :personalValue="record"
+              :id="index"
               :input="'measurement'"
               :color="convertColor(getMeasurementColor(record))"
             />
