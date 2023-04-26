@@ -76,7 +76,7 @@ const calculatePercentage = (measurement) => {
     }
   } else {
     let value = 0;
-    storeUser.measurements.forEach((record) => {
+    Object.values(storeUser.measurements).forEach((record) => {
       if (record.name === "Weight") {
         value = Math.round(
           (measurement.value[measurement.value.length - 1] /

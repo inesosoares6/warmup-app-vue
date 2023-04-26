@@ -30,7 +30,7 @@ const getMinMax = () => {
   const min = Math.min(
     ...[Math.min(...[...props.personalValue.value, props.personalValue.target])]
   );
-  return [min, max];
+  return min === max ? [min - 10, max + 10] : [min, max];
 };
 
 const chartOptionsWeight = ref({

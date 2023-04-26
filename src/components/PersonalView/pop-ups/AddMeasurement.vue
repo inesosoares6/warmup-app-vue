@@ -79,7 +79,7 @@ const measurement = ref(clearMeasurement());
 const addRecord = () => {
   let date = new Date().toString().split(" ");
   measurement.value.date = [date[2] + " " + date[1] + " " + date[3]];
-  if(!measurement.value.target) measurement.value.target = measurement.value.value;
+  if(!measurement.value.target) measurement.value.target = measurement.value.value[0];
   storeUser.addMeasurement({
     id: uuidv4(),
     measurement: measurement.value,
