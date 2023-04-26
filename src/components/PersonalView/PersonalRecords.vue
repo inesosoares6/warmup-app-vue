@@ -1,0 +1,64 @@
+<template>
+    <v-card title="Personal Records">
+      <template v-slot:prepend>
+        <v-icon class="dumbbell-icon" color="secondary"
+          >mdi-clipboard-text</v-icon
+        >
+      </template>
+      <template v-slot:append>
+        <v-btn icon color="transparent" size="35" flat>
+          <v-icon size="small">mdi-plus</v-icon>
+          <AddPersonalRecord></AddPersonalRecord>
+        </v-btn>
+      </template>
+      <v-divider></v-divider>
+      <v-card-text>
+        <v-list>
+          <v-list-item
+            v-for="(record, index) in storeUser.personalRecords"
+            :key="index"
+            :value="record"
+            :title="
+              record.name + ': ' + record.value[record.value.length - 1] + ' kg'
+            "
+            rounded="xl"
+            ><template v-slot:prepend>
+              <v-avatar size="25" :color="getColor(record.value, true)">
+                <v-icon size="small">mdi-dumbbell</v-icon>
+              </v-avatar>
+            </template>
+            <template v-slot:append>
+              <v-btn @click="storeUser.deletePR(record, false)" size="small" icon flat>
+                <v-icon color="red">mdi-delete</v-icon>
+              </v-btn>
+            </template>
+            <EditPersonalValue
+              :personalRecord="record"
+              :input="'record'"
+              :color="getColor(record.value, false)"
+            ></EditPersonalValue>
+          </v-list-item>
+        </v-list>
+      </v-card-text>
+    </v-card>
+</template>
+
+<script setup>
+import { useStoreUser } from "@/stores/storeUser";
+import AddPersonalRecord from "@/components/PersonalView/pop-ups/AddPersonalRecord.vue";
+import EditPersonalValue from "@/components/PersonalView/pop-ups/EditPersonalValue.vue";
+
+const storeUser = useStoreUser();
+
+const getColor = (array, avatar) => {
+  if (array.length === 1) return avatar ? "secondary" : ["#03dac5"];
+  return array[array.length - 1] > array[array.length - 2]
+    ? avatar
+      ? "secondary"
+      : ["#03dac5"]
+    : avatar
+    ? "error"
+    : ["#cf6679"];
+};
+
+</script>
