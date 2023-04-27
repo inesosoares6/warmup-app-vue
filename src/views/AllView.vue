@@ -1,115 +1,35 @@
 <template>
   <v-container>
-    <v-list
-      v-if="!storeApp.groupByType && Object.keys(allWorkouts).length > 0"
-      lines="two"
-    >
-      <v-list-item
-        v-for="(workout, key) in allWorkouts"
-        :key="key"
-        :value="workout"
-        :title="workout.name"
-        :subtitle="workout.type + ' - ' + workout.time + ' min'"
-        rounded="xl"
-      >
-        <PreviewWorkout :workout="workout" :id="key"></PreviewWorkout>
+    <ListWorkouts
+      v-if="!storeApp.groupByType"
+      :list="storeWorkouts.allWorkouts"
+    />
 
-        <template v-slot:prepend>
-          <v-avatar :color="workout.completions > 0 ? 'secondary' : 'error'">
-            <v-icon>mdi-dumbbell</v-icon>
-          </v-avatar>
-        </template>
-        <template v-slot:append>
-          <v-btn flat round icon @click="storeWorkouts.deleteWorkout(key)"
-            ><v-icon color="red">mdi-delete</v-icon></v-btn
-          >
-        </template>
-      </v-list-item>
-    </v-list>
+    <ListByTypes v-else />
 
-    <v-expansion-panels v-if="storeApp.groupByType">
-      <v-expansion-panel
-        v-for="(list, index) in groupWorkoutsByType()"
-        :key="index"
-        :title="list.type"
-      >
-        <v-expansion-panel-text>
-          <v-list lines="two">
-            <v-list-item
-              v-for="(workout, key) in list.details"
-              :key="key"
-              :value="workout"
-              :title="workout.name"
-              :subtitle="workout.type + ' - ' + workout.time + ' min'"
-              rounded="xl"
-            >
-              <PreviewWorkout :workout="workout" :id="key"></PreviewWorkout>
-
-              <template v-slot:prepend>
-                <v-avatar
-                  :color="workout.completions > 0 ? 'secondary' : 'error'"
-                >
-                  <v-icon>mdi-dumbbell</v-icon>
-                </v-avatar>
-              </template>
-              <template v-slot:append>
-                <v-btn flat round icon @click="storeWorkouts.deleteWorkout(key)"
-                  ><v-icon color="red">mdi-delete</v-icon></v-btn
-                >
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-
-    <v-snackbar v-model="snackbar" :timeout="timeout">
-      {{ text }}
-      <template v-slot:actions>
-        <v-btn color="error" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <NotificationToast
+      v-if="snackbar"
+      :timeout="2000"
+      :text="'Add workouts'"
+      @close="snackbar = false"
+    ></NotificationToast>
   </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import PreviewWorkout from "@/components/pop-ups/PreviewWorkout.vue";
+import ListWorkouts from "@/components/AllView/ListWorkouts.vue";
+import ListByTypes from "@/components/AllView/ListByTypes.vue";
+import NotificationToast from "@/components/shared/NotificationToast.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreApp } from "@/stores/storeApp";
-import { storeToRefs } from "pinia";
 
 const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
-const snackbar = ref(false);
-const text = ref("");
-const timeout = ref(2000);
 
-const { allWorkouts } = storeToRefs(storeWorkouts);
+const snackbar = ref(false);
 
 onMounted(() => {
-  snackbar.value = Object.keys(allWorkouts).length < 1;
-  text.value = "Add workouts";
+  snackbar.value = Object.keys(storeWorkouts.allWorkouts).length < 1;
 });
-
-const groupWorkoutsByType = () => {
-  let returnList = [];
-  Object.keys(allWorkouts.value).forEach((key) => {
-    let item = allWorkouts.value[key];
-    if (returnList.some((e) => e.type === item.type)) {
-      returnList.forEach((typeList, index) => {
-        if (typeList.type === item.type) {
-          returnList[index].details[key] = item;
-        }
-      });
-    } else {
-      returnList.push({ type: item.type, details: {} });
-      returnList[returnList.length-1].details[key] = item;
-
-    }
-  });
-  return returnList;
-};
 </script>

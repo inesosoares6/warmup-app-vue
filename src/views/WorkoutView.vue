@@ -46,10 +46,7 @@
 
     <v-divider thickness="0px"></v-divider>
 
-    <v-card
-      :color="getColor()"
-      height="200px"
-    >
+    <v-card :color="getColor()" height="200px">
       <v-card-title>
         <v-row class="timer-title">
           <v-btn-toggle
@@ -92,7 +89,7 @@
             style="margin-right: 5px"
           >
             <v-icon>mdi-dots-vertical</v-icon>
-            <TabataSettings v-on:updateTimes="resetTabata()"/>
+            <TabataSettings v-on:updateTimes="resetTabata()" />
           </v-btn>
         </v-row>
       </v-card-title>
@@ -174,7 +171,7 @@
           <span>{{ tabataTimer.minutes }}</span
           >&nbsp;:&nbsp;<span>{{ tabataTimer.seconds }}</span>
         </div>
-        <v-row align="center" justify="center" style="margin-top: 10px;">
+        <v-row align="center" justify="center" style="margin-top: 10px">
           <v-col cols="3">
             <p class="cycles-sets-numbers">
               {{ currentSet }}/{{ storeTimer.tabata.sets }}
@@ -220,23 +217,22 @@
       </v-card-text>
     </v-card>
 
-    <v-snackbar v-model="snackbar" :timeout="timeout">
-      {{ text }}
-      <template v-slot:actions>
-        <v-btn color="error" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <NotificationToast
+      v-if="snackbar"
+      :timeout="2000"
+      :text="text"
+      @close="snackbar = false"
+    ></NotificationToast>
   </v-container>
 </template>
 
 <script setup>
-import { watchEffect, onMounted, ref, computed} from "vue";
+import { watchEffect, onMounted, ref, computed } from "vue";
 import { Clipboard } from "@capacitor/clipboard";
 import { useStopwatch, useTimer } from "vue-timer-hook";
 import TabataSettings from "@/components/pop-ups/TabataSettings.vue";
 import WorkoutDetails from "@/components/pop-ups/WorkoutDetails.vue";
+import NotificationToast from "@/components/shared/NotificationToast.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreTimer } from "@/stores/storeTimer";
 import { useStoreApp } from "@/stores/storeApp";
@@ -247,7 +243,6 @@ const storeTimer = useStoreTimer();
 const checkbox = ref(false);
 const snackbar = ref(false);
 const text = ref("");
-const timeout = ref(2000);
 const mode = ref(0);
 const toggle_exclusive = ref(0);
 
@@ -277,13 +272,13 @@ const createStringWorkout = () => {
 };
 
 const updateWorkout = () => {
-  if (checkbox.value){
+  if (checkbox.value) {
     storeWorkouts.updateWorkout({
-    id: storeWorkouts.currentWorkoutId,
-    updates: {
-      completions: currentWorkout.value.completions+1,
-    },
-  });
+      id: storeWorkouts.currentWorkoutId,
+      updates: {
+        completions: currentWorkout.value.completions + 1,
+      },
+    });
     const storeApp = useStoreApp();
     storeApp.updateTimeline(
       new Date().toDateString().substring(0, 3),
@@ -422,7 +417,6 @@ onMounted(() => {
     }
   });
 });
-
 </script>
 
 <style scoped>

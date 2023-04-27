@@ -21,7 +21,6 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
           types.push(workout.type);
         }
       });
-      types.push("--> Add new type");
       return types;
     },
 

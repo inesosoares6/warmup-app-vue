@@ -12,7 +12,7 @@
           ></v-text-field>
           <v-select
             v-model="type"
-            :items="storeWorkouts.getTypes"
+            :items="types"
             :rules="[(v) => !!v || 'Item is required']"
             label="Type"
             required
@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
@@ -73,6 +73,10 @@ const alreadyDone = ref(false);
 const exercises = ref("");
 const newType = ref("");
 const formRef = ref(null);
+
+const types = computed(() => {
+  return [...storeWorkouts.getTypes, "--> Add new type"];
+});
 
 const addWorkoutFunction = () => {
   formRef.value.validate();
