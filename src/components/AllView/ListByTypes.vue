@@ -16,18 +16,16 @@
 import { computed } from "vue";
 import ListWorkouts from "@/components/AllView/ListWorkouts.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
-import { storeToRefs } from "pinia";
 
 const storeWorkouts = useStoreWorkouts();
-const { allWorkouts } = storeToRefs(storeWorkouts);
 
 const groupWorkoutsByType = computed(() => {
   const returnList = [...storeWorkouts.getTypes].reduce(
     (item, key) => ({ ...item, [key]: {} }),
     {}
   );
-  Object.keys(allWorkouts.value).forEach((key) => {
-    let item = allWorkouts.value[key];
+  Object.keys(storeWorkouts.allWorkouts).forEach((key) => {
+    let item = storeWorkouts.allWorkouts[key];
     returnList[item.type][key] = item;
   });
   return returnList;
