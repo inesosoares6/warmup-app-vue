@@ -37,11 +37,21 @@
         />
       </v-card>
       <v-card-actions>
-        <v-btn color="error" @click="deleteRecord(true)" :disabled="!personalValue.value">
+        <v-btn
+          color="error"
+          @click="deleteRecord(true)"
+          :disabled="!personalValue.value"
+        >
           Delete Last Entry
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="updateRecord" :disabled="!(newValue || newTargetValue)"> Update </v-btn>
+        <v-btn
+          color="secondary"
+          @click="updateRecord"
+          :disabled="!(newValue || newTargetValue)"
+        >
+          Update
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -66,9 +76,9 @@ const newTargetValue = ref(null);
 
 const deleteRecord = (lastEntry) => {
   if (props.input === "measurement") {
-    storeUser.deleteMeasurement(props.personalValue, lastEntry);
+    storeUser.deleteMeasurement(props.id, lastEntry);
   } else {
-    storeUser.deletePR(props.personalValue, lastEntry);
+    storeUser.deletePR(props.id, lastEntry);
   }
 };
 
@@ -82,7 +92,7 @@ const updateRecord = () => {
   }
   if (newTargetValue.value)
     personalValueEdited.value.target = newTargetValue.value;
-    
+
   storeUser.updateValue(props.input, {
     id: props.id,
     updates: personalValueEdited.value,
