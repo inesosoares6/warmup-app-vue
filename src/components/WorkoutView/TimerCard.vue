@@ -2,7 +2,7 @@
   <v-card :color="getColor()" height="200px">
     <v-card-title>
       <v-row class="timer-title">
-        <v-btn-toggle border v-model="toggle_exclusive" divided :disabled="isRunning">
+        <v-btn-toggle v-model="toggle_exclusive" divided :disabled="isRunning">
           <v-btn size="small" @click="mode = 0">
             <v-icon>mdi-timer</v-icon>
           </v-btn>
@@ -14,12 +14,11 @@
           </v-btn>
         </v-btn-toggle>
         <v-spacer></v-spacer>
-        <span class="tabata-text" v-if="mode == 2">{{ getTabataText() }}</span>
+        <span class="tabata-text" v-if="mode == 2">{{ tabataStatus }}</span>
         <v-spacer></v-spacer>
         <v-text-field
           v-if="mode === 1"
           v-model="seconds"
-          @change="restartTimer()"
           type="number"
           label="Timer (s)"
         ></v-text-field>
@@ -27,66 +26,76 @@
           v-if="mode === 2"
           size="small"
           icon
-          color="grey"
+          flat
+          color="transparent"
           style="margin-right: 5px"
         >
-          <v-icon>mdi-dots-vertical</v-icon>
+          <v-icon>mdi-cog</v-icon>
           <TabataSettings v-on:updateTimes="resetTabata()" />
         </v-btn>
       </v-row>
     </v-card-title>
     <v-card-text>
-      <TabStopwatch v-if="mode === 0" />
-      <TabTimer v-else-if="mode === 1" />
-      <TabTabata v-else />
+      <TabStopwatch v-if="mode === 0" ref="stopwatchTabRef" />
+      <TabTimer v-else-if="mode === 1" ref="timerTabRef" />
+      <TabTabata v-else ref="tabataTabRef" />
     </v-card-text>
   </v-card>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import TabStopwatch from "@/components/WorkoutView/TabStopwatch.vue";
 import TabTimer from "@/components/WorkoutView/TabTimer.vue";
 import TabTabata from "@/components/WorkoutView/TabTabata.vue";
-import TabataSettings from "@/components/pop-ups/TabataSettings.vue";
+import TabataSettings from "@/components/WorkoutView/pop-ups/TabataSettings.vue";
 import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeTimer = useStoreTimer();
 const mode = ref(0);
 const toggle_exclusive = ref(0);
-let seconds = ref(storeTimer.timer);
-const isRunning = ref(false);
-const tabataMode = ref(0);
+const stopwatchTabRef = ref(null);
+const timerTabRef = ref(null);
+const tabataTabRef = ref(null);
+
+const seconds = computed({
+  get() {
+    return storeTimer.timer;
+  },
+  set(val) {
+    storeTimer.updateTimer(val);
+  },
+});
+
+const isRunning = computed(() => {
+  if (mode.value === 0)
+    return stopwatchTabRef.value
+      ? stopwatchTabRef.value.isRunning.value
+      : false;
+  else if (mode.value === 1)
+    return timerTabRef.value ? timerTabRef.value.isRunning.value : false;
+  else return tabataTabRef.value ? tabataTabRef.value.isRunning.value : false;
+});
+
+const tabataStatus = computed(() => {
+  return tabataTabRef.value ? tabataTabRef.value.tabataStatus : "";
+});
 
 const getColor = () => {
   if (isRunning.value && (mode.value === 0 || mode.value === 1)) {
     return "error";
   } else if (isRunning.value && mode.value === 2) {
-    switch (tabataMode.value) {
-      case 0:
-      case 2:
-      case 3:
+    switch (tabataStatus.value) {
+      case "PREPARE":
+      case "FINISHED":
+      case "REST":
         return "warning";
-      case 1:
+      case "WORK":
         return "error";
     }
   } else {
     return "secondary";
   }
-};
-
-const getTabataText = () => {
-    switch (tabataMode.value) {
-      case 0:
-        return "PREPARE";
-      case 1:
-        return "WORK";
-      case 2:
-      case 3:
-        return "REST";
-      case 4:
-  return "FINISHED";
-    }
 };
 </script>
 

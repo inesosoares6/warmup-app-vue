@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, computed } from "vue";
 import { useStoreTimer } from "@/stores/storeTimer";
 import { useTimer } from "vue-timer-hook";
 
@@ -52,7 +52,6 @@ const restartTimer = () => {
   time.setSeconds(time.getSeconds() + seconds.value);
   timer.restart(time);
   timer.pause();
-  storeTimer.updateTimer(seconds.value);
 };
 
 
@@ -64,4 +63,10 @@ onMounted(() => {
     }
   });
 });
+
+const isRunning = computed(()=>{
+    return timer.isRunning
+})
+
+defineExpose({ isRunning });
 </script>

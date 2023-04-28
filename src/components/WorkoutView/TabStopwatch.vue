@@ -38,12 +38,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStopwatch } from "vue-timer-hook";
 
 const stopwatch = ref(useStopwatch());
 stopwatch.value.reset();
 stopwatch.value.pause();
 
-defineExpose({ stopwatch });
+const isRunning = computed(()=>{
+    return stopwatch.value.isRunning
+})
+
+defineExpose({ isRunning });
 </script>

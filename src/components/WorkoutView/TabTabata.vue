@@ -1,56 +1,55 @@
 <template>
-    
-    <div class="timer-text" justify="center">
-          <span>{{ tabataTimer.minutes }}</span
-          >&nbsp;:&nbsp;<span>{{ tabataTimer.seconds }}</span>
-        </div>
-        <v-row align="center" justify="center" style="margin-top: 10px">
-          <v-col cols="3">
-            <p class="cycles-sets-numbers">
-              {{ currentSet }}/{{ storeTimer.tabata.sets }}
-            </p>
-            <p class="cycles-sets-text">Sets</p>
-          </v-col>
-          <v-col cols="6" class="d-flex justify-center">
-            <v-btn
-              class="stopwatch-btns"
-              size="x-small"
-              color="grey"
-              icon
-              @click="tabataTimer.resume()"
-            >
-              <v-icon>mdi-play</v-icon>
-            </v-btn>
-            <v-btn
-              class="stopwatch-btns"
-              size="x-small"
-              color="grey"
-              icon
-              @click="tabataTimer.pause()"
-            >
-              <v-icon>mdi-pause</v-icon>
-            </v-btn>
-            <v-btn
-              class="stopwatch-btns"
-              size="x-small"
-              color="grey"
-              icon
-              @click="resetTabata()"
-            >
-              <v-icon>mdi-reload</v-icon>
-            </v-btn>
-          </v-col>
-          <v-col cols="3">
-            <p class="cycles-sets-numbers">
-              {{ currentCycle }}/{{ storeTimer.tabata.cycles }}
-            </p>
-            <p class="cycles-sets-text">Cycles</p>
-          </v-col>
-        </v-row>
+  <div class="timer-text" justify="center">
+    <span>{{ tabataTimer.minutes }}</span
+    >&nbsp;:&nbsp;<span>{{ tabataTimer.seconds }}</span>
+  </div>
+  <v-row align="center" justify="center" style="margin-top: 10px">
+    <v-col cols="3">
+      <p class="cycles-sets-numbers">
+        {{ currentSet }}/{{ storeTimer.tabata.sets }}
+      </p>
+      <p class="cycles-sets-text">Sets</p>
+    </v-col>
+    <v-col cols="6" class="d-flex justify-center">
+      <v-btn
+        class="stopwatch-btns"
+        size="x-small"
+        color="grey"
+        icon
+        @click="tabataTimer.resume()"
+      >
+        <v-icon>mdi-play</v-icon>
+      </v-btn>
+      <v-btn
+        class="stopwatch-btns"
+        size="x-small"
+        color="grey"
+        icon
+        @click="tabataTimer.pause()"
+      >
+        <v-icon>mdi-pause</v-icon>
+      </v-btn>
+      <v-btn
+        class="stopwatch-btns"
+        size="x-small"
+        color="grey"
+        icon
+        @click="resetTabata()"
+      >
+        <v-icon>mdi-reload</v-icon>
+      </v-btn>
+    </v-col>
+    <v-col cols="3">
+      <p class="cycles-sets-numbers">
+        {{ currentCycle }}/{{ storeTimer.tabata.cycles }}
+      </p>
+      <p class="cycles-sets-text">Cycles</p>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup>
-import { watchEffect, onMounted, ref } from "vue";
+import { watchEffect, onMounted, ref, computed } from "vue";
 import { useTimer } from "vue-timer-hook";
 import { useStoreTimer } from "@/stores/storeTimer";
 
@@ -81,7 +80,6 @@ const goToState = (time, state) => {
   tabataTimer.resume();
   tabataMode.value = state;
 };
-
 
 onMounted(() => {
   watchEffect(async () => {
@@ -133,4 +131,25 @@ onMounted(() => {
     }
   });
 });
+
+const isRunning = computed(() => {
+  return tabataTimer.isRunning;
+});
+
+const tabataStatus = computed(() => {
+  switch (tabataMode.value) {
+    case 0:
+      return "PREPARE";
+    case 1:
+      return "WORK";
+    case 2:
+    case 3:
+      return "REST";
+    case 4:
+      return "FINISHED";
+  }
+  return "";
+});
+
+defineExpose({ isRunning, tabataStatus });
 </script>
