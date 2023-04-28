@@ -4,22 +4,40 @@
       <v-card-title> Tabata Settings </v-card-title>
       <v-card-text>
         <v-form ref="form">
-          <v-text-field
-            v-model="tabata.prepareTime"
-            type="number"
-            :rules="[(v) => v >= 0 || 'Must be >= 0']"
-            label="Prepare (sec)"
-            required
-          ></v-text-field>
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="tabata.prepareTime"
+                type="number"
+                :rules="[(v) => v >= 0 || 'Must be >= 0']"
+                label="Get ready"
+                required
+                hide-details
+                suffix="s"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                v-model="tabata.restBetweenSets"
+                type="number"
+                :rules="[(v) => v >= 0 || 'Must be >= 0']"
+                label="Rest between sets"
+                required
+                hide-details
+                suffix="s"
+              ></v-text-field>
+            </v-col>
+          </v-row>
           <v-row>
             <v-col>
               <v-text-field
                 v-model="tabata.workTime"
                 type="number"
                 :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Work (sec)"
+                label="Work"
                 required
                 hide-details
+                suffix="s"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -27,9 +45,10 @@
                 v-model="tabata.restTime"
                 type="number"
                 :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Rest (sec)"
+                label="Rest"
                 required
                 hide-details
+                suffix="s"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -54,19 +73,11 @@
               ></v-text-field>
             </v-col>
           </v-row>
-          <v-text-field
-            v-model="tabata.restBetweenSets"
-            type="number"
-            :rules="[(v) => v >= 0 || 'Must be >= 0']"
-            label="Rest between sets (sec)"
-            required
-            hide-details
-          ></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="returnTabata()"> Go </v-btn>
+        <v-btn color="secondary" @click="returnTabata()"> Save </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -77,7 +88,7 @@ import { ref } from "vue";
 import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeTimer = useStoreTimer();
-const tabata = ref({...storeTimer.tabata});
+const tabata = ref({ ...storeTimer.tabata });
 const emit = defineEmits(["update-times"]);
 
 const tabataSettings = ref(false);
