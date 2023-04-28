@@ -33,7 +33,7 @@ import { useTimer } from "vue-timer-hook";
 import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeTimer = useStoreTimer();
-//TABATA
+
 let currentSet = ref(0);
 let currentCycle = ref(0);
 let tabataTime = new Date();
@@ -136,12 +136,6 @@ defineExpose({ isRunning, tabataStatus, resetTabata });
 </script>
 
 <style scoped>
-.stopwatch-btns {
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 10px;
-}
-
 .timer-text {
   padding: 10px 10px 10px 10px;
   text-align: center;
