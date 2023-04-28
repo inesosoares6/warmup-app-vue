@@ -15,8 +15,8 @@
 </template>
 
 <script setup>
-import SettingsMenu from "@/components/App/pop-ups/SettingsMenu.vue";
-import AddWorkout from "@/components/App/pop-ups/AddWorkout.vue";
+import SettingsMenu from "@/components/pop-ups/SettingsMenu.vue";
+import AddWorkout from "@/components/pop-ups/AddWorkout.vue";
 
 const emit = defineEmits(["toggle-theme"]);
 
