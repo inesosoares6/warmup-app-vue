@@ -12,8 +12,8 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import TopToolbar from "./components/TopToolbar.vue";
-import BottomToolbar from "./components/BottomToolbar.vue";
+import TopToolbar from "@/components/App/TopToolbar.vue";
+import BottomToolbar from "@/components/App/BottomToolbar.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreUser } from "@/stores/storeUser";
 import { useStoreApp } from "@/stores/storeApp";

@@ -32,7 +32,7 @@
 
 <script setup>
 import { ref } from "vue";
-import EditWorkout from "@/components/pop-ups/EditWorkout.vue";
+import EditWorkout from "@/components/AllView/pop-ups/EditWorkout.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 const props = defineProps(["workout", "id"]);
