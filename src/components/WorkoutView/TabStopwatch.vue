@@ -51,3 +51,23 @@ const isRunning = computed(()=>{
 
 defineExpose({ isRunning });
 </script>
+
+
+
+<style scoped>
+.stopwatch-btns {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+
+.timer-text {
+  padding: 10px 10px 10px 10px;
+  text-align: center;
+  font-size: 40px;
+}
+
+.play-btns {
+  margin-top: 22px;
+}
+</style>

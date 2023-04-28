@@ -31,7 +31,7 @@
           style="margin-right: 5px"
         >
           <v-icon>mdi-cog</v-icon>
-          <TabataSettings v-on:updateTimes="resetTabata()" />
+          <TabataSettings v-on:updateTimes="tabataTabRef.resetTabata()" />
         </v-btn>
       </v-row>
     </v-card-title>
@@ -60,10 +60,11 @@ const tabataTabRef = ref(null);
 
 const seconds = computed({
   get() {
-    return storeTimer.timer;
+    return storeTimer.getTimer;
   },
   set(val) {
     storeTimer.updateTimer(val);
+    timerTabRef.value.restartTimer();
   },
 });
 
@@ -99,19 +100,7 @@ const getColor = () => {
 };
 </script>
 
-<style>
-.stopwatch-btns {
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 10px;
-}
-
-.timer-text {
-  padding: 10px 10px 10px 10px;
-  text-align: center;
-  font-size: 40px;
-}
-
+<style scoped>
 .v-text-field {
   width: 10px !important;
 }
@@ -124,22 +113,6 @@ const getColor = () => {
 .timer-title {
   margin-top: 5px;
   height: 55px;
-}
-
-.cycles-sets-numbers {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.cycles-sets-text {
-  text-align: center;
-  font-size: 11px;
-  color: grey;
-}
-
-.play-btns {
-  margin-top: 22px;
 }
 
 .tabata-text {

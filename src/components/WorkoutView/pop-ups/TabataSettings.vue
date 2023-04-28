@@ -7,7 +7,7 @@
           <v-text-field
             v-model="tabata.prepareTime"
             type="number"
-            :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
+            :rules="[(v) => v >= 0 || 'Must be >= 0']"
             label="Prepare (sec)"
             required
           ></v-text-field>
@@ -16,7 +16,7 @@
               <v-text-field
                 v-model="tabata.workTime"
                 type="number"
-                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
+                :rules="[(v) => v >= 0 || 'Must be >= 0']"
                 label="Work (sec)"
                 required
                 hide-details
@@ -26,7 +26,7 @@
               <v-text-field
                 v-model="tabata.restTime"
                 type="number"
-                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
+                :rules="[(v) => v >= 0 || 'Must be >= 0']"
                 label="Rest (sec)"
                 required
                 hide-details
@@ -38,7 +38,7 @@
               <v-text-field
                 v-model="tabata.cycles"
                 type="number"
-                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
+                :rules="[(v) => v >= 0 || 'Must be >= 0']"
                 label="Cycles"
                 required
                 hide-details
@@ -48,7 +48,7 @@
               <v-text-field
                 v-model="tabata.sets"
                 type="number"
-                :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
+                :rules="[(v) => v >= 0 || 'Must be >= 0']"
                 label="Sets"
                 required
               ></v-text-field>
@@ -57,7 +57,7 @@
           <v-text-field
             v-model="tabata.restBetweenSets"
             type="number"
-            :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
+            :rules="[(v) => v >= 0 || 'Must be >= 0']"
             label="Rest between sets (sec)"
             required
             hide-details
@@ -78,13 +78,13 @@ import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeTimer = useStoreTimer();
 const tabata = ref({...storeTimer.tabata});
-const emit = defineEmits(["created-tabata"]);
+const emit = defineEmits(["update-times"]);
 
 const tabataSettings = ref(false);
 
 const returnTabata = () => {
   storeTimer.updateTabata(tabata.value);
-  emit("updateTimes");
+  emit("update-times");
   tabataSettings.value = false;
 };
 </script>

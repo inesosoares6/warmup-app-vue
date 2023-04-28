@@ -151,5 +151,32 @@ const tabataStatus = computed(() => {
   return "";
 });
 
-defineExpose({ isRunning, tabataStatus });
+defineExpose({ isRunning, tabataStatus, resetTabata });
 </script>
+
+
+<style scoped>
+.stopwatch-btns {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+
+.timer-text {
+  padding: 10px 10px 10px 10px;
+  text-align: center;
+  font-size: 40px;
+}
+
+.cycles-sets-numbers {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cycles-sets-text {
+  text-align: center;
+  font-size: 11px;
+  color: grey;
+}
+</style>

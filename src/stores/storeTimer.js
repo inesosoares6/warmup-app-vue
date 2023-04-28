@@ -16,7 +16,11 @@ export const useStoreTimer = defineStore("storeTimer", {
       timer: 5,
     };
   },
-  getters: {},
+  getters: {
+    getTimer: (state) => {
+      return state.timer;
+    },
+  },
   actions: {
     init() {
       if (localStorage.getItem("timer"))
