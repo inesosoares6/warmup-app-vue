@@ -11,33 +11,11 @@
       <p class="cycles-sets-text">Sets</p>
     </v-col>
     <v-col cols="6" class="d-flex justify-center">
-      <v-btn
-        class="stopwatch-btns"
-        size="x-small"
-        color="grey"
-        icon
-        @click="tabataTimer.resume()"
-      >
-        <v-icon>mdi-play</v-icon>
-      </v-btn>
-      <v-btn
-        class="stopwatch-btns"
-        size="x-small"
-        color="grey"
-        icon
-        @click="tabataTimer.pause()"
-      >
-        <v-icon>mdi-pause</v-icon>
-      </v-btn>
-      <v-btn
-        class="stopwatch-btns"
-        size="x-small"
-        color="grey"
-        icon
-        @click="resetTabata()"
-      >
-        <v-icon>mdi-reload</v-icon>
-      </v-btn>
+      <ControlButtons
+        v-on:start="tabataTimer.resume()"
+        v-on:pause="tabataTimer.pause()"
+        v-on:restart="resetTabata()"
+      />
     </v-col>
     <v-col cols="3">
       <p class="cycles-sets-numbers">
@@ -50,6 +28,7 @@
 
 <script setup>
 import { watchEffect, onMounted, ref, computed } from "vue";
+import ControlButtons from "@/components/WorkoutView/Timer/ControlButtons.vue";
 import { useTimer } from "vue-timer-hook";
 import { useStoreTimer } from "@/stores/storeTimer";
 
@@ -58,7 +37,9 @@ const storeTimer = useStoreTimer();
 let currentSet = ref(0);
 let currentCycle = ref(0);
 let tabataTime = new Date();
-tabataTime.setSeconds(tabataTime.getSeconds() + storeTimer.tabata.prepareTime.value);
+tabataTime.setSeconds(
+  tabataTime.getSeconds() + storeTimer.tabata.prepareTime.value
+);
 let tabataTimer = useTimer(tabataTime);
 tabataTimer.pause();
 let tabataMode = ref(0);
@@ -83,8 +64,8 @@ const goToState = (time, state) => {
 
 onMounted(() => {
   watchEffect(async () => {
-    const audioFinish = new Audio(require("../../assets/finish.mp3"));
-    const audioBuzzer = new Audio(require("../../assets/buzzer.mp3"));
+    const audioFinish = new Audio(require("../../../assets/finish.mp3"));
+    const audioBuzzer = new Audio(require("../../../assets/buzzer.mp3"));
     if (tabataTimer.isExpired.value) {
       if (tabataMode.value === 0) {
         // PREPARE
@@ -153,7 +134,6 @@ const tabataStatus = computed(() => {
 
 defineExpose({ isRunning, tabataStatus, resetTabata });
 </script>
-
 
 <style scoped>
 .stopwatch-btns {

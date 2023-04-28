@@ -20,7 +20,8 @@
           v-if="mode === 1"
           v-model="seconds"
           type="number"
-          label="Timer (s)"
+          label="Timer"
+          suffix="s"
         ></v-text-field>
         <v-btn
           v-if="mode === 2"
@@ -45,9 +46,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import TabStopwatch from "@/components/WorkoutView/TabStopwatch.vue";
-import TabTimer from "@/components/WorkoutView/TabTimer.vue";
-import TabTabata from "@/components/WorkoutView/TabTabata.vue";
+import TabStopwatch from "@/components/WorkoutView/Timer/TabStopwatch.vue";
+import TabTimer from "@/components/WorkoutView/Timer/TabTimer.vue";
+import TabTabata from "@/components/WorkoutView/Timer/TabTabata.vue";
 import TabataSettings from "@/components/WorkoutView/pop-ups/TabataSettings.vue";
 import { useStoreTimer } from "@/stores/storeTimer";
 
@@ -83,7 +84,7 @@ const tabataStatus = computed(() => {
 });
 
 const getColor = () => {
-  if (isRunning.value && (mode.value === 0 || mode.value === 1)) {
+  if (isRunning.value && mode.value !== 2) {
     return "error";
   } else if (isRunning.value && mode.value === 2) {
     switch (tabataStatus.value) {
@@ -117,5 +118,12 @@ const getColor = () => {
 
 .tabata-text {
   margin-top: 8px;
+}
+
+.v-text-field :deep(input::-webkit-outer-spin-button),
+.v-text-field :deep(input::-webkit-inner-spin-button) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
 }
 </style>

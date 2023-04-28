@@ -62,7 +62,7 @@ import { onMounted, ref, computed } from "vue";
 import { Clipboard } from "@capacitor/clipboard";
 import WorkoutDetails from "@/components/pop-ups/WorkoutDetails.vue";
 import NotificationToast from "@/components/shared/NotificationToast.vue";
-import TimerCard from "@/components/WorkoutView/TimerCard.vue";
+import TimerCard from "@/components/WorkoutView/Timer/TimerCard.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreApp } from "@/stores/storeApp";
 

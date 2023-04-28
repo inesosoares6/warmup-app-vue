@@ -4,38 +4,17 @@
     >&nbsp;:&nbsp;<span>{{ timer.seconds }}</span>
   </div>
   <v-row align="center" justify="center" class="play-btns">
-    <v-btn
-      class="stopwatch-btns"
-      size="x-small"
-      color="grey"
-      icon
-      @click="timer.resume()"
-    >
-      <v-icon>mdi-play</v-icon>
-    </v-btn>
-    <v-btn
-      class="stopwatch-btns"
-      size="x-small"
-      color="grey"
-      icon
-      @click="timer.pause()"
-    >
-      <v-icon>mdi-pause</v-icon>
-    </v-btn>
-    <v-btn
-      class="stopwatch-btns"
-      size="x-small"
-      color="grey"
-      icon
-      @click="restartTimer()"
-    >
-      <v-icon>mdi-reload</v-icon>
-    </v-btn>
+    <ControlButtons
+      v-on:start="timer.resume()"
+      v-on:pause="timer.pause()"
+      v-on:restart="restartTimer()"
+    />
   </v-row>
 </template>
 
 <script setup>
 import { onMounted, watchEffect, computed } from "vue";
+import ControlButtons from "@/components/WorkoutView/Timer/ControlButtons.vue";
 import { useStoreTimer } from "@/stores/storeTimer";
 import { useTimer } from "vue-timer-hook";
 
@@ -43,7 +22,6 @@ const storeTimer = useStoreTimer();
 const seconds = computed(() => {
   return storeTimer.getTimer;
 });
-
 
 let time = new Date();
 time.setSeconds(time.getSeconds() + seconds.value);
@@ -59,7 +37,7 @@ const restartTimer = () => {
 
 onMounted(() => {
   watchEffect(async () => {
-    const audioFinish = new Audio(require("../../assets/finish.mp3"));
+    const audioFinish = new Audio(require("../../../assets/finish.mp3"));
     if (timer.isExpired.value) {
       audioFinish.play();
     }
