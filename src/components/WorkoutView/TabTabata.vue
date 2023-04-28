@@ -6,7 +6,7 @@
   <v-row align="center" justify="center" style="margin-top: 10px">
     <v-col cols="3">
       <p class="cycles-sets-numbers">
-        {{ currentSet }}/{{ storeTimer.tabata.sets }}
+        {{ currentSet }}/{{ storeTimer.tabata.sets.value }}
       </p>
       <p class="cycles-sets-text">Sets</p>
     </v-col>
@@ -41,7 +41,7 @@
     </v-col>
     <v-col cols="3">
       <p class="cycles-sets-numbers">
-        {{ currentCycle }}/{{ storeTimer.tabata.cycles }}
+        {{ currentCycle }}/{{ storeTimer.tabata.cycles.value }}
       </p>
       <p class="cycles-sets-text">Cycles</p>
     </v-col>
@@ -58,7 +58,7 @@ const storeTimer = useStoreTimer();
 let currentSet = ref(0);
 let currentCycle = ref(0);
 let tabataTime = new Date();
-tabataTime.setSeconds(tabataTime.getSeconds() + storeTimer.tabata.prepareTime);
+tabataTime.setSeconds(tabataTime.getSeconds() + storeTimer.tabata.prepareTime.value);
 let tabataTimer = useTimer(tabataTime);
 tabataTimer.pause();
 let tabataMode = ref(0);
@@ -70,7 +70,7 @@ const restartTabata = (time) => {
   tabataTimer.pause();
 };
 const resetTabata = () => {
-  restartTabata(storeTimer.tabata.prepareTime);
+  restartTabata(storeTimer.tabata.prepareTime.value);
   currentCycle.value = 0;
   currentSet.value = 0;
   tabataMode.value = 0;
@@ -91,23 +91,23 @@ onMounted(() => {
         audioBuzzer.play();
         currentCycle.value = 1;
         currentSet.value = 1;
-        goToState(storeTimer.tabata.workTime, 1);
+        goToState(storeTimer.tabata.workTime.value, 1);
       } else if (tabataMode.value === 1) {
         // WORK
         if (
-          currentCycle.value === storeTimer.tabata.cycles &&
-          currentSet.value < storeTimer.tabata.sets
+          currentCycle.value === storeTimer.tabata.cycles.value &&
+          currentSet.value < storeTimer.tabata.sets.value
         ) {
           audioBuzzer.play();
           goToState(
-            storeTimer.tabata.restBetweenSets > 0
-              ? storeTimer.tabata.restBetweenSets
-              : storeTimer.tabata.rest,
+            storeTimer.tabata.restBetweenSets.value > 0
+              ? storeTimer.tabata.restBetweenSets.value
+              : storeTimer.tabata.restTime.value,
             3
           );
-        } else if (currentCycle.value < storeTimer.tabata.cycles) {
+        } else if (currentCycle.value < storeTimer.tabata.cycles.value) {
           audioBuzzer.play();
-          goToState(storeTimer.tabata.rest, 2);
+          goToState(storeTimer.tabata.restTime.value, 2);
         } else {
           audioFinish.play();
           tabataMode.value = 4;
@@ -115,17 +115,17 @@ onMounted(() => {
       } else if (tabataMode.value === 2) {
         // REST
         audioBuzzer.play();
-        if (currentCycle.value < storeTimer.tabata.cycles) {
-          goToState(storeTimer.tabata.workTime, 1);
+        if (currentCycle.value < storeTimer.tabata.cycles.value) {
+          goToState(storeTimer.tabata.workTime.value, 1);
           currentCycle.value = currentCycle.value + 1;
-        } else if (currentSet.value < storeTimer.tabata.sets) {
-          goToState(storeTimer.tabata.restBetweenSets, 3);
+        } else if (currentSet.value < storeTimer.tabata.sets.value) {
+          goToState(storeTimer.tabata.restBetweenSets.value, 3);
         }
       } else if (tabataMode.value === 3) {
         // REST BETWEEN SETS
         currentCycle.value = 1;
         currentSet.value = currentSet.value + 1;
-        goToState(storeTimer.tabata.workTime, 1);
+        goToState(storeTimer.tabata.workTime.value, 1);
         audioBuzzer.play();
       }
     }

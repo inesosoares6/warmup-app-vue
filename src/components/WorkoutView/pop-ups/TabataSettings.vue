@@ -1,77 +1,40 @@
 <template>
   <v-dialog v-model="tabataSettings" activator="parent">
-    <v-card>
-      <v-card-title> Tabata Settings </v-card-title>
+    <v-card :title="'Tabata Settings'">
+      <template v-slot:prepend>
+        <v-icon size="small" color="secondary">mdi-camera-timer</v-icon>
+      </template>
       <v-card-text>
         <v-form ref="form">
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="tabata.prepareTime"
-                type="number"
-                :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Get ready"
-                required
-                hide-details
-                suffix="s"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="tabata.restBetweenSets"
-                type="number"
-                :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Rest between sets"
-                required
-                hide-details
-                suffix="s"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="tabata.workTime"
-                type="number"
-                :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Work"
-                required
-                hide-details
-                suffix="s"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="tabata.restTime"
-                type="number"
-                :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Rest"
-                required
-                hide-details
-                suffix="s"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="tabata.cycles"
-                type="number"
-                :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Cycles"
-                required
-                hide-details
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="tabata.sets"
-                type="number"
-                :rules="[(v) => v >= 0 || 'Must be >= 0']"
-                label="Sets"
-                required
-              ></v-text-field>
-            </v-col>
+          <v-row align="center" justify="center">
+
+            <div class="left-column">
+              <div  v-for="(item, index) in Object.values(tabata)" :key="index">
+                <v-text-field
+                  v-if="!(index % 2)"
+                  v-model="item.value"
+                  type="number"
+                  :rules="[(v) => v >= 0 || 'Must be >= 0']"
+                  :label="item.label"
+                  required
+                  :suffix="item.suffix"
+                ></v-text-field>
+              </div>
+            </div>
+
+            <div class="right-column">
+              <div  v-for="(item, index) in Object.values(tabata)" :key="index">
+                <v-text-field
+                  v-if="index % 2"
+                  v-model="item.value"
+                  type="number"
+                  :rules="[(v) => v >= 0 || 'Must be >= 0']"
+                  :label="item.label"
+                  required
+                  :suffix="item.suffix"
+                ></v-text-field>
+              </div>
+            </div>
           </v-row>
         </v-form>
       </v-card-text>
@@ -101,7 +64,24 @@ const returnTabata = () => {
 </script>
 
 <style scoped>
-.v-card-title {
-  margin-top: 10px;
+.v-card-text {
+  margin-top: 15px;
+}
+
+.left-column{
+  width: 45%;
+  margin-right: 2.5%
+}
+
+.right-column{
+  width: 45%;
+  margin-right: 2.5%
+}
+
+.v-text-field :deep(input::-webkit-outer-spin-button),
+.v-text-field :deep(input::-webkit-inner-spin-button) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
 }
 </style>
