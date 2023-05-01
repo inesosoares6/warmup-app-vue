@@ -3,18 +3,17 @@
     <v-card-title>
       <v-row class="timer-title">
         <v-btn-toggle v-model="toggle_exclusive" divided :disabled="isRunning">
-          <v-btn size="small" @click="mode = 0">
-            <v-icon>mdi-timer</v-icon>
-          </v-btn>
-          <v-btn size="small" @click="mode = 1">
-            <v-icon>mdi-timer-sand</v-icon>
-          </v-btn>
-          <v-btn size="small" @click="mode = 2">
-            <v-icon>mdi-camera-timer</v-icon>
+          <v-btn
+            v-for="(button, index) in buttonTabs"
+            :key="index"
+            size="small"
+            @click="mode = index"
+          >
+            <v-icon>mdi-{{ button }}</v-icon>
           </v-btn>
         </v-btn-toggle>
         <v-spacer></v-spacer>
-        <span class="tabata-text" v-if="mode == 2">{{ tabataStatus }}</span>
+        <span class="tabata-text" v-if="mode === 2">{{ tabataStatus }}</span>
         <v-spacer></v-spacer>
         <v-text-field
           v-if="mode === 1"
@@ -55,6 +54,9 @@ import { useStoreTimer } from "@/stores/storeTimer";
 const storeTimer = useStoreTimer();
 const mode = ref(0);
 const toggle_exclusive = ref(0);
+const buttonTabs = ref(["timer", "timer-sand", "camera-timer"]);
+
+// Tab Refs
 const stopwatchTabRef = ref(null);
 const timerTabRef = ref(null);
 const tabataTabRef = ref(null);
