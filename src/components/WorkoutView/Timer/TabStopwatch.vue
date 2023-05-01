@@ -6,9 +6,9 @@
 
   <v-row align="center" justify="center" class="play-btns">
     <ControlButtons
-      v-on:start="stopwatch.start()"
+      v-on:play="stopwatch.start()"
       v-on:pause="stopwatch.pause()"
-      v-on:restart="
+      v-on:reload="
         stopwatch.reset();
         stopwatch.pause();
       "

@@ -12,9 +12,9 @@
     </v-col>
     <v-col cols="6" class="d-flex justify-center">
       <ControlButtons
-        v-on:start="tabataTimer.resume()"
+        v-on:play="tabataTimer.resume()"
         v-on:pause="tabataTimer.pause()"
-        v-on:restart="resetTabata()"
+        v-on:reload="resetTabata()"
       />
     </v-col>
     <v-col cols="3">

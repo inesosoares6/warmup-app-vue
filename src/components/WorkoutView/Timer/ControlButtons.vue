@@ -1,35 +1,21 @@
 <template>
   <v-btn
+    v-for="(button, index) in buttons"
+    :key="index"
     class="stopwatch-btns"
     size="x-small"
     color="grey"
     icon
-    @click="$emit('start')"
+    @click="$emit(button)"
   >
-    <v-icon>mdi-play</v-icon>
-  </v-btn>
-  <v-btn
-    class="stopwatch-btns"
-    size="x-small"
-    color="grey"
-    icon
-    @click="$emit('pause')"
-  >
-    <v-icon>mdi-pause</v-icon>
-  </v-btn>
-  <v-btn
-    class="stopwatch-btns"
-    size="x-small"
-    color="grey"
-    icon
-    @click="$emit('restart')"
-  >
-    <v-icon>mdi-reload</v-icon>
+    <v-icon>mdi-{{ button }}</v-icon>
   </v-btn>
 </template>
 
 <script setup>
-defineEmits(["start", "pause", "restart"]);
+import { ref } from "vue";
+const buttons = ref(["play", "pause", "reload"]);
+defineEmits(["play", "pause", "reload"]);
 </script>
 
 <style scoped>

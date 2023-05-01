@@ -5,9 +5,9 @@
   </div>
   <v-row align="center" justify="center" class="play-btns">
     <ControlButtons
-      v-on:start="timer.resume()"
+      v-on:play="timer.resume()"
       v-on:pause="timer.pause()"
-      v-on:restart="restartTimer()"
+      v-on:reload="restartTimer()"
     />
   </v-row>
 </template>
