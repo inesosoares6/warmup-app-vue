@@ -31,18 +31,18 @@ import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeTimer = useStoreTimer();
 
-let currentSet = ref(0);
-let currentCycle = ref(0);
+const currentSet = ref(0);
+const currentCycle = ref(0);
+const tabataMode = ref(0);
 let tabataTime = new Date();
 tabataTime.setSeconds(
   tabataTime.getSeconds() + storeTimer.tabata.prepareTime.value
 );
 let tabataTimer = useTimer(tabataTime);
 tabataTimer.pause();
-let tabataMode = ref(0);
 
 const restartTabata = (time) => {
-  const tabataTime = new Date();
+  tabataTime = new Date();
   tabataTime.setSeconds(tabataTime.getSeconds() + time);
   tabataTimer.restart(tabataTime);
   tabataTimer.pause();
@@ -64,47 +64,44 @@ onMounted(() => {
     const audioFinish = new Audio(require("../../../assets/finish.mp3"));
     const audioBuzzer = new Audio(require("../../../assets/buzzer.mp3"));
     if (tabataTimer.isExpired.value) {
-      if (tabataMode.value === 0) {
-        // PREPARE
-        audioBuzzer.play();
-        currentCycle.value = 1;
-        currentSet.value = 1;
-        goToState(storeTimer.tabata.workTime.value, 1);
-      } else if (tabataMode.value === 1) {
-        // WORK
-        if (
-          currentCycle.value === storeTimer.tabata.cycles.value &&
-          currentSet.value < storeTimer.tabata.sets.value
-        ) {
-          audioBuzzer.play();
-          goToState(
-            storeTimer.tabata.restBetweenSets.value > 0
-              ? storeTimer.tabata.restBetweenSets.value
-              : storeTimer.tabata.restTime.value,
-            3
-          );
-        } else if (currentCycle.value < storeTimer.tabata.cycles.value) {
-          audioBuzzer.play();
-          goToState(storeTimer.tabata.restTime.value, 2);
-        } else {
-          audioFinish.play();
-          tabataMode.value = 4;
-        }
-      } else if (tabataMode.value === 2) {
-        // REST
-        audioBuzzer.play();
-        if (currentCycle.value < storeTimer.tabata.cycles.value) {
+      switch (tabataMode.value) {
+        case 0: // PREPARE
+          currentCycle.value = 1;
+          currentSet.value = 1;
           goToState(storeTimer.tabata.workTime.value, 1);
+          audioBuzzer.play();
+          break;
+        case 1: // WORK
+          if (
+            currentCycle.value === storeTimer.tabata.cycles.value &&
+            currentSet.value < storeTimer.tabata.sets.value
+          ) {
+            audioBuzzer.play();
+            goToState(
+              storeTimer.tabata.restBetweenSets.value > 0
+                ? storeTimer.tabata.restBetweenSets.value
+                : storeTimer.tabata.restTime.value,
+              3
+            );
+          } else if (currentCycle.value < storeTimer.tabata.cycles.value) {
+            audioBuzzer.play();
+            goToState(storeTimer.tabata.restTime.value, 2);
+          } else {
+            audioFinish.play();
+            tabataMode.value = 4;
+          }
+          break;
+        case 2: // REST BETWEEN CYCLES
           currentCycle.value = currentCycle.value + 1;
-        } else if (currentSet.value < storeTimer.tabata.sets.value) {
-          goToState(storeTimer.tabata.restBetweenSets.value, 3);
-        }
-      } else if (tabataMode.value === 3) {
-        // REST BETWEEN SETS
-        currentCycle.value = 1;
-        currentSet.value = currentSet.value + 1;
-        goToState(storeTimer.tabata.workTime.value, 1);
-        audioBuzzer.play();
+          goToState(storeTimer.tabata.workTime.value, 1);
+          audioBuzzer.play();
+          break;
+        case 3: // REST BETWEEN SETS
+          currentCycle.value = 1;
+          currentSet.value = currentSet.value + 1;
+          goToState(storeTimer.tabata.workTime.value, 1);
+          audioBuzzer.play();
+          break;
       }
     }
   });
