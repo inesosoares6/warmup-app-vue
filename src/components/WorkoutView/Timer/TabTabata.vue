@@ -1,15 +1,11 @@
 <template>
-  <div class="timer-text" justify="center">
-    <span>{{ tabataTimer.minutes }}</span
-    >&nbsp;:&nbsp;<span>{{ tabataTimer.seconds }}</span>
-  </div>
+  <DisplayTime :time="tabataTimer" />
   <v-row align="center" justify="center" style="margin-top: 10px">
-    <v-col cols="3">
-      <p class="cycles-sets-numbers">
-        {{ currentSet }}/{{ storeTimer.tabata.sets.value }}
-      </p>
-      <p class="cycles-sets-text">Sets</p>
-    </v-col>
+    <DisplaySetsCycles
+      text="Sets"
+      :currentValue="currentSet"
+      :totalValue="storeTimer.tabata.sets.value"
+    />
     <v-col cols="6" class="d-flex justify-center">
       <ControlButtons
         v-on:play="tabataTimer.resume()"
@@ -17,18 +13,19 @@
         v-on:reload="resetTabata()"
       />
     </v-col>
-    <v-col cols="3">
-      <p class="cycles-sets-numbers">
-        {{ currentCycle }}/{{ storeTimer.tabata.cycles.value }}
-      </p>
-      <p class="cycles-sets-text">Cycles</p>
-    </v-col>
+    <DisplaySetsCycles
+      text="Cycles"
+      :currentValue="currentCycle"
+      :totalValue="storeTimer.tabata.cycles.value"
+    />
   </v-row>
 </template>
 
 <script setup>
 import { watchEffect, onMounted, ref, computed } from "vue";
 import ControlButtons from "@/components/WorkoutView/Timer/ControlButtons.vue";
+import DisplayTime from "@/components/WorkoutView/Timer/DisplayTime.vue";
+import DisplaySetsCycles from "@/components/WorkoutView/Timer/DisplaySetsCycles.vue";
 import { useTimer } from "vue-timer-hook";
 import { useStoreTimer } from "@/stores/storeTimer";
 
@@ -134,23 +131,3 @@ const tabataStatus = computed(() => {
 
 defineExpose({ isRunning, tabataStatus, resetTabata });
 </script>
-
-<style scoped>
-.timer-text {
-  padding: 10px 10px 10px 10px;
-  text-align: center;
-  font-size: 40px;
-}
-
-.cycles-sets-numbers {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.cycles-sets-text {
-  text-align: center;
-  font-size: 11px;
-  color: grey;
-}
-</style>

@@ -1,8 +1,5 @@
 <template>
-  <div class="timer-text" justify="center">
-    <span>{{ timer.minutes }}</span
-    >&nbsp;:&nbsp;<span>{{ timer.seconds }}</span>
-  </div>
+  <DisplayTime :time="timer"/>
   <v-row align="center" justify="center" class="play-btns">
     <ControlButtons
       v-on:play="timer.resume()"
@@ -15,6 +12,7 @@
 <script setup>
 import { onMounted, watchEffect, computed } from "vue";
 import ControlButtons from "@/components/WorkoutView/Timer/ControlButtons.vue";
+import DisplayTime from "@/components/WorkoutView/Timer/DisplayTime.vue";
 import { useStoreTimer } from "@/stores/storeTimer";
 import { useTimer } from "vue-timer-hook";
 
@@ -52,18 +50,6 @@ defineExpose({ isRunning, restartTimer });
 </script>
 
 <style scoped>
-.stopwatch-btns {
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 10px;
-}
-
-.timer-text {
-  padding: 10px 10px 10px 10px;
-  text-align: center;
-  font-size: 40px;
-}
-
 .play-btns {
   margin-top: 22px;
 }
