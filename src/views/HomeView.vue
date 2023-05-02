@@ -4,40 +4,8 @@
     <v-divider thickness="0px"></v-divider>
     <GenerateRandomCard @show-snackbar="showSnackbar"/>
     <v-divider thickness="0px"></v-divider>
-
-    <v-card>
-      <v-card-title>
-        <v-icon color="secondary">mdi-checkbox-marked-circle-outline</v-icon>
-        Week Overview
-      </v-card-title>
-
-      <v-btn class="print-button" icon flat size="small">
-        <v-icon color="secondary">mdi-printer</v-icon>
-        <WeeklyReport />
-      </v-btn>
-
-      <v-card-text class="pa-0 ml-3 mr-3 mb-3">
-        <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
-          <v-timeline-item
-            v-for="(item, index) in storeApp.timeline"
-            size="x-small"
-            :key="index"
-            :dot-color="storeApp.timeline[index].color"
-            @click="
-              showWorkoutDone = true;
-              selectedDay = item;
-            "
-          >
-            <template v-if="index % 2 !== 0">
-              {{ item.day.substring(0, 3) }}
-            </template>
-            <template v-if="index % 2 === 0" v-slot:opposite>
-              {{ item.day.substring(0, 3) }}
-            </template>
-          </v-timeline-item>
-        </v-timeline>
-      </v-card-text>
-    </v-card>
+    <WeekOverviewCard/>
+    
     <v-divider thickness="0px"></v-divider>
     <v-card>
       <v-card-title>
@@ -69,38 +37,7 @@
       </v-card-text>
     </v-card>
 
-    <v-dialog v-model="showWorkoutDone">
-      <v-card
-        class="workouts-done-card"
-        :title="selectedDay.day + ' Workouts'"
-        style="overflow-y: auto"
-      >
-        <template v-slot:prepend>
-          <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
-        </template>
-        <v-divider thickness="0px"></v-divider>
-        <div
-          v-for="(workout, index) in getWorkoutsDone()"
-          :key="index"
-          width="95%"
-        >
-          <v-divider></v-divider>
-          <v-card
-            :title="workout.name"
-            :subtitle="workout.type + ' - ' + workout.time + ' min'"
-          >
-            <template v-slot:prepend>
-              <v-icon size="small" color="secondary">mdi-weight-lifter</v-icon>
-            </template>
-            <v-card-text
-              style="text-align: center"
-              v-html="workout.exercises.replaceAll('\n', '<br/>')"
-            >
-            </v-card-text>
-          </v-card>
-        </div>
-      </v-card>
-    </v-dialog>
+    
 
     <PreviewList
       v-model="imported"
@@ -124,13 +61,11 @@
 import { ref } from "vue";
 import SummaryCard from "@/components/HomeView/SummaryCard.vue";
 import GenerateRandomCard from "@/components/HomeView/GenerateRandomCard.vue";
+import WeekOverviewCard from "@/components/HomeView/WeekOverviewCard.vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
-import WeeklyReport from "@/components/pop-ups/WeeklyReport.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
-import { useStoreApp } from "@/stores/storeApp";
 
-const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 
 const importedWorkouts = ref([]);
@@ -139,8 +74,6 @@ const snackbar = ref(false);
 const color = ref("");
 const text = ref("");
 const timeout = ref(2000);
-const showWorkoutDone = ref(false);
-const selectedDay = ref("");
 
 const showSnackbar = (payload) => {
   snackbar.value = true;
@@ -154,14 +87,6 @@ const downloadedWorkouts = (fileName) => {
     snackbar.value = true;
     color.value = "secondary";
   }
-};
-
-const getWorkoutsDone = () => {
-  let workoutsList = [];
-  selectedDay.value.workoutsId.forEach((id) => {
-    workoutsList.push(storeWorkouts.allWorkouts[id]);
-  });
-  return workoutsList;
 };
 
 const previewImportedWorkouts = (workouts) => {
@@ -211,10 +136,5 @@ const previewImportedWorkouts = (workouts) => {
 
 .v-slide-group__content {
   justify-content: center;
-}
-
-.workouts-done-card {
-  max-height: 600px;
-  overflow-y: auto;
 }
 </style>

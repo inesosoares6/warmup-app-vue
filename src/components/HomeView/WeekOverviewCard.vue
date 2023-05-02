@@ -1,0 +1,58 @@
+<template>
+  <v-card>
+    <v-card-title>
+      <v-icon color="secondary">mdi-checkbox-marked-circle-outline</v-icon>
+      Week Overview
+    </v-card-title>
+
+    <v-btn class="print-button" icon flat size="small">
+      <v-icon color="secondary">mdi-printer</v-icon>
+      <WeeklyReport />
+    </v-btn>
+
+    <v-card-text class="pa-0 ml-3 mr-3 mb-3">
+      <v-timeline direction="horizontal" line-inset="8" truncate-line="both">
+        <v-timeline-item
+          v-for="(item, index) in timeline"
+          size="x-small"
+          :key="index"
+          :dot-color="timeline[index].color"
+          @click="
+            showWorkoutDone = true;
+            selectedDay = item;
+          "
+        >
+          <template v-if="index % 2 !== 0">
+            {{ item.day.substring(0, 3) }}
+          </template>
+          <template v-if="index % 2 === 0" v-slot:opposite>
+            {{ item.day.substring(0, 3) }}
+          </template>
+        </v-timeline-item>
+      </v-timeline>
+    </v-card-text>
+  </v-card>
+
+  <DailyReport v-if="showWorkoutDone" :selectedDay="selectedDay" />
+</template>
+
+<script setup>
+import { ref, computed } from "vue";
+import WeeklyReport from "@/components/HomeView/pop-ups/WeeklyReport.vue";
+import DailyReport from "@/components/HomeView/pop-ups/DailyReport.vue";
+import { useStoreApp } from "@/stores/storeApp";
+const storeApp = useStoreApp();
+const selectedDay = ref("");
+const showWorkoutDone = ref(false);
+
+const timeline = computed(() => {
+  return storeApp.timeline;
+});
+</script>
+
+<style>
+.workouts-done-card {
+  max-height: 600px;
+  overflow-y: auto;
+}
+</style>
