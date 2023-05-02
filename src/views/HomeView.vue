@@ -2,15 +2,15 @@
   <v-container>
     <SummaryCard />
 
-    <v-divider thickness="0px"></v-divider>
+    <v-divider thickness="0px" />
 
     <GenerateRandomCard @show-snackbar="showSnackbar" />
 
-    <v-divider thickness="0px"></v-divider>
+    <v-divider thickness="0px" />
 
     <WeekOverviewCard />
 
-    <v-divider thickness="0px"></v-divider>
+    <v-divider thickness="0px" />
 
     <ExchangeCard @show-snackbar="showSnackbar" />
 

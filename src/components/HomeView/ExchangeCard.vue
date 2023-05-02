@@ -29,7 +29,7 @@
 
   <PreviewList
     v-model="imported"
-    v-if="imported && importedWorkouts.length"
+    v-if="imported && Object.keys(importedWorkouts).length"
     :workouts="importedWorkouts"
     action="import"
   />
