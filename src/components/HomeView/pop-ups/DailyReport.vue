@@ -6,7 +6,7 @@
       style="overflow-y: auto"
     >
       <template v-slot:prepend>
-        <v-icon class="dumbbell-icon" color="secondary">mdi-history</v-icon>
+        <v-icon class="title-icon" color="secondary">mdi-history</v-icon>
       </template>
       <v-divider thickness="0px"></v-divider>
       <div

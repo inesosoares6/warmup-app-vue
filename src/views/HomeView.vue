@@ -96,45 +96,13 @@ const previewImportedWorkouts = (workouts) => {
 </script>
 
 <style>
-.print-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
 
 .v-divider {
   margin-top: 5px;
   margin-bottom: 5px;
 }
-.divider {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
 
-.go-btn {
-  margin-top: 10px;
-}
-
-.dumbbell-icon {
+.title-icon {
   font-size: 23px;
-}
-
-.center-btns {
-  text-align: center;
-}
-
-.done-todo {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.types-avatar {
-  text-align: center;
-  margin-right: 15px;
-  margin-left: 15px;
-}
-
-.v-slide-group__content {
-  justify-content: center;
 }
 </style>

@@ -1,10 +1,11 @@
 <template>
     <v-card title="Summary">
       <template v-slot:prepend>
-        <v-icon class="dumbbell-icon" color="secondary"
+        <v-icon class="title-icon" color="secondary"
           >mdi-clipboard-check-multiple-outline</v-icon
         >
       </template>
+
       <v-card-text>
         <v-row class="center-btns">
           <v-col class="done-todo">
@@ -46,3 +47,24 @@ import { storeToRefs } from "pinia";
 const storeWorkouts = useStoreWorkouts();
 const { getWorkoutSummary } = storeToRefs(storeWorkouts);
 </script>
+
+<style>
+.center-btns {
+  text-align: center;
+}
+
+.done-todo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.types-avatar {
+  text-align: center;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.v-slide-group__content {
+  justify-content: center;
+}
+</style>

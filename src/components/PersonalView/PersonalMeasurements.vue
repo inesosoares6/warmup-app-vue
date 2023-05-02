@@ -1,7 +1,7 @@
 <template>
   <v-card title="Measurements">
     <template v-slot:prepend>
-      <v-icon class="dumbbell-icon" color="secondary"
+      <v-icon class="title-icon" color="secondary"
         >mdi-scale-bathroom</v-icon
       >
     </template>

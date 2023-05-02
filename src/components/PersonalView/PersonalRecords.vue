@@ -1,7 +1,7 @@
 <template>
   <v-card title="Personal Records">
     <template v-slot:prepend>
-      <v-icon class="dumbbell-icon" color="secondary"
+      <v-icon class="title-icon" color="secondary"
         >mdi-clipboard-text</v-icon
       >
     </template>

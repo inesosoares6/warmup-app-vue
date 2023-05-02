@@ -1,9 +1,10 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <v-icon color="secondary">mdi-checkbox-marked-circle-outline</v-icon>
-      Week Overview
-    </v-card-title>
+  <v-card title="Week Overview">
+      <template v-slot:prepend>
+        <v-icon class="title-icon" color="secondary"
+          >mdi-checkbox-marked-circle-outline</v-icon
+        >
+      </template>
 
     <v-btn class="print-button" icon flat size="small">
       <v-icon color="secondary">mdi-printer</v-icon>
@@ -51,6 +52,12 @@ const timeline = computed(() => {
 </script>
 
 <style>
+.print-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 .workouts-done-card {
   max-height: 600px;
   overflow-y: auto;

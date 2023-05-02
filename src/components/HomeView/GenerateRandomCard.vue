@@ -1,9 +1,11 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <v-icon class="dumbbell-icon" color="secondary">mdi-dumbbell</v-icon>
-      Generate Random
-    </v-card-title>
+  <v-card title="Generate Random">
+      <template v-slot:prepend>
+        <v-icon class="title-icon" color="secondary"
+          >mdi-dumbbell</v-icon
+        >
+      </template>
+
     <v-card-text>
       <v-row>
         <v-col>
@@ -77,6 +79,10 @@ const generateValidWorkoutsList = () => {
 </script>
 
 <style scoped>
+.go-btn {
+  margin-top: 10px;
+}
+
 .v-text-field :deep(input::-webkit-outer-spin-button),
 .v-text-field :deep(input::-webkit-inner-spin-button) {
   appearance: none !important;
