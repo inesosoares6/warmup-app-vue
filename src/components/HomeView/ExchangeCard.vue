@@ -20,9 +20,7 @@
         <v-col class="d-flex justify-center">
           <v-btn variant="outlined" prepend-icon="mdi-arrow-bottom-left">
             Receive
-            <FileReader
-              @preview-imported-workouts="previewImportedWorkouts"
-            />
+            <FileReader @preview-imported-workouts="previewImportedWorkouts" />
           </v-btn>
         </v-col>
       </v-row>
@@ -55,10 +53,7 @@ const emit = defineEmits(["show-snackbar"]);
 
 const downloadedWorkouts = (fileName) => {
   if (fileName !== "") {
-    emit("show-snackbar", {
-      color: "secondary",
-      text: fileName + " exported to Documents folder.",
-    });
+    emit("show-snackbar", fileName + " exported to Documents folder.");
   }
 };
 

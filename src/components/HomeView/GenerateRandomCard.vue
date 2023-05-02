@@ -1,10 +1,8 @@
 <template>
   <v-card title="Generate Random">
-      <template v-slot:prepend>
-        <v-icon class="title-icon" color="secondary"
-          >mdi-dumbbell</v-icon
-        >
-      </template>
+    <template v-slot:prepend>
+      <v-icon class="title-icon" color="secondary">mdi-dumbbell</v-icon>
+    </template>
 
     <v-card-text>
       <v-row>
@@ -61,10 +59,10 @@ const generateWorkout = () => {
     storeWorkouts.selectWorkout(validList[0]);
     router.push({ name: "workout-view" });
   } else {
-    emit("show-snackbar", {
-      color: "error",
-      text: "There is no workout with less than " + time.value + " minutes.",
-    });
+    emit(
+      "show-snackbar",
+      "There is no workout with less than " + time.value + " minutes."
+    );
   }
 };
 

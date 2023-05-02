@@ -14,14 +14,12 @@
 
     <ExchangeCard @show-snackbar="showSnackbar" />
 
-    <v-snackbar v-model="snackbar" :timeout="timeout">
-      {{ text }}
-      <template v-slot:actions>
-        <v-btn :color="color" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <NotificationToast
+      v-if="snackbar"
+      :timeout="2000"
+      :text="text"
+      @close="snackbar = false"
+    ></NotificationToast>
   </v-container>
 </template>
 
@@ -31,16 +29,14 @@ import SummaryCard from "@/components/HomeView/SummaryCard.vue";
 import GenerateRandomCard from "@/components/HomeView/GenerateRandomCard.vue";
 import WeekOverviewCard from "@/components/HomeView/WeekOverviewCard.vue";
 import ExchangeCard from "@/components/HomeView/ExchangeCard.vue";
+import NotificationToast from "@/components/shared/NotificationToast.vue";
 
 const snackbar = ref(false);
-const color = ref("");
 const text = ref("");
-const timeout = ref(2000);
 
 const showSnackbar = (payload) => {
   snackbar.value = true;
-  color.value = payload.color;
-  text.value = payload.text;
+  text.value = payload;
 };
 </script>
 
