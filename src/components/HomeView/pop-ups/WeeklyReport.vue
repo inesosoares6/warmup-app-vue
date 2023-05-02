@@ -21,7 +21,7 @@
               <v-icon color="secondary">mdi-printer</v-icon>
             </v-btn>
           </template>
-          <v-timeline align="start" class="pa-5">
+          <v-timeline align="start" class="pa-5 scroll-view">
             <v-timeline-item
               v-for="(item, index) in storeApp.timeline"
               :key="index"
@@ -101,5 +101,9 @@ const printReport = () => {
 
 .LIGHT {
   background-color: #fafafa;
+}
+.scroll-view {
+  max-height: 500px;
+  overflow-y: auto;
 }
 </style>
