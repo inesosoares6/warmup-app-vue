@@ -99,3 +99,12 @@ const resetForm = () => {
     formRef.value.reset();
 };
 </script>
+
+<style scoped>
+.v-text-field :deep(input::-webkit-outer-spin-button),
+.v-text-field :deep(input::-webkit-inner-spin-button) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+</style>
