@@ -1,43 +1,6 @@
 <template>
   <v-container>
-    <v-card title="Summary">
-      <template v-slot:prepend>
-        <v-icon class="dumbbell-icon" color="secondary"
-          >mdi-clipboard-check-multiple-outline</v-icon
-        >
-      </template>
-      <v-card-text>
-        <v-row class="center-btns">
-          <v-col class="done-todo">
-            <v-avatar size="60" :color="'secondary'">
-              {{ getWorkoutSummary.done }} </v-avatar
-            ><br />
-            <v-divider thickness="0px"></v-divider>
-            Done
-          </v-col>
-          <v-col class="done-todo">
-            <v-avatar size="60" :color="'error'">
-              {{ getWorkoutSummary.todo }} </v-avatar
-            ><br />
-            <v-divider thickness="0px"></v-divider>
-            To Do
-          </v-col>
-        </v-row>
-        <v-divider class="divider" thickness="1px"></v-divider>
-        <v-slide-group>
-          <v-slide-group-item
-            v-for="(item, index) in getWorkoutSummary.types"
-            :key="index"
-          >
-            <div class="types-avatar">
-              <v-avatar :color="'secondary'"> {{ item.value }} </v-avatar><br />
-              <v-divider thickness="0px"></v-divider>
-              {{ item.type }}
-            </div>
-          </v-slide-group-item>
-        </v-slide-group>
-      </v-card-text>
-    </v-card>
+    <SummaryCard />
     <v-divider thickness="0px"></v-divider>
     <v-card>
       <v-card-title>
@@ -187,18 +150,17 @@
 
 <script setup>
 import { ref } from "vue";
+import SummaryCard from "@/components/HomeView/SummaryCard.vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import WeeklyReport from "@/components/pop-ups/WeeklyReport.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreApp } from "@/stores/storeApp";
 import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
 
 const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
 const router = useRouter();
-const { getWorkoutSummary } = storeToRefs(storeWorkouts);
 
 const time = ref(null);
 const importedWorkouts = ref([]);
