@@ -2,35 +2,7 @@
   <v-container>
     <SummaryCard />
     <v-divider thickness="0px"></v-divider>
-    <v-card>
-      <v-card-title>
-        <v-icon class="dumbbell-icon" color="secondary">mdi-dumbbell</v-icon>
-        Generate Random
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="time"
-              type="number"
-              :rules="[(v) => v >= 0 || 'Time must be greater than 0']"
-              label="Max time (min)"
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col class="d-flex justify-center">
-            <v-btn
-              class="go-btn"
-              prepend-icon="mdi-weight-lifter"
-              color="secondary"
-              @click="generateWorkout"
-            >
-              GO
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <GenerateRandomCard @show-snackbar="showSnackbar"/>
     <v-divider thickness="0px"></v-divider>
 
     <v-card>
@@ -151,18 +123,16 @@
 <script setup>
 import { ref } from "vue";
 import SummaryCard from "@/components/HomeView/SummaryCard.vue";
+import GenerateRandomCard from "@/components/HomeView/GenerateRandomCard.vue";
 import PreviewList from "@/components/pop-ups/PreviewList.vue";
 import WeeklyReport from "@/components/pop-ups/WeeklyReport.vue";
 import QrcodeReader from "@/components/pop-ups/QrcodeReader.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 import { useStoreApp } from "@/stores/storeApp";
-import { useRouter } from "vue-router";
 
 const storeApp = useStoreApp();
 const storeWorkouts = useStoreWorkouts();
-const router = useRouter();
 
-const time = ref(null);
 const importedWorkouts = ref([]);
 const imported = ref(false);
 const snackbar = ref(false);
@@ -172,42 +142,18 @@ const timeout = ref(2000);
 const showWorkoutDone = ref(false);
 const selectedDay = ref("");
 
+const showSnackbar = (payload) => {
+  snackbar.value = true;
+  color.value = payload.color;
+  text.value = payload.text;
+}
+
 const downloadedWorkouts = (fileName) => {
   if (fileName !== "") {
     text.value = fileName + " exported to Documents folder.";
     snackbar.value = true;
     color.value = "secondary";
   }
-};
-
-const generateWorkout = () => {
-  const validList =
-    time.value !== null
-      ? generateValidWorkoutsList()
-      : [...Object.keys(storeWorkouts.allWorkouts)];
-  if (validList.length > 1) {
-    storeWorkouts.selectWorkout(
-      validList[Math.floor(Math.random() * validList.length)]
-    );
-    router.push({ name: "workout-view" });
-  } else if (validList.length === 1) {
-    storeWorkouts.selectWorkout(validList[0]);
-    router.push({ name: "workout-view" });
-  } else {
-    snackbar.value = true;
-    color.value = "error";
-    text.value =
-      "There is no workout with less than " + time.value + " minutes.";
-  }
-};
-
-const generateValidWorkoutsList = () => {
-  let validList = [];
-  Object.keys(storeWorkouts.allWorkouts).forEach((key) => {
-    let workout = storeWorkouts.allWorkouts[key];
-    if (workout.time <= time.value) validList = [...validList, key];
-  });
-  return validList;
 };
 
 const getWorkoutsDone = () => {
