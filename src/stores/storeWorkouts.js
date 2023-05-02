@@ -80,9 +80,9 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
     },
 
     importWorkouts(workouts) {
-      for (const workout of workouts) {
-        this.addWorkout({ id: uuidv4(), workout: workout });
-      }
+      Object.values(workouts).forEach((item) => {
+        this.addWorkout({ id: uuidv4(), workout: item });
+      });
     },
 
     selectWorkout(id) {
