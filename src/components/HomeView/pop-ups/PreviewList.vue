@@ -12,7 +12,7 @@
         <v-list
           class="preview-wod-list"
           lines="two"
-          v-if="Object.keys(workouts).length > 0"
+          v-if="Object.keys(workouts).length"
         >
           <v-list-item
             v-for="(workout, key) in workouts"
@@ -24,7 +24,7 @@
           >
             <template v-slot:prepend>
               <v-avatar
-                :color="workout.completions > 0 ? 'secondary' : 'error'"
+                :color="workout.completions ? 'secondary' : 'error'"
               >
                 <v-icon>mdi-dumbbell</v-icon>
               </v-avatar>
@@ -44,19 +44,18 @@
         <v-btn
           v-if="action === 'export'"
           color="secondary"
-          :disabled="Object.keys(getWorkouts).length < 1"
+          :disabled="!Object.keys(getWorkouts).length"
         >
           Generate
-          <QrcodeGenerator
-            v-if="Object.keys(getWorkouts).length > 0"
-            :workoutList="Object.values(getWorkouts)"
-            v-on:close-menu="downloadedWorkouts"
+          <FileGenerator
+            :workoutList="getWorkouts"
+            @close-menu="downloadedWorkouts"
           />
         </v-btn>
         <v-btn
           v-else
           color="secondary"
-          :disabled="Object.keys(getWorkouts).length < 1"
+          :disabled="!Object.keys(getWorkouts).length"
           @click="importWorkouts"
         >
           Import
@@ -69,7 +68,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
-import QrcodeGenerator from "@/components/HomeView/pop-ups/QrcodeGenerator.vue";
+import FileGenerator from "@/components/HomeView/pop-ups/FileGenerator.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 const storeWorkouts = useStoreWorkouts();

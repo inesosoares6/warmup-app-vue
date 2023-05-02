@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="qrcodeGenerator" activator="parent">
+  <v-dialog v-model="fileGenerator" activator="parent">
     <v-card>
       <v-card-title>
         Workouts
@@ -48,43 +48,39 @@
 <script setup>
 import { ref, onUpdated } from "vue";
 import VueQRCodeComponent from "vue-qrcode-component";
-import { Filesystem, Directory, Encoding  } from '@capacitor/filesystem';
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 const emit = defineEmits(["close-menu"]);
-const props = defineProps({
-  workoutList: {
-    type: Array,
-    required: true,
-  },
-});
+const props = defineProps(["workoutList"]);
 
-const qrcodeGenerator = ref(false);
+const fileGenerator = ref(false);
 const file = ref(false);
 const name = ref("");
 
 onUpdated(() => {
-  file.value = props.workoutList.length > 1;
+  file.value = Object.keys(props.workoutList).length > 1;
 });
 
 const closeMenu = (fileName) => {
-  qrcodeGenerator.value = false;
+  fileGenerator.value = false;
   emit("close-menu", fileName);
 };
 
 const downloadFile = async () => {
-      try {
-        const fileName = (name.value.length === 0 ? 'Workout' : name.value ) + ".json";
-        await Filesystem.writeFile({
-          path: fileName,
-          data: JSON.stringify(props.workoutList, null, 4),
-          directory: Directory.Documents,
-          encoding: Encoding.UTF8
-        })
-        closeMenu(fileName);
-      } catch(e) {
-        alert('Unable to write file', e);
-      }
-    };
+  try {
+    const fileName =
+      (name.value.length === 0 ? "Workout" : name.value) + ".json";
+    await Filesystem.writeFile({
+      path: fileName,
+      data: JSON.stringify(props.workoutList, null, 4),
+      directory: Directory.Documents,
+      encoding: Encoding.UTF8,
+    });
+    closeMenu(fileName);
+  } catch (e) {
+    alert("Unable to write file", e);
+  }
+};
 </script>
 
 <style>
