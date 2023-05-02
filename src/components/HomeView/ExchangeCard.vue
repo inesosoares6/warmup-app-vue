@@ -20,7 +20,7 @@
         <v-col class="d-flex justify-center">
           <v-btn variant="outlined" prepend-icon="mdi-arrow-bottom-left">
             Receive
-            <QrcodeReader
+            <FileReader
               @preview-imported-workouts="previewImportedWorkouts"
             />
           </v-btn>
@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import QrcodeReader from "@/components/HomeView/pop-ups/QrcodeReader.vue";
+import FileReader from "@/components/HomeView/pop-ups/FileReader.vue";
 import PreviewList from "@/components/HomeView/pop-ups/PreviewList.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
 

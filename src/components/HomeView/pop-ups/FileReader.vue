@@ -1,18 +1,12 @@
 <template>
-  <v-dialog v-model="qrcodeReader" activator="parent">
+  <v-dialog v-model="fileReader" activator="parent">
     <v-card class="mb">
-      <v-card-title>
-        Importing
-        <v-btn-toggle border>
-          <v-btn drpressed :active="!showCamera" @click="showCamera = false">
-            File
-          </v-btn>
-          <v-btn drpressed :active="showCamera" @click="showCamera = true">
-            Camera
-          </v-btn>
-        </v-btn-toggle>
-      </v-card-title>
-      <div v-if="!showCamera">
+      <ImportExportHeader
+        :file="file"
+        title="Import"
+        @toggle-value="(val) => (file = val)"
+      />
+      <div v-if="file">
         <v-card-subtitle>Select the workouts file</v-card-subtitle>
         <v-card-text>
           <v-file-input
@@ -40,16 +34,17 @@
 
 <script setup>
 import { ref } from "vue";
+import ImportExportHeader from "@/components/HomeView/shared/ImportExportHeader.vue";
 import { QrStream } from "vue3-qr-reader";
 
 const emit = defineEmits(["preview-imported-workouts"]);
 
-const qrcodeReader = ref(false);
-const showCamera = ref(false);
+const fileReader = ref(false);
+const file = ref(true);
 
 const openPreviewList = (list) => {
   emit("preview-imported-workouts", list);
-  qrcodeReader.value = false;
+  fileReader.value = false;
 };
 
 const importFile = (event) => {

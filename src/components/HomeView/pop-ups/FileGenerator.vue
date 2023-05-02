@@ -1,16 +1,27 @@
 <template>
   <v-dialog v-model="fileGenerator" activator="parent">
     <v-card>
-      <v-card-title>
-        Workouts
-        <v-btn-toggle border>
-          <v-btn drpressed :active="!file" @click="file = false">
-            QR Code
-          </v-btn>
-          <v-btn drpressed :active="file" @click="file = true"> File </v-btn>
-        </v-btn-toggle>
-      </v-card-title>
-      <div v-if="!file">
+      <ImportExportHeader
+        :file="file"
+        title="Export"
+        @toggle-value="(val) => (file = val)"
+      />
+      <div v-if="file">
+        <v-card-subtitle>Download and import in another device</v-card-subtitle>
+        <v-card-text class="d-flex justify-center">
+          <v-text-field
+            v-model="name"
+            label="File name"
+            required
+            hide-details
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer
+          ><v-btn color="secondary" @click="downloadFile"> Download </v-btn>
+        </v-card-actions>
+      </div>
+      <div v-else>
         <v-card-subtitle>Read QR Code with another device</v-card-subtitle>
         <v-card-text class="d-flex justify-center">
           <div class="border">
@@ -26,21 +37,6 @@
           ><v-btn color="secondary" @click="closeMenu('')"> Done </v-btn>
         </v-card-actions>
       </div>
-      <div v-else>
-        <v-card-subtitle>Download and import in another device</v-card-subtitle>
-        <v-card-text class="d-flex justify-center">
-          <v-text-field
-            v-model="name"
-            label="File name"
-            required
-            hide-details
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer
-          ><v-btn color="secondary" @click="downloadFile"> Download </v-btn>
-        </v-card-actions>
-      </div>
     </v-card>
   </v-dialog>
 </template>
@@ -48,13 +44,14 @@
 <script setup>
 import { ref, onUpdated } from "vue";
 import VueQRCodeComponent from "vue-qrcode-component";
+import ImportExportHeader from "@/components/HomeView/shared/ImportExportHeader.vue";
 import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 const emit = defineEmits(["close-menu"]);
 const props = defineProps(["workoutList"]);
 
 const fileGenerator = ref(false);
-const file = ref(false);
+const file = ref(true);
 const name = ref("");
 
 onUpdated(() => {
