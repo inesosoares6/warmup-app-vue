@@ -19,9 +19,9 @@
         </v-card-text>
       </div>
       <div v-else>
-        <v-card-subtitle
-          >Point your camera to the workouts' QR Code</v-card-subtitle
-        >
+        <v-card-subtitle>
+          Point your camera to the workouts' QR Code
+        </v-card-subtitle>
         <v-card-text class="center stream">
           <qr-stream @decode="openPreviewList" class="mb">
             <div style="color: red" class="frame"></div>

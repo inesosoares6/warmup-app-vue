@@ -6,7 +6,7 @@
           v-model="selectedAll"
           hide-details
           @change="updateCheckboxes(selectedAll)"
-        ></v-checkbox>
+        />
       </template>
       <v-card-text>
         <v-list
@@ -23,9 +23,7 @@
             :subtitle="workout.type + ' - ' + workout.time + ' min'"
           >
             <template v-slot:prepend>
-              <v-avatar
-                :color="workout.completions ? 'secondary' : 'error'"
-              >
+              <v-avatar :color="workout.completions ? 'secondary' : 'error'">
                 <v-icon>mdi-dumbbell</v-icon>
               </v-avatar>
             </template>
@@ -34,7 +32,7 @@
                 v-model="selected[key]"
                 hide-details
                 @change="updateMainCheckbox()"
-              ></v-checkbox>
+              />
             </template>
           </v-list-item>
         </v-list>

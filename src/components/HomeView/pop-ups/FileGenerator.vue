@@ -14,11 +14,11 @@
             label="File name"
             required
             hide-details
-          ></v-text-field>
+          />
         </v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer
-          ><v-btn color="secondary" @click="downloadFile"> Download </v-btn>
+          <v-spacer />
+          <v-btn color="secondary" @click="downloadFile"> Download </v-btn>
         </v-card-actions>
       </div>
       <div v-else>
@@ -29,12 +29,12 @@
               class="qrcode"
               :text="JSON.stringify(workoutList)"
               :size="200"
-            ></VueQRCodeComponent>
+            />
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer
-          ><v-btn color="secondary" @click="closeMenu('')"> Done </v-btn>
+          <v-spacer />
+          <v-btn color="secondary" @click="closeMenu('')"> Done </v-btn>
         </v-card-actions>
       </div>
     </v-card>
