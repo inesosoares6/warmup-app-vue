@@ -18,6 +18,8 @@
         <v-text-field
           v-if="mode === 1"
           v-model="seconds"
+          variant="underlined"
+          theme="light"
           type="number"
           label="Timer"
           suffix="s"
@@ -52,7 +54,7 @@ import TabataSettings from "@/components/WorkoutView/pop-ups/TabataSettings.vue"
 import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeTimer = useStoreTimer();
-const mode = ref(0);
+const mode = ref(1);
 const toggle_exclusive = ref(0);
 const buttonTabs = ref(["timer", "timer-sand", "camera-timer"]);
 
@@ -105,7 +107,8 @@ const getColor = () => {
 
 <style scoped>
 .v-text-field {
-  width: 10px !important;
+  width: 1% !important;
+  margin-right: 5px;
 }
 
 .v-card-title {
