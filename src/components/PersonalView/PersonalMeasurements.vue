@@ -4,12 +4,7 @@
       <v-icon class="title-icon" color="secondary">mdi-scale-bathroom</v-icon>
     </template>
     <template v-slot:append>
-      <v-btn
-        v-show="Object.keys(storeUser.measurements).length < 3"
-        icon
-        flat
-        size="35"
-      >
+      <v-btn v-show="Object.keys(measurements).length < 3" icon flat size="35">
         <v-icon size="small">mdi-plus</v-icon>
         <AddMeasurement />
       </v-btn>
@@ -20,7 +15,7 @@
         <v-row class="center-btns">
           <v-col
             class="measurements"
-            v-for="(record, index) in storeUser.measurements"
+            v-for="(record, index) in measurements"
             :key="index"
           >
             <v-progress-circular
@@ -41,7 +36,7 @@
             />
             <br />
             <v-divider thickness="0px" />
-            <p style="font-size:105%;">{{ record.name }}</p>
+            <p style="font-size: 105%">{{ record.name }}</p>
             <v-btn icon flat size="x-small">
               <v-icon color="grey">mdi-pencil</v-icon>
               <EditPersonalValue
@@ -67,40 +62,33 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useStoreUser } from "@/stores/storeUser";
 import AddMeasurement from "@/components/PersonalView/pop-ups/AddMeasurement.vue";
 import EditPersonalValue from "@/components/PersonalView/pop-ups/EditPersonalValue.vue";
 
 const storeUser = useStoreUser();
+const measurements = computed(() => {
+  return storeUser.measurements;
+});
 
 const calculatePercentage = (measurement) => {
-  if (measurement.unit === "%")
-    return measurement.value[measurement.value.length - 1];
+  if (measurement.unit === "%") return measurement.value.at(-1);
 
   if (measurement.name === "Weight") {
-    if (measurement.target > measurement.value[measurement.value.length - 1]) {
-      return (
-        (measurement.value[measurement.value.length - 1] / measurement.target) *
-        100
-      );
+    if (measurement.target > measurement.value.at(-1)) {
+      // Overweight
+      return (measurement.value.at(-1) / measurement.target) * 100;
     } else {
-      return (
-        (measurement.target / measurement.value[measurement.value.length - 1]) *
-        100
-      );
+      // Underweight
+      return (measurement.target / measurement.value.at(-1)) * 100;
     }
   } else {
-    let value = 0;
-    Object.values(storeUser.measurements).forEach((record) => {
-      if (record.name === "Weight") {
-        value = Math.round(
-          (measurement.value[measurement.value.length - 1] /
-            record.value[record.value.length - 1]) *
-            100
-        );
-      }
-    });
-    return value;
+    // Muscle Mass or Body Fat (in kg)
+    const totalWeight = Object.values(measurements.value).find(
+      (item) => item.name === "Weight"
+    ).value;
+    return Math.round((measurement.value.at(-1) / totalWeight.at(-1)) * 100);
   }
 };
 
@@ -108,22 +96,16 @@ const getMeasurementColor = (measurement) => {
   if (measurement.value.length < 2) return "secondary";
   switch (measurement.name) {
     case "Weight":
-      return Math.abs(
-        measurement.value[measurement.value.length - 1] - measurement.target
-      ) <=
-        Math.abs(
-          measurement.value[measurement.value.length - 2] - measurement.target
-        )
+      return Math.abs(measurement.value.at(-1) - measurement.target) <=
+        Math.abs(measurement.value.at(-2) - measurement.target)
         ? "secondary"
         : "error";
     case "Body Fat":
-      return measurement.value[measurement.value.length - 1] <=
-        measurement.value[measurement.value.length - 2]
+      return measurement.value.at(-1) <= measurement.value.at(-2)
         ? "secondary"
         : "error";
     case "Muscle Mass":
-      return measurement.value[measurement.value.length - 1] >
-        measurement.value[measurement.value.length - 2]
+      return measurement.value.at(-1) > measurement.value.at(-2)
         ? "secondary"
         : "error";
   }
