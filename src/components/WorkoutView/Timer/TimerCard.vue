@@ -54,7 +54,7 @@ import TabataSettings from "@/components/WorkoutView/pop-ups/TabataSettings.vue"
 import { useStoreTimer } from "@/stores/storeTimer";
 
 const storeTimer = useStoreTimer();
-const mode = ref(1);
+const mode = ref(0);
 const toggle_exclusive = ref(0);
 const buttonTabs = ref(["timer", "timer-sand", "camera-timer"]);
 
