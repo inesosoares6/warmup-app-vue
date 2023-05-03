@@ -18,6 +18,7 @@
         <v-text-field
           v-if="mode === 1"
           v-model="seconds"
+          class="centered-input"
           variant="underlined"
           theme="light"
           type="number"
@@ -130,5 +131,9 @@ const getColor = () => {
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
+}
+
+.centered-input >>> input {
+  text-align: center;
 }
 </style>
