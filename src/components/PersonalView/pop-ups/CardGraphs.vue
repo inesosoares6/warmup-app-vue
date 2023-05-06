@@ -1,4 +1,8 @@
 <template>
+  <v-card-title> Evolution </v-card-title>
+  <v-card-subtitle>
+    {{ personalValue.date.at(0) }} - {{ personalValue.date.at(-1) }}
+  </v-card-subtitle>
   <VueApexCharts
     type="line"
     :options="input === 'measurement' ? chartOptionsTarget : chartOptions"

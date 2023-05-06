@@ -29,21 +29,18 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-card
-        v-if="input === 'measurement'"
-        title="Evolution"
-        width="85%"
-        style="margin: auto"
-      >
+      <v-card v-if="input === 'measurement'" width="85%" style="margin: auto">
         <CardGraphs
           :personalValue="personalValue"
           :input="input"
           :color="color"
         />
       </v-card>
-      <v-card v-else>
+      <v-card v-else width="95%" style="margin: auto">
         <v-tabs v-model="tab" color="secondary" align-tabs="center">
-          <v-tab :value="1">RM &nbsp;<v-icon>mdi-chart-timeline-variant</v-icon></v-tab>
+          <v-tab :value="1"
+            >RM &nbsp;<v-icon>mdi-chart-timeline-variant</v-icon></v-tab
+          >
           <v-tab :value="2">RM &nbsp;%</v-tab>
           <v-tab :value="3">Log &nbsp;<v-icon>mdi-history</v-icon></v-tab>
         </v-tabs>
@@ -59,12 +56,20 @@
           </v-window-item>
           <v-window-item :value="2">
             <v-container fluid>
-              
+              <TableRM
+                :personalValue="personalValue"
+                :headerArray="[100, 90, 80, 70, 60]"
+              />
+              <v-divider />
+              <TableRM
+                :personalValue="personalValue"
+                :headerArray="[50, 40, 30, 20, 10]"
+              />
             </v-container>
           </v-window-item>
           <v-window-item :value="3">
             <v-container fluid>
-              
+              <TableLog :personalValue="personalValue" />
             </v-container>
           </v-window-item>
         </v-window>
@@ -93,6 +98,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import CardGraphs from "@/components/PersonalView/pop-ups/CardGraphs.vue";
+import TableRM from "@/components/PersonalView/shared/TableRM.vue";
+import TableLog from "@/components/PersonalView/shared/TableLog.vue";
 import { useStoreUser } from "@/stores/storeUser";
 
 const storeUser = useStoreUser();
