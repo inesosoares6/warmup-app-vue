@@ -26,7 +26,7 @@
           "
           rounded="xl"
           ><template v-slot:prepend>
-            <v-avatar size="25" :color="getColor(record.value, true)">
+            <v-avatar size="25" :color="getColor(record, true)">
               <v-icon size="small">mdi-dumbbell</v-icon>
             </v-avatar>
           </template>
@@ -44,7 +44,7 @@
             :personalValue="record"
             :id="index"
             :input="'record'"
-            :color="getColor(record.value, false)"
+            :color="getColor(record, false)"
           />
         </v-list-item>
       </v-list>
@@ -54,6 +54,7 @@
 
 <script setup>
 import { useStoreUser } from "@/stores/storeUser";
+import { getRM } from "@/helpers/math.js";
 import AddPersonalRecord from "@/components/PersonalView/pop-ups/AddPersonalRecord.vue";
 import EditPersonalValue from "@/components/PersonalView/pop-ups/EditPersonalValue.vue";
 
@@ -61,12 +62,12 @@ const storeUser = useStoreUser();
 
 const getColor = (array, avatar) => {
   if (array.length === 1) return avatar ? "secondary" : ["#03dac5"];
-  return array[array.length - 1] > array[array.length - 2]
+  return getRM(array, 100, -1) > getRM(array, 100, -2)
     ? avatar
       ? "secondary"
       : ["#03dac5"]
     : avatar
     ? "error"
-    : ["#cf6679"];
+    : ["#ffcc80"];
 };
 </script>

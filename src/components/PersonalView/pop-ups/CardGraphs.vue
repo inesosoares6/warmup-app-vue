@@ -14,21 +14,10 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { getRMEvolution } from "@/helpers/math.js";
 import VueApexCharts from "vue3-apexcharts";
 
 const props = defineProps(["personalValue", "input", "color"]);
-
-const getRMEvolution = () => {
-  let evolution = [];
-  props.personalValue.value.forEach((item, index) => {
-    evolution.push(
-      Math.round(
-        (item / (1.0278 - 0.0278 * props.personalValue.reps[index])) * 100
-      ) / 100
-    );
-  });
-  return evolution;
-};
 
 const getMinMax = () => {
   const max = Math.max(
@@ -46,7 +35,7 @@ const series = ref([
     data:
       props.input === "measurement"
         ? props.personalValue.value
-        : getRMEvolution(),
+        : getRMEvolution(props.personalValue),
   },
 ]);
 
