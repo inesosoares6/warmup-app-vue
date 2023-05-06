@@ -61,7 +61,7 @@ import EditPersonalValue from "@/components/PersonalView/pop-ups/EditPersonalVal
 const storeUser = useStoreUser();
 
 const getColor = (array, avatar) => {
-  if (array.length === 1) return avatar ? "secondary" : ["#03dac5"];
+  if (array.value.length === 1) return avatar ? "secondary" : ["#03dac5"];
   return getRM(array, 100, -1) > getRM(array, 100, -2)
     ? avatar
       ? "secondary"
