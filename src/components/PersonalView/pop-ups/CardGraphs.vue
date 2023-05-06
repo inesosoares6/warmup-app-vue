@@ -14,6 +14,18 @@ import VueApexCharts from "vue3-apexcharts";
 
 const props = defineProps(["personalValue", "input", "color"]);
 
+const getRMEvolution = () => {
+  let evolution = [];
+  props.personalValue.value.forEach((item, index) => {
+    evolution.push(
+      Math.round(
+        (item / (1.0278 - 0.0278 * props.personalValue.reps[index])) * 100
+      ) / 100
+    );
+  });
+  return evolution;
+};
+
 const getMinMax = () => {
   const max = Math.max(
     ...[Math.max(...[...props.personalValue.value, props.personalValue.target])]
@@ -23,6 +35,16 @@ const getMinMax = () => {
   );
   return min === max ? [min - 10, max + 10] : [min, max];
 };
+
+const series = ref([
+  {
+    name: props.personalValue.name,
+    data:
+      props.input === "measurement"
+        ? props.personalValue.value
+        : getRMEvolution(),
+  },
+]);
 
 const chartOptions = ref({
   chart: {
@@ -81,19 +103,13 @@ const chartOptionsTarget = ref({
     min: getMinMax()[0],
     max: getMinMax()[1],
   },
-  ...chartOptions.value
+  ...chartOptions.value,
 });
-const series = ref([
-  {
-    name: props.personalValue.name,
-    data: props.personalValue.value,
-  },
-]);
 
 watch(
   () => [props.color, props.personalValue],
   () => {
-    if (props.input === 'measurement') {
+    if (props.input === "measurement") {
       chartOptionsTarget.value.colors = props.color;
     } else {
       chartOptions.value.colors = props.color;
