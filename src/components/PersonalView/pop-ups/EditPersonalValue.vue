@@ -19,11 +19,11 @@
               :suffix="personalValue.unit ? personalValue.unit : 'kg'"
             ></v-text-field>
           </v-col>
-          <v-col v-if="input === 'measurement'">
+          <v-col>
             <v-text-field
               v-model="newTargetValue"
-              label="New target"
-              :suffix="personalValue.unit"
+              :label="input === 'measurement' ? 'New target' : 'Reps'"
+              :suffix="input === 'measurement' ? personalValue.unit : ''"
               type="number"
             ></v-text-field>
           </v-col>
@@ -48,7 +48,7 @@
         <v-btn
           color="secondary"
           @click="updateRecord"
-          :disabled="!(newValue || newTargetValue)"
+          :disabled="!(newValue && newTargetValue)"
         >
           Update
         </v-btn>
@@ -83,15 +83,12 @@ const deleteRecord = (lastEntry) => {
 };
 
 const updateRecord = () => {
-  if (newValue.value) {
-    personalValueEdited.value.value.push(newValue.value);
-    let date = new Date().toString().split(" ");
-    personalValueEdited.value.date.push(
-      date[2] + " " + date[1] + " " + date[3]
-    );
-  }
-  if (newTargetValue.value)
+  personalValueEdited.value.value.push(newValue.value);
+  let date = new Date().toString().split(" ");
+  personalValueEdited.value.date.push(date[2] + " " + date[1] + " " + date[3]);
+  if (props.input === "measurement")
     personalValueEdited.value.target = newTargetValue.value;
+  else personalValueEdited.value.reps.push(newTargetValue.value);
 
   storeUser.updateValue(props.input, {
     id: props.id,

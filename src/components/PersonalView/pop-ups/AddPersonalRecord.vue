@@ -10,19 +10,38 @@
             label="Name"
             required
           ></v-text-field>
-          <v-text-field
-            v-model="record.value[0]"
-            :rules="[(v) => !!v || 'Field is required']"
-            label="Value"
-            type="number"
-            suffix="kg"
-            required
-          ></v-text-field>
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="record.value[0]"
+                :rules="[(v) => !!v || 'Field is required']"
+                label="Value"
+                type="number"
+                suffix="kg"
+                required
+              ></v-text-field
+            ></v-col>
+            <v-col>
+              <v-text-field
+                v-model="record.reps[0]"
+                :rules="[(v) => !!v || 'Field is required']"
+                label="Reps"
+                type="number"
+                required
+              ></v-text-field
+            ></v-col>
+          </v-row>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="addRecord" :disabled="!(record.name && record.value[0])"> Add </v-btn>
+        <v-btn
+          color="secondary"
+          @click="addRecord"
+          :disabled="!(record.name && record.value[0])"
+        >
+          Add
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -39,6 +58,7 @@ const clearRecord = () => {
   return {
     name: "",
     value: [""],
+    reps: [""],
     date: [""],
   };
 };

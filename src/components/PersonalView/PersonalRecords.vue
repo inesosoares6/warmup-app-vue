@@ -1,9 +1,7 @@
 <template>
   <v-card title="Personal Records">
     <template v-slot:prepend>
-      <v-icon class="title-icon" color="secondary"
-        >mdi-clipboard-text</v-icon
-      >
+      <v-icon class="title-icon" color="secondary">mdi-clipboard-text</v-icon>
     </template>
     <template v-slot:append>
       <v-btn icon color="transparent" size="35" flat>
@@ -19,7 +17,12 @@
           :key="index"
           :value="record"
           :title="
-            record.name + ': ' + record.value[record.value.length - 1] + ' kg'
+            record.name +
+            ': ' +
+            record.value.at(-1) +
+            ' kg - ' +
+            record.reps.at(-1) +
+            ' reps'
           "
           rounded="xl"
           ><template v-slot:prepend>
