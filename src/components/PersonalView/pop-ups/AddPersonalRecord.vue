@@ -9,6 +9,7 @@
             :rules="[(v) => !!v || 'Field is required']"
             label="Name"
             required
+            autofocus
           ></v-text-field>
           <v-row>
             <v-col>

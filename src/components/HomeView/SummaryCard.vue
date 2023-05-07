@@ -23,7 +23,7 @@
             To Do
           </v-col>
         </v-row>
-        <v-divider class="divider" thickness="1px"></v-divider>
+        <v-divider class="divider" thickness="1px" style="margin-top: 15px; margin-bottom: 15px"></v-divider>
         <v-slide-group>
           <v-slide-group-item
             v-for="(item, index) in getWorkoutSummary.types"

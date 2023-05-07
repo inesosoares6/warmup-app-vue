@@ -8,6 +8,7 @@
           label="Name"
           :rules="[(v) => !!v || 'Required']"
           required
+          autofocus
         ></v-text-field>
         <v-row v-if="!showNewType && types.length">
           <v-col cols="10">
@@ -17,8 +18,6 @@
               :rules="[(v) => !!v || 'Required']"
               label="Type"
               required
-              hide-details
-              style="margin-bottom: 10px"
             ></v-select>
           </v-col>
           <v-col cols="2">
@@ -33,6 +32,7 @@
           :rules="[(v) => !!v || 'Required']"
           label="Type"
           required
+          autofocus
         ></v-text-field>
         <v-row
           ><v-col>
@@ -130,6 +130,9 @@ const resetForm = () => {
 </script>
 
 <style scoped>
+.v-row {
+  margin: -12px;
+}
 .v-text-field :deep(input::-webkit-outer-spin-button),
 .v-text-field :deep(input::-webkit-inner-spin-button) {
   appearance: none !important;
