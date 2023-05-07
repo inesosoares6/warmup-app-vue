@@ -51,4 +51,24 @@ watch(
     );
   }
 );
+
+watch(
+  () => Object.keys(storeUser.personalRecords),
+  () => {
+    localStorage.setItem(
+        "personalRecords",
+        JSON.stringify(storeUser.personalRecords)
+      );
+  }
+);
+
+watch(
+  () => Object.keys(storeUser.measurements),
+  () => {
+    localStorage.setItem(
+        "measurements",
+        JSON.stringify(storeUser.measurements)
+      );
+  }
+);
 </script>

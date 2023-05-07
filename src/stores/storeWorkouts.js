@@ -92,5 +92,10 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
         JSON.stringify(this.currentWorkoutId)
       );
     },
+
+    deleteAllCache() {
+      this.allWorkouts = {};
+      this.selectWorkout("");
+    },
   },
 });

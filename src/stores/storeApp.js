@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import { useStoreTimer } from "@/stores/storeTimer";
+import { useStoreUser } from "@/stores/storeUser";
+import { useStoreWorkouts } from "@/stores/storeWorkouts";
 
 export const useStoreApp = defineStore("storeApp", {
   state: () => {
@@ -69,7 +72,7 @@ export const useStoreApp = defineStore("storeApp", {
 
     updateTimeline(day, workoutId) {
       this.timeline.forEach((item) => {
-        if (item.day.substring(0,3) === day) {
+        if (item.day.substring(0, 3) === day) {
           item.color = "secondary";
           item.workoutsId.push(workoutId);
         }
@@ -93,6 +96,22 @@ export const useStoreApp = defineStore("storeApp", {
         localStorage.setItem("timeline", JSON.stringify(this.timeline));
         localStorage.setItem("weekNumber", JSON.stringify(this.weekNumber));
       }
+    },
+
+    deleteAllCache() {
+      this.groupByTypeFunction(false);
+      this.timeline = this.clearTimeline();
+      localStorage.setItem("timeline", JSON.stringify(this.timeline));
+      this.weekNumber = 0;
+      localStorage.setItem("weekNumber", JSON.stringify(this.weekNumber));
+
+      const storeTimer = useStoreTimer();
+      const storeUser = useStoreUser();
+      const storeWorkouts = useStoreWorkouts();
+
+      storeTimer.deleteAllCache();
+      storeUser.deleteAllCache();
+      storeWorkouts.deleteAllCache();
     },
   },
 });

@@ -3,33 +3,33 @@ import { defineStore } from "pinia";
 const tabataDefault = {
   prepareTime: {
     value: 5,
-    label: 'Get ready',
-    suffix: 's'
+    label: "Get ready",
+    suffix: "s",
   },
   restBetweenSets: {
     value: 5,
-    label: 'Rest between sets',
-    suffix: 's'
+    label: "Rest between sets",
+    suffix: "s",
   },
   workTime: {
     value: 5,
-    label: 'Work',
-    suffix: 's'
+    label: "Work",
+    suffix: "s",
   },
   restTime: {
     value: 5,
-    label: 'Rest',
-    suffix: 's'
+    label: "Rest",
+    suffix: "s",
   },
   cycles: {
     value: 5,
-    label: 'Cycles',
-    suffix: ''
+    label: "Cycles",
+    suffix: "",
   },
   sets: {
     value: 5,
-    label: 'Sets',
-    suffix: ''
+    label: "Sets",
+    suffix: "",
   },
 };
 
@@ -61,6 +61,11 @@ export const useStoreTimer = defineStore("storeTimer", {
     updateTimer(newTimer) {
       this.timer = newTimer;
       localStorage.setItem("timer", JSON.stringify(this.timer));
+    },
+
+    deleteAllCache() {
+      this.updateTabata(tabataDefault);
+      this.updateTimer(5);
     },
   },
 });
