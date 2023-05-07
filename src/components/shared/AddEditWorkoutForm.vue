@@ -9,16 +9,26 @@
           :rules="[(v) => !!v || 'Required']"
           required
         ></v-text-field>
-        <v-select
-          v-if="types.length > 1"
-          v-model="workoutEdited.type"
-          :items="types"
-          :rules="[(v) => !!v || 'Required']"
-          label="Type"
-          required
-        ></v-select>
+        <v-row v-if="!showNewType && types.length">
+          <v-col cols="10">
+            <v-select
+              v-model="workoutEdited.type"
+              :items="types"
+              :rules="[(v) => !!v || 'Required']"
+              label="Type"
+              required
+              hide-details
+              style="margin-bottom: 10px"
+            ></v-select>
+          </v-col>
+          <v-col cols="2">
+            <v-btn icon flat @click="showNewType = true">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
         <v-text-field
-          v-if="workoutEdited.type === '--> Add new type' || types.length === 1"
+          v-else
           v-model="newType"
           :rules="[(v) => !!v || 'Required']"
           label="Type"
@@ -60,7 +70,13 @@
     <v-card-actions>
       <v-spacer></v-spacer
       ><v-btn color="error" @click="resetForm"> Reset </v-btn>
-      <v-btn color="secondary" @click="submitWorkout"> {{ buttonText }} </v-btn>
+      <v-btn
+        color="secondary"
+        :disabled="checkFormValid()"
+        @click="submitWorkout"
+      >
+        {{ buttonText }}
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -78,9 +94,10 @@ const workoutEdited = ref({});
 const newType = ref("");
 const valid = ref(true);
 const formRef = ref(null);
+const showNewType = ref(false);
 
 const types = computed(() => {
-  return [...storeWorkouts.getTypes, "--> Add new type"];
+  return storeWorkouts.getTypes;
 });
 
 onMounted(() => {
@@ -90,15 +107,23 @@ onMounted(() => {
 const submitWorkout = () => {
   formRef.value.validate();
   if (valid.value) {
-    if (
-      workoutEdited.value.type === "--> Add new type" ||
-      workoutEdited.value.type === undefined
-    ) {
-      workoutEdited.value.type = newType.value;
-    }
+    workoutEdited.value.type = showNewType.value
+      ? newType.value
+      : workoutEdited.value.type;
     emit("submit-workout", workoutEdited.value);
   }
 };
+
+const checkFormValid = () => {
+  return !(
+    workoutEdited.value.name &&
+    (workoutEdited.value.type || newType.value) &&
+    workoutEdited.value.time &&
+    workoutEdited.value.completions &&
+    workoutEdited.value.exercises
+  );
+};
+
 const resetForm = () => {
   formRef.value.reset();
 };
