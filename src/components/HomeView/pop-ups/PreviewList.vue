@@ -96,11 +96,12 @@ const downloadedWorkouts = (fileName) => {
 };
 
 const importWorkouts = () => {
-  storeWorkouts.importWorkouts(getWorkouts);
+  storeWorkouts.importWorkouts(getWorkouts.value);
   router.push({ name: "all-view" });
 };
 
 const updateCheckboxes = (value) => {
+  selected.value = {};
   Object.keys(props.workouts).forEach((key) => {
     selected.value[key] = value;
   });
