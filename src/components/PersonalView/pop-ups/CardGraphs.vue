@@ -5,10 +5,17 @@
   </v-card-subtitle>
   <VueApexCharts
     type="line"
-    :options="input === 'measurement' ? chartOptionsTarget : chartOptions"
+    :options="
+      input === 'measurement'
+        ? chartOptionsWithTarget
+        : Object.keys(personalValue.value).length === 1
+        ? chartOptionsWithoutTarget
+        : chartOptions
+    "
     :series="series"
     width="100%"
     height="70px"
+    style="margin-top: 15px"
   ></VueApexCharts>
 </template>
 
@@ -19,13 +26,9 @@ import VueApexCharts from "vue3-apexcharts";
 
 const props = defineProps(["personalValue", "input", "color"]);
 
-const getMinMax = () => {
-  const max = Math.max(
-    ...[Math.max(...[...props.personalValue.value, props.personalValue.target])]
-  );
-  const min = Math.min(
-    ...[Math.min(...[...props.personalValue.value, props.personalValue.target])]
-  );
+const getMinMax = (value, target) => {
+  const max = Math.max(...[Math.max(...[...value, target])]);
+  const min = Math.min(...[Math.min(...[...value, target])]);
   return min === max ? [min - 10, max + 10] : [min, max];
 };
 
@@ -83,7 +86,16 @@ const chartOptions = ref({
     },
   },
 });
-const chartOptionsTarget = ref({
+
+const chartOptionsWithoutTarget = ref({
+  yaxis: {
+    min: getMinMax(props.personalValue.value, props.personalValue.value)[0],
+    max: getMinMax(props.personalValue.value, props.personalValue.value)[1],
+  },
+  ...chartOptions.value,
+});
+
+const chartOptionsWithTarget = ref({
   annotations: {
     yaxis: [
       {
@@ -93,8 +105,8 @@ const chartOptionsTarget = ref({
     ],
   },
   yaxis: {
-    min: getMinMax()[0],
-    max: getMinMax()[1],
+    min: getMinMax(props.personalValue.value, props.personalValue.target)[0],
+    max: getMinMax(props.personalValue.value, props.personalValue.target)[1],
   },
   ...chartOptions.value,
 });
@@ -103,7 +115,7 @@ watch(
   () => [props.color, props.personalValue],
   () => {
     if (props.input === "measurement") {
-      chartOptionsTarget.value.colors = props.color;
+      chartOptionsWithTarget.value.colors = props.color;
     } else {
       chartOptions.value.colors = props.color;
     }

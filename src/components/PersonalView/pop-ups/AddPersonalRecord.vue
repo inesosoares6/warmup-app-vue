@@ -38,7 +38,7 @@
         <v-btn
           color="secondary"
           @click="addRecord"
-          :disabled="!(record.name && record.value[0])"
+          :disabled="!(record.name && record.value[0] && record.reps[0])"
         >
           Add
         </v-btn>

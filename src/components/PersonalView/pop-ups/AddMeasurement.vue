@@ -50,7 +50,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="addRecord"> Add </v-btn>
+        <v-btn color="secondary" @click="addRecord"
+          :disabled="!(measurement.name && measurement.unit && measurement.value[0])"> Add </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
