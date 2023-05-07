@@ -10,6 +10,7 @@
           required
         ></v-text-field>
         <v-select
+          v-if="types.length > 1"
           v-model="workoutEdited.type"
           :items="types"
           :rules="[(v) => !!v || 'Required']"
@@ -17,10 +18,10 @@
           required
         ></v-select>
         <v-text-field
-          v-if="workoutEdited.type === '--> Add new type'"
+          v-if="workoutEdited.type === '--> Add new type' || types.length === 1"
           v-model="newType"
           :rules="[(v) => !!v || 'Required']"
-          label="New type"
+          label="Type"
           required
         ></v-text-field>
         <v-row
@@ -40,7 +41,7 @@
               v-model="workoutEdited.completions"
               type="number"
               :rules="[
-                (v) => v!= null || 'Required',
+                (v) => v != null || 'Required',
                 (v) => v >= 0 || 'Must be >= 0',
               ]"
               label="Completions"
@@ -89,14 +90,17 @@ onMounted(() => {
 const submitWorkout = () => {
   formRef.value.validate();
   if (valid.value) {
-    if (workoutEdited.value.type === "--> Add new type") {
+    if (
+      workoutEdited.value.type === "--> Add new type" ||
+      workoutEdited.value.type === undefined
+    ) {
       workoutEdited.value.type = newType.value;
     }
     emit("submit-workout", workoutEdited.value);
   }
 };
 const resetForm = () => {
-    formRef.value.reset();
+  formRef.value.reset();
 };
 </script>
 
