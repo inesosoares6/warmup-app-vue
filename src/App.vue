@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import TopToolbar from "@/components/TopToolbar.vue";
 import BottomToolbar from "@/components/BottomToolbar.vue";
 import { useStoreWorkouts } from "@/stores/storeWorkouts";
@@ -41,34 +41,4 @@ const toggleTheme = (newTheme) => {
   theme.value.global.name = newTheme.toString();
   localStorage.setItem("themeString", newTheme);
 };
-
-watch(
-  () => Object.keys(storeWorkouts.allWorkouts),
-  () => {
-    localStorage.setItem(
-      "allWorkouts",
-      JSON.stringify(storeWorkouts.allWorkouts)
-    );
-  }
-);
-
-watch(
-  () => Object.keys(storeUser.personalRecords),
-  () => {
-    localStorage.setItem(
-        "personalRecords",
-        JSON.stringify(storeUser.personalRecords)
-      );
-  }
-);
-
-watch(
-  () => Object.keys(storeUser.measurements),
-  () => {
-    localStorage.setItem(
-        "measurements",
-        JSON.stringify(storeUser.measurements)
-      );
-  }
-);
 </script>

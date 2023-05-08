@@ -20,10 +20,12 @@ export const useStoreUser = defineStore("storeUser", {
 
     addPR(payload) {
       this.personalRecords[payload.id] = payload.record;
+      this.writeInDB(true);
     },
 
     addMeasurement(payload) {
       this.measurements[payload.id] = payload.measurement;
+      this.writeInDB(false);
     },
 
     deleteMeasurement(id, lastEntry) {
@@ -32,6 +34,7 @@ export const useStoreUser = defineStore("storeUser", {
       } else {
         delete this.measurements[id];
       }
+      this.writeInDB(false);
     },
 
     deletePR(id, lastEntry) {
@@ -40,6 +43,7 @@ export const useStoreUser = defineStore("storeUser", {
       } else {
         delete this.personalRecords[id];
       }
+      this.writeInDB(true);
     },
 
     updateValue(variableName, payload) {
@@ -49,15 +53,29 @@ export const useStoreUser = defineStore("storeUser", {
 
     updateMeasurement(payload) {
       Object.assign(this.measurements[payload.id], payload.updates);
+      this.writeInDB(false);
     },
 
     updatePR(payload) {
       Object.assign(this.personalRecords[payload.id], payload.updates);
+      this.writeInDB(true);
     },
 
     deleteAllCache() {
       this.personalRecords = {};
       this.measurements = {};
+      this.writeInDB(true);
+      this.writeInDB(false);
+    },
+
+    writeInDB(record) {
+      if (record)
+        localStorage.setItem(
+          "personalRecords",
+          JSON.stringify(this.personalRecords)
+        );
+      else
+        localStorage.setItem("measurements", JSON.stringify(this.measurements));
     },
   },
 });

@@ -69,20 +69,24 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
 
     addWorkout(payload) {
       this.allWorkouts[payload.id] = payload.workout;
+      this.writeInDB();
     },
 
     deleteWorkout(id) {
       delete this.allWorkouts[id];
+      this.writeInDB();
     },
 
     updateWorkout(payload) {
       Object.assign(this.allWorkouts[payload.id], payload.updates);
+      this.writeInDB();
     },
 
     importWorkouts(workouts) {
       Object.values(workouts).forEach((item) => {
         this.addWorkout({ id: uuidv4(), workout: item });
       });
+      this.writeInDB();
     },
 
     selectWorkout(id) {
@@ -95,7 +99,12 @@ export const useStoreWorkouts = defineStore("storeWorkouts", {
 
     deleteAllCache() {
       this.allWorkouts = {};
+      this.writeInDB();
       this.selectWorkout("");
+    },
+
+    writeInDB() {
+      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
     },
   },
 });
