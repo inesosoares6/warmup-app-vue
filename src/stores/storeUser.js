@@ -5,6 +5,7 @@ export const useStoreUser = defineStore("storeUser", {
     return {
       personalRecords: {},
       measurements: {},
+      objectives: {},
     };
   },
   getters: {},
@@ -16,25 +17,23 @@ export const useStoreUser = defineStore("storeUser", {
         );
       if (localStorage.getItem("measurements"))
         this.measurements = JSON.parse(localStorage.getItem("measurements"));
+      if (localStorage.getItem("objectives"))
+        this.objectives = JSON.parse(localStorage.getItem("objectives"));
     },
 
     addPR(payload) {
       this.personalRecords[payload.id] = payload.record;
-      this.writeInDB(true);
+      this.writeInDB(1);
     },
 
     addMeasurement(payload) {
       this.measurements[payload.id] = payload.measurement;
-      this.writeInDB(false);
+      this.writeInDB(2);
     },
 
-    deleteMeasurement(id, lastEntry) {
-      if (lastEntry) {
-        this.measurements[id].value.pop();
-      } else {
-        delete this.measurements[id];
-      }
-      this.writeInDB(false);
+    addObjective(payload) {
+      this.objectives[payload.id] = payload.objective;
+      this.writeInDB(3);
     },
 
     deletePR(id, lastEntry) {
@@ -43,7 +42,21 @@ export const useStoreUser = defineStore("storeUser", {
       } else {
         delete this.personalRecords[id];
       }
-      this.writeInDB(true);
+      this.writeInDB(1);
+    },
+
+    deleteMeasurement(id, lastEntry) {
+      if (lastEntry) {
+        this.measurements[id].value.pop();
+      } else {
+        delete this.measurements[id];
+      }
+      this.writeInDB(2);
+    },
+
+    deleteObjective(id) {
+      delete this.objectives[id];
+      this.writeInDB(3);
     },
 
     updateValue(variableName, payload) {
@@ -53,29 +66,41 @@ export const useStoreUser = defineStore("storeUser", {
 
     updateMeasurement(payload) {
       Object.assign(this.measurements[payload.id], payload.updates);
-      this.writeInDB(false);
+      this.writeInDB(2);
     },
 
     updatePR(payload) {
       Object.assign(this.personalRecords[payload.id], payload.updates);
-      this.writeInDB(true);
+      this.writeInDB(1);
     },
 
     deleteAllCache() {
       this.personalRecords = {};
       this.measurements = {};
-      this.writeInDB(true);
-      this.writeInDB(false);
+      this.objectives = {};
+      for (let i = 1; i <= 3; i++) {
+        this.writeInDB(i);
+      }
     },
 
-    writeInDB(record) {
-      if (record)
-        localStorage.setItem(
-          "personalRecords",
-          JSON.stringify(this.personalRecords)
-        );
-      else
-        localStorage.setItem("measurements", JSON.stringify(this.measurements));
+    writeInDB(mode) {
+      switch (mode) {
+        case 1:
+          localStorage.setItem(
+            "personalRecords",
+            JSON.stringify(this.personalRecords)
+          );
+          break;
+        case 2:
+          localStorage.setItem(
+            "measurements",
+            JSON.stringify(this.measurements)
+          );
+          break;
+        case 3:
+          localStorage.setItem("objectives", JSON.stringify(this.objectives));
+          break;
+      }
     },
   },
 });
