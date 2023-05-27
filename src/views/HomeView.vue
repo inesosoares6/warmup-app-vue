@@ -47,6 +47,7 @@ const showSnackbar = (payload) => {
 }
 
 .title-icon {
+  margin-top: 10px;
   font-size: 23px;
 }
 </style>

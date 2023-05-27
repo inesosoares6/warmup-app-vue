@@ -9,6 +9,7 @@
             :rules="[(v) => !!v || 'Field is required']"
             label="Objective"
             required
+            autofocus
           ></v-text-field>
         </v-form>
       </v-card-text>
@@ -37,7 +38,8 @@ const addObjectiveModal = ref(false);
 const clearObjective = () => {
   return {
     text: "",
-    date: "",
+    date: 0,
+    dateDone: 0,
     done: false,
   };
 };

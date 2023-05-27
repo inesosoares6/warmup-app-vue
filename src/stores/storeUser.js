@@ -8,7 +8,24 @@ export const useStoreUser = defineStore("storeUser", {
       objectives: {},
     };
   },
-  getters: {},
+  getters: {
+    getObjectivesSorted: (state) => {
+      let objectivesSorted = {},
+        keysOrdered = Object.keys(state.objectives);
+
+      keysOrdered.sort((a, b) => {
+        let productAProp = new Date(state.objectives[a]["dateDone"]).getTime(),
+          productBProp = new Date(state.objectives[b]["dateDone"]).getTime();
+        return productAProp - productBProp;
+      });
+
+      keysOrdered.forEach((key) => {
+        objectivesSorted[key] = state.objectives[key];
+      });
+
+      return objectivesSorted;
+    },
+  },
   actions: {
     init() {
       if (localStorage.getItem("personalRecords"))
@@ -76,6 +93,7 @@ export const useStoreUser = defineStore("storeUser", {
 
     updateObjective(id) {
       this.objectives[id].done = !this.objectives[id].done;
+      this.objectives[id].dateDone = this.objectives[id].done ? new Date() : 0;
       this.writeInDB(3);
     },
 

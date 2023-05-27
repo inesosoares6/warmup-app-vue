@@ -2,11 +2,12 @@
   <v-card title="Objectives">
     <template v-slot:prepend>
       <v-progress-circular
-        v-if="objectives.length > 0"
+        v-if="Object.keys(objectives).length > 0"
         v-model="progress"
         class="me-2"
         :color="progress == 100 ? 'secondary' : 'primary'"
       ></v-progress-circular>
+      <v-icon v-else class="title-icon" color="secondary">mdi-calendar-check</v-icon>
     </template>
     <template v-slot:append>
       <v-btn icon flat size="35">
@@ -16,20 +17,19 @@
     </template>
     <v-divider />
 
-    <v-card v-if="objectives.length > 0">
+    <v-card v-if="Object.keys(objectives).length > 0">
       <v-slide-y-transition class="py-0" group tag="v-list">
         <template
-          v-for="(objective, i) in objectives"
-          :key="`${i}-${objective.text}`"
+          v-for="(objective, id) in objectives"
+          :key="id"
         >
-          <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
           <v-list-item>
             <v-list-item-action>
               <v-checkbox
                 v-model="objective.done"
                 :color="(objective.done && 'secondary') || 'primary'"
                 hideDetails
-                @click="updateObjective(i)"
+                @click="storeUser.updateObjective(id)"
               >
                 <template v-slot:label>
                   <div
@@ -49,7 +49,7 @@
                 <v-icon
                   v-if="!objective.done"
                   color="red"
-                  @click="deleteObjective(i)"
+                  @click="storeUser.deleteObjective(id)"
                   >mdi-delete</v-icon
                 >
                 <v-icon v-else color="secondary">mdi-medal</v-icon>
@@ -70,22 +70,14 @@ import AddObjective from "@/components/PersonalView/pop-ups/AddObjective.vue";
 const storeUser = useStoreUser();
 
 const objectives = computed(() => {
-  return Object.values(storeUser.objectives);
+  return storeUser.getObjectivesSorted;
 });
 
 const completedTasks = computed(() => {
-  return objectives.value.filter((objective) => objective.done).length;
+  return Object.values(objectives.value).filter((objective) => objective.done).length;
 });
 
 const progress = computed(() => {
-  return (completedTasks.value / objectives.value.length) * 100;
+  return (completedTasks.value / Object.values(objectives.value).length) * 100;
 });
-
-function deleteObjective(i) {
-  storeUser.deleteObjective(Object.keys(storeUser.objectives)[i]);
-}
-
-function updateObjective(i) {
-  storeUser.updateObjective(Object.keys(storeUser.objectives)[i]);
-}
 </script>
