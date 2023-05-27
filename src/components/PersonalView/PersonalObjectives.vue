@@ -14,6 +14,7 @@
         <AddObjective />
       </v-btn>
     </template>
+    <v-divider />
 
     <v-card v-if="objectives.length > 0">
       <v-slide-y-transition class="py-0" group tag="v-list">
