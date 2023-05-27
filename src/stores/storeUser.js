@@ -74,6 +74,11 @@ export const useStoreUser = defineStore("storeUser", {
       this.writeInDB(1);
     },
 
+    updateObjective(id) {
+      this.objectives[id].done = !this.objectives[id].done;
+      this.writeInDB(3);
+    },
+
     deleteAllCache() {
       this.personalRecords = {};
       this.measurements = {};
