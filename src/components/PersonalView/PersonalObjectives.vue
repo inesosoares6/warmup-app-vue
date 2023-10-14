@@ -7,7 +7,9 @@
         class="me-2"
         :color="progress == 100 ? 'secondary' : 'primary'"
       />
-      <v-icon v-else class="title-icon" color="secondary">mdi-calendar-check</v-icon>
+      <v-icon v-else class="title-icon" color="secondary"
+        >mdi-calendar-check</v-icon
+      >
     </template>
     <template v-slot:append>
       <v-btn icon flat size="35">
@@ -19,10 +21,7 @@
 
     <v-card v-if="Object.keys(objectives).length > 0">
       <v-slide-y-transition class="py-0" group tag="v-list">
-        <template
-          v-for="(objective, id) in objectives"
-          :key="id"
-        >
+        <template v-for="(objective, id) in objectives" :key="id">
           <v-list-item>
             <v-list-item-action>
               <v-checkbox
@@ -52,7 +51,10 @@
                   @click="storeUser.deleteObjective(id)"
                   >mdi-delete</v-icon
                 >
-                <v-icon v-else color="secondary">mdi-medal</v-icon>
+                <v-icon v-else color="secondary" @click="medalAnimation()"
+                  >mdi-medal</v-icon
+                >
+                <ConfettiExplosion v-if="visible" />
               </v-btn>
             </template>
           </v-list-item>
@@ -63,21 +65,30 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, nextTick } from "vue";
 import { useStoreUser } from "@/stores/storeUser";
 import AddObjective from "@/components/PersonalView/pop-ups/AddObjective.vue";
+import ConfettiExplosion from "vue-confetti-explosion";
 
 const storeUser = useStoreUser();
+const visible = ref(false);
 
 const objectives = computed(() => {
   return storeUser.getObjectivesSorted;
 });
 
 const completedTasks = computed(() => {
-  return Object.values(objectives.value).filter((objective) => objective.done).length;
+  return Object.values(objectives.value).filter((objective) => objective.done)
+    .length;
 });
 
 const progress = computed(() => {
   return (completedTasks.value / Object.values(objectives.value).length) * 100;
 });
+
+const medalAnimation = async () => {
+  visible.value = false;
+  await nextTick();
+  visible.value = true;
+};
 </script>
