@@ -6,7 +6,7 @@
         v-model="progress"
         class="me-2"
         :color="progress == 100 ? 'secondary' : 'primary'"
-      ></v-progress-circular>
+      />
       <v-icon v-else class="title-icon" color="secondary">mdi-calendar-check</v-icon>
     </template>
     <template v-slot:append>
