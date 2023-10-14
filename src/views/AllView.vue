@@ -49,5 +49,6 @@ onMounted(() => {
   left: 50%;
   z-index: 10;
   pointer-events: none;
+  transform: translate(-25%, 0%);
 }
 </style>
