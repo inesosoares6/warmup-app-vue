@@ -15,6 +15,7 @@
 			class="d-flex justify-center"
 		>
 			<ControlButtons
+				:isRunning="isRunning.value"
 				@play="tabataTimer.resume()"
 				@pause="tabataTimer.pause()"
 				@reload="resetTabata()"

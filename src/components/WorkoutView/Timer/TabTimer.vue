@@ -6,6 +6,7 @@
 		class="play-btns"
 	>
 		<ControlButtons
+			:isRunning="isRunning.value"
 			@play="timer.resume()"
 			@pause="timer.pause()"
 			@reload="restartTimer()"

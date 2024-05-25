@@ -8,13 +8,25 @@
 		icon
 		@click="$emit(button)"
 	>
-		<v-icon>mdi-{{ button }}</v-icon>
+		<v-icon>{{ button === 'reload' ? `mdi-${button}` : buttonIcon }}</v-icon>
 	</v-btn>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-const buttons = ref(['play', 'pause', 'reload'])
+import { computed } from 'vue'
+
+const props = defineProps({
+	isRunning: {
+		type: Boolean,
+		required: true
+	}
+})
+const buttons = computed(() =>
+	props.isRunning ? ['pause', 'reload'] : ['play', 'reload']
+)
+
+const buttonIcon = computed(() => (props.isRunning ? 'mdi-pause' : 'mdi-play'))
+
 defineEmits(['play', 'pause', 'reload'])
 </script>
 
