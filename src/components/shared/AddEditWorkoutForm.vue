@@ -105,9 +105,7 @@ const valid = ref(true)
 const formRef = ref(null)
 const showNewType = ref(false)
 
-const types = computed(() => {
-	return storeWorkouts.getTypes
-})
+const types = computed(() => storeWorkouts.getTypes)
 
 onMounted(() => {
 	workoutEdited.value = { ...props.workout }

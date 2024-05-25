@@ -81,9 +81,7 @@ const checkbox = ref(false)
 const snackbar = ref(false)
 const text = ref('')
 
-const currentWorkout = computed(() => {
-	return storeWorkouts.getCurrentWorkout
-})
+const currentWorkout = computed(() => storeWorkouts.getCurrentWorkout)
 
 const createStringWorkout = () => {
 	return (

@@ -1,21 +1,31 @@
 <template>
-  <v-table>
-    <thead>
-      <tr>
-        <th class="text-center" v-for="k in headerArray" :key="k">{{ k }} %</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="text-center" v-for="k in headerArray" :key="k">
-          {{ getRM(personalValue, k, -1) }}
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+	<v-table>
+		<thead>
+			<tr>
+				<th
+					class="text-center"
+					v-for="k in headerArray"
+					:key="k"
+				>
+					{{ k }} %
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td
+					class="text-center"
+					v-for="k in headerArray"
+					:key="k"
+				>
+					{{ getRM(personalValue, k, -1) }}
+				</td>
+			</tr>
+		</tbody>
+	</v-table>
 </template>
 
 <script setup>
-import { getRM } from "@/helpers/math.js";
-defineProps(["headerArray", "personalValue"]);
+import { getRM } from '@/helpers/math.js'
+defineProps(['headerArray', 'personalValue'])
 </script>
