@@ -1,110 +1,110 @@
-import { defineStore } from "pinia";
-import { v4 as uuidv4 } from "uuid";
+import { defineStore } from 'pinia'
+import { v4 as uuidv4 } from 'uuid'
 
-export const useStoreWorkouts = defineStore("storeWorkouts", {
+export const useStoreWorkouts = defineStore('storeWorkouts', {
   state: () => {
     return {
       allWorkouts: {},
-      currentWorkoutId: "",
-    };
+      currentWorkoutId: ''
+    }
   },
   getters: {
-    getCurrentWorkout: (state) => {
-      return state.allWorkouts[state.currentWorkoutId];
+    getCurrentWorkout: state => {
+      return state.allWorkouts[state.currentWorkoutId]
     },
 
-    getTypes: (state) => {
-      let types = [];
-      Object.keys(state.allWorkouts).forEach((key) => {
-        let workout = state.allWorkouts[key];
-        if (!types.some((e) => e === workout.type)) {
-          types.push(workout.type);
+    getTypes: state => {
+      let types = []
+      Object.keys(state.allWorkouts).forEach(key => {
+        let workout = state.allWorkouts[key]
+        if (!types.some(e => e === workout.type)) {
+          types.push(workout.type)
         }
-      });
-      return types;
+      })
+      return types
     },
 
-    getWorkoutSummary: (state) => {
+    getWorkoutSummary: state => {
       let summary = {
         done: 0,
         todo: 0,
-        types: [],
-      };
-      Object.keys(state.allWorkouts).forEach((key) => {
-        let workout = state.allWorkouts[key];
+        types: []
+      }
+      Object.keys(state.allWorkouts).forEach(key => {
+        let workout = state.allWorkouts[key]
         if (workout.completions === 0) {
-          summary.todo++;
+          summary.todo++
         } else {
-          summary.done += workout.completions;
+          summary.done += workout.completions
 
-          if (summary.types.some((e) => e.type === workout.type)) {
-            let index = summary.types.findIndex((object) => {
-              return object.type === workout.type;
-            });
-            summary.types[index].value += workout.completions;
+          if (summary.types.some(e => e.type === workout.type)) {
+            let index = summary.types.findIndex(object => {
+              return object.type === workout.type
+            })
+            summary.types[index].value += workout.completions
             if (summary.types[index].value === 0) {
-              summary.types.splice(index, 1);
+              summary.types.splice(index, 1)
             }
           } else {
             summary.types = [
               ...summary.types,
-              { type: workout.type, value: workout.completions },
-            ];
+              { type: workout.type, value: workout.completions }
+            ]
           }
         }
-      });
-      return summary;
-    },
+      })
+      return summary
+    }
   },
   actions: {
     async init() {
-      if (localStorage.getItem("allWorkouts"))
-        this.allWorkouts = JSON.parse(localStorage.getItem("allWorkouts"));
+      if (localStorage.getItem('allWorkouts'))
+        this.allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'))
 
-      if (localStorage.getItem("currentWorkoutId"))
+      if (localStorage.getItem('currentWorkoutId'))
         this.currentWorkoutId = JSON.parse(
-          localStorage.getItem("currentWorkoutId")
-        );
+          localStorage.getItem('currentWorkoutId')
+        )
     },
 
     addWorkout(payload) {
-      this.allWorkouts[payload.id] = payload.workout;
-      this.writeInDB();
+      this.allWorkouts[payload.id] = payload.workout
+      this.writeInDB()
     },
 
     deleteWorkout(id) {
-      delete this.allWorkouts[id];
-      this.writeInDB();
+      delete this.allWorkouts[id]
+      this.writeInDB()
     },
 
     updateWorkout(payload) {
-      Object.assign(this.allWorkouts[payload.id], payload.updates);
-      this.writeInDB();
+      Object.assign(this.allWorkouts[payload.id], payload.updates)
+      this.writeInDB()
     },
 
     importWorkouts(workouts) {
-      Object.values(workouts).forEach((item) => {
-        this.addWorkout({ id: uuidv4(), workout: item });
-      });
-      this.writeInDB();
+      Object.values(workouts).forEach(item => {
+        this.addWorkout({ id: uuidv4(), workout: item })
+      })
+      this.writeInDB()
     },
 
     selectWorkout(id) {
-      this.currentWorkoutId = id;
+      this.currentWorkoutId = id
       localStorage.setItem(
-        "currentWorkoutId",
+        'currentWorkoutId',
         JSON.stringify(this.currentWorkoutId)
-      );
+      )
     },
 
     deleteAllCache() {
-      this.allWorkouts = {};
-      this.writeInDB();
-      this.selectWorkout("");
+      this.allWorkouts = {}
+      this.writeInDB()
+      this.selectWorkout('')
     },
 
     writeInDB() {
-      localStorage.setItem("allWorkouts", JSON.stringify(this.allWorkouts));
-    },
-  },
-});
+      localStorage.setItem('allWorkouts', JSON.stringify(this.allWorkouts))
+    }
+  }
+})
