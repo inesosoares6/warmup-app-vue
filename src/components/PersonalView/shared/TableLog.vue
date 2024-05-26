@@ -6,7 +6,9 @@
 		<thead>
 			<tr>
 				<th class="text-center">Value</th>
-				<th class="text-center">Reps</th>
+				<th class="text-center">
+					{{ personalValue?.reps ? 'Reps' : 'Date' }}
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -15,12 +17,20 @@
 				:key="index"
 			>
 				<td class="text-center">{{ item }} kg</td>
-				<td class="text-center">{{ personalValue.reps[index] }}</td>
+				<td class="text-center">
+					{{ secondColumn[index] }}
+				</td>
 			</tr>
 		</tbody>
 	</v-table>
 </template>
 
 <script setup>
-defineProps(['personalValue'])
+import { computed } from 'vue'
+
+const props = defineProps(['personalValue'])
+
+const secondColumn = computed(
+	() => props.personalValue?.reps ?? props.personalValue?.date
+)
 </script>

@@ -6,7 +6,7 @@
 		<v-card :title="personalValue.name">
 			<template v-slot:prepend>
 				<v-icon
-					v-if="input === 'measurement'"
+					v-if="isMeasurement"
 					size="small"
 					color="secondary"
 				>
@@ -33,39 +33,33 @@
 					<v-col>
 						<v-text-field
 							v-model="newTargetValue"
-							:label="input === 'measurement' ? 'New target' : 'Reps'"
-							:suffix="input === 'measurement' ? personalValue.unit : ''"
+							:label="isMeasurement ? 'New target' : 'Reps'"
+							:suffix="personalValue?.unit ?? ''"
 							type="number"
 						/>
 					</v-col>
 				</v-row>
 			</v-card-text>
 			<v-card
-				v-if="input === 'measurement'"
-				width="85%"
-				style="margin: auto"
-			>
-				<CardGraphs
-					:personalValue="personalValue"
-					:input="input"
-					:color="color"
-				/>
-			</v-card>
-			<v-card
-				v-else
-				width="95%"
+				width="90%"
 				style="margin: auto"
 			>
 				<v-tabs
 					v-model="tab"
 					color="secondary"
 					align-tabs="center"
+					fixed-tabs
 				>
 					<v-tab :value="1">
-						RM &nbsp;
+						{{ isMeasurement ? personalValue.name : 'RM' }} &nbsp;
 						<v-icon>mdi-chart-timeline-variant</v-icon>
 					</v-tab>
-					<v-tab :value="2">RM &nbsp;%</v-tab>
+					<v-tab
+						:value="2"
+						v-if="!isMeasurement"
+					>
+						RM &nbsp;%
+					</v-tab>
 					<v-tab :value="3">
 						Log &nbsp;
 						<v-icon>mdi-history</v-icon>
@@ -73,7 +67,10 @@
 				</v-tabs>
 				<v-window v-model="tab">
 					<v-window-item :value="1">
-						<v-container fluid>
+						<v-container
+							fluid
+							style="height: 232px"
+						>
 							<CardGraphs
 								:personalValue="personalValue"
 								:input="input"
@@ -81,7 +78,10 @@
 							/>
 						</v-container>
 					</v-window-item>
-					<v-window-item :value="2">
+					<v-window-item
+						:value="2"
+						v-if="!isMeasurement"
+					>
 						<v-container fluid>
 							<TableRM
 								:personalValue="personalValue"
@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import CardGraphs from '@/components/PersonalView/pop-ups/CardGraphs.vue'
 import TableRM from '@/components/PersonalView/shared/TableRM.vue'
 import TableLog from '@/components/PersonalView/shared/TableLog.vue'
@@ -137,13 +137,15 @@ onMounted(() => {
 	personalValueEdited.value = { ...props.personalValue }
 })
 
+const isMeasurement = computed(() => props.input === 'measurement')
+
 const editPersonalRecord = ref(false)
 const personalValueEdited = ref({})
 const newValue = ref(null)
 const newTargetValue = ref(null)
 
 const deleteRecord = lastEntry => {
-	if (props.input === 'measurement') {
+	if (isMeasurement.value) {
 		storeUser.deleteMeasurement(props.id, lastEntry)
 	} else {
 		storeUser.deletePR(props.id, lastEntry)
@@ -154,7 +156,7 @@ const updateRecord = () => {
 	personalValueEdited.value.value.push(newValue.value)
 	let date = new Date().toString().split(' ')
 	personalValueEdited.value.date.push(date[2] + ' ' + date[1] + ' ' + date[3])
-	if (props.input === 'measurement')
+	if (isMeasurement.value)
 		personalValueEdited.value.target = newTargetValue.value
 	else personalValueEdited.value.reps.push(newTargetValue.value)
 
