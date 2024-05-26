@@ -46,13 +46,13 @@ const time = ref(null)
 
 const emit = defineEmits(['show-snackbar'])
 
-const allWorkouts = computed(() => storeWorkouts.allWorkouts)
+const getWODs = computed(() => storeWorkouts.getWODs)
 
 const generateWorkout = () => {
 	const validList =
 		time.value !== null
 			? generateValidWorkoutsList()
-			: [...Object.keys(allWorkouts.value)]
+			: [...Object.keys(getWODs.value)]
 	if (validList.length > 1) {
 		storeWorkouts.selectWorkout(
 			validList[Math.floor(Math.random() * validList.length)]
@@ -71,8 +71,8 @@ const generateWorkout = () => {
 
 const generateValidWorkoutsList = () => {
 	let validList = []
-	Object.keys(allWorkouts.value).forEach(key => {
-		let workout = allWorkouts.value[key]
+	Object.keys(getWODs.value).forEach(key => {
+		let workout = getWODs.value[key]
 		if (workout.time <= time.value) validList = [...validList, key]
 	})
 	return validList

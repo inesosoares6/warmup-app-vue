@@ -1,5 +1,5 @@
 <template>
-	<v-card title="Summary">
+	<v-card title="WODs Summary">
 		<template v-slot:prepend>
 			<v-icon
 				class="title-icon"

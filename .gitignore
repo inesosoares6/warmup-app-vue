@@ -2,7 +2,8 @@
 node_modules
 dist
 android
-
+icons
+public
 
 # local env files
 .env.local
