@@ -10,7 +10,7 @@
 		</template>
 		<template v-slot:append>
 			<v-btn
-				v-show="Object.keys(measurements).length < 3"
+				v-show="Object.keys(measurements).length < 6"
 				icon
 				flat
 				size="35"
@@ -87,7 +87,7 @@ const measurements = computed(() => storeUser.measurements)
 const calculatePercentage = measurement => {
 	if (measurement.unit === '%') return measurement.value.at(-1)
 
-	if (measurement.name === 'Weight') {
+	if (measurement.name === 'Weight' || measurement.name === 'Skinfold') {
 		if (measurement.target > measurement.value.at(-1)) {
 			// Overweight
 			return (measurement.value.at(-1) / measurement.target) * 100
@@ -96,7 +96,7 @@ const calculatePercentage = measurement => {
 			return (measurement.target / measurement.value.at(-1)) * 100
 		}
 	} else {
-		// Muscle Mass or Body Fat (in kg)
+		// Muscle Mass, MIG or Body Fat (in kg)
 		const totalWeight = Object.values(measurements.value).find(
 			item => item.name === 'Weight'
 		).value
@@ -112,12 +112,13 @@ const getMeasurementColor = measurement => {
 				Math.abs(measurement.value.at(-2) - measurement.target)
 				? 'secondary'
 				: 'error'
-		case 'Body Fat':
-			return measurement.value.at(-1) <= measurement.value.at(-2)
-				? 'secondary'
-				: 'error'
+		case 'MIG':
 		case 'Muscle Mass':
 			return measurement.value.at(-1) > measurement.value.at(-2)
+				? 'secondary'
+				: 'error'
+		default:
+			return measurement.value.at(-1) <= measurement.value.at(-2)
 				? 'secondary'
 				: 'error'
 	}

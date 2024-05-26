@@ -101,23 +101,39 @@ const addRecord = () => {
 }
 
 const getItems = () => {
-	if (measurement.value.name === 'Weight') {
+	if (measurement.value.name === 'Weight' || measurement.value.name === 'MIG') {
 		measurement.value.unit = 'kg'
 		return ['kg']
+	} else if (measurement.value.name === 'Skinfold') {
+		measurement.value.unit = 'mm'
+		return ['mm']
+	} else if (measurement.value.name === 'Waist/Height') {
+		measurement.value.unit = '%'
+		return ['%']
 	} else {
 		return ['%', 'kg']
 	}
 }
 
 const getTypes = () => {
-	let types = ['Weight', 'Body Fat', 'Muscle Mass']
-	if (Object.keys(storeUser.measurements).length === 0) return types
+	let types = [
+		'Weight',
+		'Body Fat',
+		'Muscle Mass',
+		'Skinfold',
+		'Waist/Height',
+		'MIG'
+	]
+	if (!Object.keys(storeUser.measurements).length) return types
 	Object.values(storeUser.measurements).forEach(record => {
 		const index = types.indexOf(record.name)
 		if (index > -1) {
 			types.splice(index, 1)
 		}
 	})
+	if (types.length === 1) {
+		measurement.value.name = types[0]
+	}
 	return types
 }
 </script>
