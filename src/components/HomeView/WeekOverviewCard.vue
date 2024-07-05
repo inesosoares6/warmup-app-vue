@@ -15,7 +15,7 @@
 			flat
 			size="small"
 		>
-			<v-icon color="secondary">mdi-printer</v-icon>
+			<v-icon color="secondary">mdi-format-list-bulleted</v-icon>
 			<WeeklyReport />
 		</v-btn>
 
