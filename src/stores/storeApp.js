@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useStoreTimer } from '@/stores/storeTimer'
 import { useStoreUser } from '@/stores/storeUser'
 import { useStoreWorkouts } from '@/stores/storeWorkouts'
-import { shareFile, formatDate } from '@/helpers/utils'
+import { shareFile, formatDate, formatData } from '@/helpers/utils'
 
 export const useStoreApp = defineStore('storeApp', {
 	state: () => {
@@ -115,15 +115,6 @@ export const useStoreApp = defineStore('storeApp', {
 
 		async saveUserData() {
 			const storeUser = useStoreUser()
-
-			const formatData = list => {
-				const tmp = []
-				Object.keys(list).forEach(key => {
-					const item = list[key]
-					tmp.push({ ...item, id: key })
-				})
-				return tmp
-			}
 
 			const data = {
 				personalRecords: formatData(storeUser.personalRecords),

@@ -6,7 +6,7 @@ export const isWOD = workoutType => {
 	return WODs.includes(workoutType)
 }
 
-export const formatDate = (date) => {
+export const formatDate = date => {
 	return date
 		.toLocaleString('pt-PT', {
 			year: 'numeric',
@@ -17,12 +17,23 @@ export const formatDate = (date) => {
 }
 
 export const shareFile = async (name, data) => {
-	const fileName = `${name}.json`
+	const fileName = name + '.json'
 	FileSharer.share({
 		filename: fileName,
 		contentType: 'application/json',
 		base64Data: btoa(JSON.stringify(data, null, 4))
-	}).catch(error => {
-		alert(`Error: ${error.message}`)
 	})
+		.then(() => alert('finished'))
+		.catch(error => {
+			alert(error.message)
+		})
+}
+
+export const formatData = list => {
+	const tmp = []
+	Object.keys(list).forEach(key => {
+		const item = list[key]
+		tmp.push({ ...item, id: key })
+	})
+	return tmp
 }

@@ -58,7 +58,7 @@
 import { ref, onUpdated } from 'vue'
 import VueQRCodeComponent from 'vue-qrcode-component'
 import ImportExportHeader from '@/components/HomeView/shared/ImportExportHeader.vue'
-import { shareFile } from '@/helpers/utils'
+import { shareFile, formatData, formatDate } from '@/helpers/utils'
 
 const emit = defineEmits(['close-menu'])
 const props = defineProps(['workoutList'])
@@ -76,19 +76,14 @@ const closeMenu = fileName => {
 	emit('close-menu', fileName)
 }
 
-const formatData = () => {
-	const data = []
-	Object.keys(props.workoutList).forEach(key => {
-		const workout = props.workoutList[key]
-		data.push({ ...workout, id: key })
-	})
-	return data
-}
-
 const handleShare = async () => {
-	await shareFile(name.value.length ? name.value : 'Workouts', {
-		workouts: formatData
-	})
+	alert('start sharing...')
+	await shareFile(
+		name.value.length ? name.value : 'Workouts-' + formatDate(new Date()),
+		{
+			workouts: formatData(props.workoutList)
+		}
+	)
 	fileGenerator.value = false
 	emit('close-menu')
 }
