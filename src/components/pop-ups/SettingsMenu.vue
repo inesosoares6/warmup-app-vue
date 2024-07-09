@@ -41,6 +41,16 @@
 			<v-card-text style="padding: 0px 20px 0px 20px">
 				<v-list lines="two">
 					<v-list-item
+						title="Save user data to file"
+						subtitle="This will save the user's personal data"
+						style="padding: 0px"
+						@click="saveUserData"
+					>
+						<template v-slot:append>
+							<v-icon class="material-icons">mdi-chevron-right</v-icon>
+						</template>
+					</v-list-item>
+					<v-list-item
 						title="Delete all cache"
 						subtitle="This will delete all the stored data"
 						style="padding: 0px"
@@ -88,6 +98,10 @@ const toggleTheme = () => {
 
 const deleteAllCache = () => {
 	storeApp.deleteAllCache()
+}
+
+const saveUserData = () => {
+	storeApp.saveUserData()
 }
 </script>
 

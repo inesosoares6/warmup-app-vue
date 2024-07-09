@@ -23,7 +23,7 @@
 					<v-spacer />
 					<v-btn
 						color="secondary"
-						@click="downloadFile"
+						@click="handleShare"
 					>
 						Download
 					</v-btn>
@@ -58,7 +58,7 @@
 import { ref, onUpdated } from 'vue'
 import VueQRCodeComponent from 'vue-qrcode-component'
 import ImportExportHeader from '@/components/HomeView/shared/ImportExportHeader.vue'
-import { FileSharer } from '@byteowls/capacitor-filesharer'
+import { shareFile } from '@/helpers/utils'
 
 const emit = defineEmits(['close-menu'])
 const props = defineProps(['workoutList'])
@@ -85,15 +85,12 @@ const formatData = () => {
 	return data
 }
 
-const downloadFile = async () => {
-	const fileName = name.value.length === 0 ? 'Workout' : name.value
-	FileSharer.share({
-		filename: fileName,
-		contentType: 'application/json',
-		base64Data: btoa(JSON.stringify({ workouts: formatData() }, null, 4))
-	}).catch(error => {
-		alert(error.message)
+const handleShare = async () => {
+	await shareFile(name.value.length ? name.value : 'Workouts', {
+		workouts: formatData
 	})
+	fileGenerator.value = false
+	emit('close-menu')
 }
 </script>
 
