@@ -77,7 +77,6 @@ const closeMenu = fileName => {
 }
 
 const handleShare = async () => {
-	alert('start sharing...')
 	await shareFile(
 		name.value.length ? name.value : 'Workouts-' + formatDate(new Date()),
 		{

@@ -22,11 +22,9 @@ export const shareFile = async (name, data) => {
 		filename: fileName,
 		contentType: 'application/json',
 		base64Data: btoa(JSON.stringify(data, null, 4))
+	}).catch(error => {
+		alert(error.message)
 	})
-		.then(() => alert('finished'))
-		.catch(error => {
-			alert(error.message)
-		})
 }
 
 export const formatData = list => {
