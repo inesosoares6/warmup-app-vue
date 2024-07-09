@@ -58,7 +58,7 @@
 import { ref, onUpdated } from 'vue'
 import VueQRCodeComponent from 'vue-qrcode-component'
 import ImportExportHeader from '@/components/HomeView/shared/ImportExportHeader.vue'
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
+import { FileSharer } from '@byteowls/capacitor-filesharer'
 
 const emit = defineEmits(['close-menu'])
 const props = defineProps(['workoutList'])
@@ -76,20 +76,24 @@ const closeMenu = fileName => {
 	emit('close-menu', fileName)
 }
 
+const formatData = () => {
+	const data = []
+	Object.keys(props.workoutList).forEach(key => {
+		const workout = props.workoutList[key]
+		data.push({ ...workout, id: key })
+	})
+	return data
+}
+
 const downloadFile = async () => {
-	try {
-		const fileName =
-			(name.value.length === 0 ? 'Workout' : name.value) + '.json'
-		await Filesystem.writeFile({
-			path: fileName,
-			data: JSON.stringify(props.workoutList, null, 4),
-			directory: Directory.Documents,
-			encoding: Encoding.UTF8
-		})
-		closeMenu(fileName)
-	} catch (e) {
-		alert('Unable to write file', e)
-	}
+	const fileName = name.value.length === 0 ? 'Workout' : name.value
+	FileSharer.share({
+		filename: fileName,
+		contentType: 'application/json',
+		base64Data: btoa(JSON.stringify({ workouts: formatData() }, null, 4))
+	}).catch(error => {
+		alert(error.message)
+	})
 }
 </script>
 

@@ -1,7 +1,5 @@
+const WODs = ['AFAP', 'WOD', 'I GO U GO', 'EMOM', 'AMRAP']
+
 export const isWOD = workoutType => {
-	return !(
-		workoutType === 'Mobilidade' ||
-		workoutType === 'CORE' ||
-		workoutType === 'Plano Be 2020'
-	)
+	return WODs.includes(workoutType)
 }
